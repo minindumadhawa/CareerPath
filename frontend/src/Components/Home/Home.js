@@ -26,7 +26,7 @@ function Home() {
             <a href="#contact">Contact</a>
           </div>
           <div className="nav-actions">
-            <button className="btn-login">Login</button>
+            <button className="btn-login" onClick={() => navigate('/login')}>Login</button>
             <button className="btn-signup" onClick={() => navigate('/signup/student')}>Sign Up</button>
           </div>
         </div>

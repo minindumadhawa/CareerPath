@@ -48,3 +48,34 @@ exports.signup = async (req, res) => {
     res.status(500).json({ message: 'Server error during signup', error: error.message });
   }
 };
+
+exports.login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // Check if user exists
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(401).json({ message: 'Invalid email or password.' });
+    }
+
+    // Check password (In production, use bcrypt.compare)
+    if (user.password !== password) {
+      return res.status(401).json({ message: 'Invalid email or password.' });
+    }
+
+    // Success response
+    res.status(200).json({
+      message: 'Login successful',
+      user: {
+        id: user._id,
+        email: user.email,
+        role: user.role,
+        name: user.role === 'student' ? user.fullName : user.companyName
+      }
+    });
+  } catch (error) {
+    console.error('Error during login:', error);
+    res.status(500).json({ message: 'Server error during login', error: error.message });
+  }
+};
