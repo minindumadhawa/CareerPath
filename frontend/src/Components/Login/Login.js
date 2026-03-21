@@ -29,9 +29,15 @@ function Login() {
       const data = await res.json();
       
       if (res.ok) {
-        alert(`Welcome back, ${data.user.name || data.user.email}!`);
-        // Save user detais to localstorage / global state in production
-        navigate('/');
+        // Redirect based on user role
+        if (data.user && data.user.role === 'student') {
+          navigate('/student-dashboard');
+        } else if (data.user && data.user.role === 'company') {
+          // Future company dashboard could go here
+          navigate('/');
+        } else {
+          navigate('/');
+        }
       } else {
         setError(data.message || 'Login failed. Please check your credentials.');
       }
