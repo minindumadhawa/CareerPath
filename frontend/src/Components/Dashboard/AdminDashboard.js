@@ -4,10 +4,14 @@ import './AdminDashboard.css';
 import ManageStudents from './ManageStudents';
 import ManageCompanies from './ManageCompanies';
 import AICVFilter from './AICVFilter';
+import AdminSettings from './AdminSettings';
 
 function AdminDashboard() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('overview');
+  
+  const user = JSON.parse(localStorage.getItem('user')) || { name: 'Super Admin' };
+  const initials = user.name ? user.name.substring(0, 2).toUpperCase() : 'AD';
 
   const handleLogout = () => {
     navigate('/login');
@@ -43,7 +47,7 @@ function AdminDashboard() {
         </nav>
         
         <div className="sidebar-footer">
-           <a href="#settings" className="nav-item">
+           <a href="#settings" className={`nav-item ${activeTab === 'settings' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); setActiveTab('settings'); }}>
              <span className="nav-icon">⚙️</span> System Settings
            </a>
            <button onClick={handleLogout} className="logout-btn">
@@ -64,8 +68,8 @@ function AdminDashboard() {
              <button className="btn-add-admin">+ New Admin</button>
              <button className="icon-btn" aria-label="Notifications">🔔</button>
              <div className="user-profile">
-               <div className="avatar admin-avatar">AD</div>
-               <span>Super Admin</span>
+               <div className="avatar admin-avatar">{initials}</div>
+               <span>{user.name}</span>
              </div>
            </div>
         </header>
@@ -218,6 +222,7 @@ function AdminDashboard() {
           {activeTab === 'students' && <ManageStudents />}
           {activeTab === 'companies' && <ManageCompanies />}
           {activeTab === 'ai-filter' && <AICVFilter />}
+          {activeTab === 'settings' && <AdminSettings />}
         </div>
       </main>
     </div>
