@@ -33,8 +33,7 @@ function Login() {
         if (data.user && data.user.role === 'student') {
           navigate('/student-dashboard');
         } else if (data.user && data.user.role === 'company') {
-          // Future company dashboard could go here
-          navigate('/');
+          navigate('/company-dashboard');
         } else {
           navigate('/');
         }
