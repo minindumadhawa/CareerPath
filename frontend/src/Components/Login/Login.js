@@ -30,7 +30,9 @@ function Login() {
       
       if (res.ok) {
         // Redirect based on user role
-        if (data.user && data.user.role === 'student') {
+        if (data.user && data.user.role === 'admin') {
+          navigate('/admin-dashboard');
+        } else if (data.user && data.user.role === 'student') {
           navigate('/student-dashboard');
         } else if (data.user && data.user.role === 'company') {
           navigate('/company-dashboard');

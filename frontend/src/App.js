@@ -6,6 +6,7 @@ import CompanySignup from './Components/Signup/CompanySignup';
 import Login from './Components/Login/Login';
 import StudentDashboard from './Components/Dashboard/StudentDashboard';
 import CompanyDashboard from './Components/Dashboard/CompanyDashboard';
+import AdminDashboard from './Components/Dashboard/AdminDashboard';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/signup/company" element={<CompanySignup />} />
           <Route path="/student-dashboard" element={<StudentDashboard />} />
           <Route path="/company-dashboard" element={<CompanyDashboard />} />
+          <Route path="/admin-dashboard" element={<AdminDashboard />} />
         </Routes>
       </div>
     </Router>

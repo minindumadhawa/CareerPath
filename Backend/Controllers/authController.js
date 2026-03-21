@@ -53,6 +53,19 @@ exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    // Hardcoded Admin check
+    if (email === 'admin@gmail.com' && password === '000000') {
+      return res.status(200).json({
+        message: 'Admin login successful',
+        user: {
+          id: 'admin_id_001',
+          email: 'admin@gmail.com',
+          role: 'admin',
+          name: 'System Administrator'
+        }
+      });
+    }
+
     // Check if user exists
     const user = await User.findOne({ email });
     if (!user) {
