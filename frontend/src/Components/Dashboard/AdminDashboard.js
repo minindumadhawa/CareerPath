@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './AdminDashboard.css';
+import ManageStudents from './ManageStudents';
 
 function AdminDashboard() {
   const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState('overview');
 
   const handleLogout = () => {
     navigate('/login');
@@ -18,19 +20,19 @@ function AdminDashboard() {
           <span className="badge-admin">Admin Portal</span>
         </div>
         <nav className="sidebar-nav">
-          <a href="#overview" className="nav-item active">
+          <a href="#overview" className={`nav-item ${activeTab === 'overview' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); setActiveTab('overview'); }}>
              <span className="nav-icon">📈</span> System Overview
           </a>
-          <a href="#students" className="nav-item">
+          <a href="#students" className={`nav-item ${activeTab === 'students' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); setActiveTab('students'); }}>
              <span className="nav-icon">🎓</span> Manage Students
           </a>
-          <a href="#companies" className="nav-item">
+          <a href="#companies" className={`nav-item ${activeTab === 'companies' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); setActiveTab('companies'); }}>
              <span className="nav-icon">🏢</span> Manage Companies
           </a>
-          <a href="#internships" className="nav-item">
+          <a href="#internships" className={`nav-item ${activeTab === 'internships' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); setActiveTab('internships'); }}>
              <span className="nav-icon">💼</span> All Internships
           </a>
-          <a href="#reports" className="nav-item">
+          <a href="#reports" className={`nav-item ${activeTab === 'reports' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); setActiveTab('reports'); }}>
              <span className="nav-icon">📑</span> Reports & Analytics
           </a>
         </nav>
@@ -65,7 +67,9 @@ function AdminDashboard() {
 
         {/* Content Area */}
         <div className="dashboard-content">
-          <div className="welcome-banner admin-banner">
+          {activeTab === 'overview' && (
+            <>
+              <div className="welcome-banner admin-banner">
             <div className="welcome-text">
                <h1>System Administration ⚙️</h1>
                <p>Monitor platform health, verify companies, and manage all CareerPath activity.</p>
@@ -204,6 +208,9 @@ function AdminDashboard() {
                 </div>
              </div>
           </div>
+          </>
+          )}
+          {activeTab === 'students' && <ManageStudents />}
         </div>
       </main>
     </div>

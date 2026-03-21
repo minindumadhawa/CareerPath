@@ -74,3 +74,27 @@ exports.updateProfile = async (req, res) => {
     res.status(500).json({ message: 'Server error updating profile', error: error.message });
   }
 };
+
+exports.getAllStudents = async (req, res) => {
+  try {
+    const students = await User.find({ role: 'student' }).select('-password').sort({ createdAt: -1 });
+    res.status(200).json(students);
+  } catch (error) {
+    console.error('Error fetching students:', error);
+    res.status(500).json({ message: 'Server error fetching students', error: error.message });
+  }
+};
+
+exports.deleteStudent = async (req, res) => {
+  try {
+    const student = await User.findById(req.params.id);
+    if (!student) {
+      return res.status(404).json({ message: 'Student not found' });
+    }
+    await User.findByIdAndDelete(req.params.id);
+    res.status(200).json({ message: 'Student deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting student:', error);
+    res.status(500).json({ message: 'Server error deleting student', error: error.message });
+  }
+};

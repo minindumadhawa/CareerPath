@@ -2,6 +2,12 @@ const express = require('express');
 const router = express.Router();
 const userController = require('../Controllers/userController');
 
+// Get all students
+router.get('/students', userController.getAllStudents);
+
+// Delete student
+router.delete('/students/:id', userController.deleteStudent);
+
 // Get user profile
 router.get('/profile/:id', userController.getProfile);
 

@@ -1,26 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import './CVPreview.css';
 
-function CVPreview() {
+function CVPreview({ studentId }) {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   const user = JSON.parse(localStorage.getItem('user'));
+  const fetchId = studentId || (user ? user.id : null);
 
   useEffect(() => {
-    if (user && user.id) {
-      fetchProfile();
+    if (fetchId) {
+      fetchProfile(fetchId);
     } else {
       setLoading(false);
-      setError('User data not found in local storage.');
+      setError('User ID not found or not logged in.');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [fetchId]);
 
-  const fetchProfile = async () => {
+  const fetchProfile = async (id) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/users/profile/${user.id}`);
+      const res = await fetch(`http://localhost:5000/api/users/profile/${id}`);
       const data = await res.json();
       if (res.ok) {
         setProfile({

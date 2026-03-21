@@ -1,0 +1,71 @@
+.manage-students-container {
+  width: 100%;
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+.manage-loading {
+  padding: 3rem;
+  text-align: center;
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.btn-delete {
+  background-color: #ffebee;
+  color: #c62828 !important;
+  border: 1px solid #ef9a9a !important;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.btn-delete:hover {
+  background-color: #f4cfcf;
+}
+
+.badge-count {
+  background: #edf2ff;
+  color: #4361ee;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 4rem 1rem !important;
+  color: #888;
+  font-style: italic;
+}
+
+.btn-view-cv {
+  background-color: #fff;
+  border: 1px solid #4361ee !important;
+  color: #4361ee !important;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.btn-view-cv:hover {
+  background-color: #edf2ff;
+}
+
+.btn-back {
+  background: none;
+  border: none;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #555;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+.btn-back:hover {
+  background: #f5f5f5;
+  color: #111;
+}
