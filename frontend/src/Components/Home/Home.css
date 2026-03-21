@@ -66,6 +66,22 @@
   background-color: #4f46e5;
 }
 
+.signup-btn {
+  background-color: white;
+  color: #6366f1;
+  border: 2px solid #6366f1;
+  padding: 0.6rem 1.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.signup-btn:hover {
+  background-color: #6366f1;
+  color: white;
+}
+
 /* Hero Section */
 .hero {
   background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);

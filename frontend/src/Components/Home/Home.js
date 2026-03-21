@@ -43,6 +43,7 @@ function Home() {
             <a href="#about">About</a>
             <a href="#contact">Contact</a>
             <button className="login-btn">Login</button>
+            <button className="signup-btn">Sign Up</button>
           </div>
         </div>
       </nav>
