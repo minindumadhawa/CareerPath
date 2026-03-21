@@ -16,9 +16,10 @@ exports.getProfile = async (req, res) => {
 exports.updateProfile = async (req, res) => {
   try {
     const { 
-      fullName, phone, location, linkedin, professionalSummary,
-      university, educationLevel, graduationYear,
-      technicalSkills, softSkills, experience, projects,
+      fullName, university, 
+      phoneNumber, location, linkedin, summary,
+      technicalSkills, softSkills, 
+      education, workExperience, projects,
       certifications, achievements, references 
     } = req.body;
     
@@ -28,24 +29,30 @@ exports.updateProfile = async (req, res) => {
     }
 
     if (user.role === 'student') {
-      if (fullName) user.fullName = fullName;
-      if (phone !== undefined) user.phone = phone;
+      if (fullName !== undefined) user.fullName = fullName;
+      if (university !== undefined) user.university = university;
+      if (phoneNumber !== undefined) user.phoneNumber = phoneNumber;
       if (location !== undefined) user.location = location;
       if (linkedin !== undefined) user.linkedin = linkedin;
-      if (professionalSummary !== undefined) user.professionalSummary = professionalSummary;
+      if (summary !== undefined) user.summary = summary;
       
-      if (university) user.university = university;
-      if (educationLevel !== undefined) user.educationLevel = educationLevel;
-      if (graduationYear !== undefined) user.graduationYear = graduationYear;
+      if (technicalSkills !== undefined) {
+          user.technicalSkills = Array.isArray(technicalSkills) ? technicalSkills : typeof technicalSkills === 'string' ? technicalSkills.split(',').map(s => s.trim()).filter(Boolean) : [];
+      }
+      if (softSkills !== undefined) {
+          user.softSkills = Array.isArray(softSkills) ? softSkills : typeof softSkills === 'string' ? softSkills.split(',').map(s => s.trim()).filter(Boolean) : [];
+      }
       
-      if (technicalSkills) user.technicalSkills = Array.isArray(technicalSkills) ? technicalSkills : technicalSkills.split(',').map(s => s.trim());
-      if (softSkills) user.softSkills = Array.isArray(softSkills) ? softSkills : softSkills.split(',').map(s => s.trim());
+      if (education !== undefined) user.education = education;
+      if (workExperience !== undefined) user.workExperience = workExperience;
+      if (projects !== undefined) user.projects = projects;
       
-      if (experience) user.experience = experience;
-      if (projects) user.projects = projects;
-      
-      if (certifications) user.certifications = Array.isArray(certifications) ? certifications : certifications.split(',').map(s => s.trim());
-      if (achievements) user.achievements = Array.isArray(achievements) ? achievements : achievements.split(',').map(s => s.trim());
+      if (certifications !== undefined) {
+          user.certifications = Array.isArray(certifications) ? certifications : typeof certifications === 'string' ? certifications.split(',').map(s => s.trim()).filter(Boolean) : [];
+      }
+      if (achievements !== undefined) {
+          user.achievements = Array.isArray(achievements) ? achievements : typeof achievements === 'string' ? achievements.split(',').map(s => s.trim()).filter(Boolean) : [];
+      }
       if (references !== undefined) user.references = references;
     }
 
@@ -57,8 +64,10 @@ exports.updateProfile = async (req, res) => {
         id: user._id,
         email: user.email,
         role: user.role,
-        fullName: user.fullName
-      }
+        fullName: user.fullName,
+        university: user.university
+      },
+      profile: user
     });
   } catch (error) {
     console.error('Error updating profile:', error);

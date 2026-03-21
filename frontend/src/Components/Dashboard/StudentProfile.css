@@ -1,12 +1,6 @@
-/* Base Profile Styles */
 .profile-container {
   padding: 1rem 0;
-  max-width: 800px;
-}
-
-.profile-container.wide {
-  max-width: 900px;
-  margin: 0 auto;
+  max-width: 900px; /* Widened to fit grids better */
 }
 
 .profile-header {
@@ -50,48 +44,81 @@
   border: 1px solid #ef9a9a;
 }
 
-/* Detailed Form Sections */
-.detailed-form .form-section {
+/* Sections for the complex form */
+.profile-section {
   background: white;
   border-radius: 12px;
   padding: 2rem;
-  margin-bottom: 2rem;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-  border: 1px solid #f0f2f5;
+  margin-bottom: 2rem;
 }
 
-.form-section h3 {
-  color: #1a1a2e;
-  font-size: 1.3rem;
-  margin-top: 0;
+.profile-section h3 {
+  font-size: 1.25rem;
+  color: #222;
   margin-bottom: 1.5rem;
+  border-bottom: 1px solid #eaeaea;
   padding-bottom: 0.8rem;
-  border-bottom: 2px solid #f0f2f5;
-}
-
-.section-help {
-  color: #666;
-  font-size: 0.9rem;
-  margin-top: -1rem;
-  margin-bottom: 1.5rem;
 }
 
 .section-header-flex {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 2px solid #f0f2f5;
+  border-bottom: 1px solid #eaeaea;
   margin-bottom: 1.5rem;
   padding-bottom: 0.8rem;
 }
 
 .section-header-flex h3 {
-  border-bottom: none;
   margin-bottom: 0;
+  border-bottom: none;
   padding-bottom: 0;
 }
 
-/* Base Form Inputs */
+.btn-add {
+  background-color: #edf2ff;
+  color: #4361ee;
+  border: 1px dashed #4361ee;
+  padding: 0.4rem 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-add:hover {
+  background-color: #4361ee;
+  color: white;
+}
+
+.array-item-card {
+  background-color: #fafbfc;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.btn-remove {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  color: #999;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.btn-remove:hover {
+  color: #d32f2f;
+}
+
+/* General form styling */
 .profile-form .form-group {
   margin-bottom: 1.5rem;
 }
@@ -107,8 +134,14 @@
   min-width: 250px;
 }
 
-.profile-form .col-full {
-  flex: 1 1 100%;
+.profile-form .col-1 {
+  flex: 2;
+  min-width: 200px;
+}
+
+.profile-form .col-small {
+  flex: 0.5;
+  min-width: 100px;
 }
 
 .profile-form label {
@@ -125,12 +158,9 @@
   border: 1px solid #ddd;
   border-radius: 8px;
   font-size: 1rem;
-  font-family: inherit;
   transition: all 0.3s ease;
   box-sizing: border-box;
-}
-
-.profile-form textarea {
+  font-family: inherit;
   resize: vertical;
 }
 
@@ -147,97 +177,39 @@
   cursor: not-allowed;
 }
 
-/* Array Item Cards */
-.array-card {
-  background: #f8f9fa;
-  border: 1px solid #e9ecef;
-  border-radius: 8px;
-  padding: 1.5rem;
-  margin-bottom: 1.5rem;
-  position: relative;
-}
-
-.btn-remove {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background: none;
-  border: none;
-  color: #dc3545;
-  font-weight: 600;
-  cursor: pointer;
-  padding: 0.5rem;
-  border-radius: 4px;
-}
-
-.btn-remove:hover {
-  background: #ffebee;
-}
-
-.btn-add {
-  background: #e8f0fe;
-  color: #1a73e8;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.btn-add:hover {
-  background: #d2e3fc;
-}
-
-.empty-text {
-  color: #888;
-  font-style: italic;
-  margin-bottom: 1.5rem;
-}
-
-/* Action Buttons */
-.form-actions {
-  margin-top: 2.5rem;
-  display: flex;
-  justify-content: flex-end;
-}
-
-.form-actions.sticky {
+.sticky-actions {
   position: sticky;
   bottom: 0;
-  background: white;
-  padding: 1.5rem;
-  border-top: 1px solid #eee;
-  box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.05);
-  border-radius: 12px;
+  background: linear-gradient(to top, rgba(255,255,255,1) 80%, rgba(255,255,255,0));
+  padding: 1.5rem 0;
+  margin-top: 2rem;
+  display: flex;
+  justify-content: flex-end;
   z-index: 10;
-  margin-bottom: 2rem;
 }
 
 .btn-save {
   background-color: #4361ee;
   color: white;
   border: none;
-  padding: 0.8rem 2rem;
+  padding: 0.8rem 2.5rem;
   border-radius: 8px;
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.1s ease;
-}
-
-.btn-save.btn-large {
-  width: 100%;
-  padding: 1rem;
-  font-size: 1.1rem;
+  box-shadow: 0 4px 10px rgba(67, 97, 238, 0.3);
 }
 
 .btn-save:hover:not(:disabled) {
   background-color: #3a56d4;
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(67, 97, 238, 0.4);
 }
 
 .btn-save:disabled {
   background-color: #a0b0f7;
   cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }

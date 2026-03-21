@@ -5,22 +5,20 @@ function StudentProfile() {
   const [profile, setProfile] = useState({
     fullName: '',
     email: '',
-    phone: '',
+    university: '',
+    phoneNumber: '',
     location: '',
     linkedin: '',
-    professionalSummary: '',
-    university: '',
-    educationLevel: '',
-    graduationYear: '',
+    summary: '',
     technicalSkills: '',
     softSkills: '',
-    experience: [],
+    education: [],
+    workExperience: [],
     projects: [],
     certifications: '',
     achievements: '',
     references: ''
   });
-  
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState({ text: '', type: '' });
@@ -45,19 +43,18 @@ function StudentProfile() {
         setProfile({
           fullName: data.fullName || '',
           email: data.email || '',
-          phone: data.phone || '',
+          university: data.university || '',
+          phoneNumber: data.phoneNumber || '',
           location: data.location || '',
           linkedin: data.linkedin || '',
-          professionalSummary: data.professionalSummary || '',
-          university: data.university || '',
-          educationLevel: data.educationLevel || '',
-          graduationYear: data.graduationYear || '',
-          technicalSkills: data.technicalSkills && Array.isArray(data.technicalSkills) ? data.technicalSkills.join(', ') : '',
-          softSkills: data.softSkills && Array.isArray(data.softSkills) ? data.softSkills.join(', ') : '',
-          experience: data.experience || [],
+          summary: data.summary || '',
+          technicalSkills: data.technicalSkills ? data.technicalSkills.join(', ') : '',
+          softSkills: data.softSkills ? data.softSkills.join(', ') : '',
+          education: data.education || [],
+          workExperience: data.workExperience || [],
           projects: data.projects || [],
-          certifications: data.certifications && Array.isArray(data.certifications) ? data.certifications.join(', ') : '',
-          achievements: data.achievements && Array.isArray(data.achievements) ? data.achievements.join(', ') : '',
+          certifications: data.certifications ? data.certifications.join(', ') : '',
+          achievements: data.achievements ? data.achievements.join(', ') : '',
           references: data.references || ''
         });
       } else {
@@ -71,24 +68,22 @@ function StudentProfile() {
   };
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setProfile(prev => ({ ...prev, [name]: value }));
+    setProfile({ ...profile, [e.target.name]: e.target.value });
   };
 
-  const handleArrayChange = (index, field, value, arrayName) => {
-    const newArray = [...profile[arrayName]];
-    newArray[index] = { ...newArray[index], [field]: value };
-    setProfile(prev => ({ ...prev, [arrayName]: newArray }));
+  const handleArrayChange = (e, index, arrayName) => {
+    const updatedArray = [...profile[arrayName]];
+    updatedArray[index][e.target.name] = e.target.value;
+    setProfile({ ...profile, [arrayName]: updatedArray });
   };
 
   const addArrayItem = (arrayName, emptyItem) => {
-    setProfile(prev => ({ ...prev, [arrayName]: [...prev[arrayName], emptyItem] }));
+    setProfile({ ...profile, [arrayName]: [...profile[arrayName], emptyItem] });
   };
 
   const removeArrayItem = (index, arrayName) => {
-    const newArray = [...profile[arrayName]];
-    newArray.splice(index, 1);
-    setProfile(prev => ({ ...prev, [arrayName]: newArray }));
+    const updatedArray = profile[arrayName].filter((_, i) => i !== index);
+    setProfile({ ...profile, [arrayName]: updatedArray });
   };
 
   const handleSubmit = async (e) => {
@@ -97,12 +92,16 @@ function StudentProfile() {
     setMessage({ text: '', type: '' });
     
     try {
+      const payload = {
+        ...profile,
+      };
+
       const res = await fetch(`http://localhost:5000/api/users/profile/${user.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(profile)
+        body: JSON.stringify(payload)
       });
       
       const data = await res.json();
@@ -117,18 +116,17 @@ function StudentProfile() {
       setMessage({ text: 'Network error while saving', type: 'error' });
     } finally {
       setSaving(false);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
-  if (loading) {
-    return <div className="profile-container"><div className="profile-loading">Loading profile...</div></div>;
-  }
+  if (loading) return <div className="profile-container"><div className="profile-loading">Loading profile...</div></div>;
 
   return (
-    <div className="profile-container wide">
+    <div className="profile-container">
       <div className="profile-header">
-        <h2>My Profile Builder</h2>
-        <p>Complete your resume details to stand out to employers</p>
+        <h2>My Resume / Profile</h2>
+        <p>Complete your profile to build out your resume automatically and stand out to employers.</p>
       </div>
       
       {message.text && (
@@ -137,168 +135,180 @@ function StudentProfile() {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="profile-form detailed-form">
+      <form onSubmit={handleSubmit} className="profile-form">
         
         {/* Section 1: Personal Info */}
-        <div className="form-section">
-          <h3>🔹 1. Personal Information</h3>
+        <div className="profile-section">
+          <h3>1. Personal Information</h3>
           <div className="form-group row">
             <div className="col-half">
-              <label>Full Name *</label>
+              <label>Full Name</label>
               <input type="text" name="fullName" value={profile.fullName} onChange={handleChange} required />
             </div>
             <div className="col-half">
               <label>Email Address</label>
-              <input type="email" name="email" value={profile.email} className="input-disabled" disabled />
+              <input type="email" name="email" value={profile.email} disabled className="input-disabled" />
             </div>
+          </div>
+          <div className="form-group row">
             <div className="col-half">
               <label>Phone Number</label>
-              <input type="tel" name="phone" value={profile.phone} onChange={handleChange} placeholder="+1 234 567 8900" />
+              <input type="tel" name="phoneNumber" value={profile.phoneNumber} onChange={handleChange} placeholder="+1 234 567 890" />
             </div>
             <div className="col-half">
-              <label>Location</label>
-              <input type="text" name="location" value={profile.location} onChange={handleChange} placeholder="City, Country" />
+              <label>Location (City, Country)</label>
+              <input type="text" name="location" value={profile.location} onChange={handleChange} placeholder="e.g. New York, USA" />
             </div>
-            <div className="col-full">
-              <label>LinkedIn / Portfolio URL</label>
-              <input type="url" name="linkedin" value={profile.linkedin} onChange={handleChange} placeholder="https://linkedin.com/in/yourprofile" />
+          </div>
+          <div className="form-group row">
+            <div className="col-half">
+              <label>LinkedIn / Portfolio</label>
+              <input type="text" name="linkedin" value={profile.linkedin} onChange={handleChange} placeholder="github.com/username or linkedin.com/in/..." />
+            </div>
+            <div className="col-half">
+              <label>University / College</label>
+              <input type="text" name="university" value={profile.university} onChange={handleChange} required />
             </div>
           </div>
         </div>
 
-        {/* Section 2: Professional Summary */}
-        <div className="form-section">
-          <h3>🔹 2. Professional Summary</h3>
-          <p className="section-help">A short paragraph about who you are, your skills, and career goals.</p>
+        {/* Section 2: Summary */}
+        <div className="profile-section">
+          <h3>2. Professional Summary</h3>
           <div className="form-group">
             <textarea 
-              name="professionalSummary" 
-              value={profile.professionalSummary} 
+              name="summary" 
+              value={profile.summary} 
               onChange={handleChange} 
-              rows="4"
-              placeholder="e.g. Motivated IT undergraduate with strong skills in web development and a passion for building user-friendly applications."
+              rows="3" 
+              placeholder="A short paragraph about who you are, your skills, and your career goals... e.g. Motivated IT undergraduate..."
             ></textarea>
           </div>
         </div>
 
         {/* Section 3: Education */}
-        <div className="form-section">
-          <h3>🔹 3. Education</h3>
-          <div className="form-group row">
-            <div className="col-full">
-              <label>University or School Name *</label>
-              <input type="text" name="university" value={profile.university} onChange={handleChange} required />
-            </div>
-            <div className="col-half">
-              <label>Degree / Course Name</label>
-              <input type="text" name="educationLevel" value={profile.educationLevel} onChange={handleChange} placeholder="BSc in Computer Science" />
-            </div>
-            <div className="col-half">
-              <label>Year of Completion</label>
-              <input type="text" name="graduationYear" value={profile.graduationYear} onChange={handleChange} placeholder="2024 (or Expected 2025)" />
-            </div>
+        <div className="profile-section">
+          <div className="section-header-flex">
+            <h3>3. Education</h3>
+            <button type="button" className="btn-add" onClick={() => addArrayItem('education', { degree: '', institution: '', year: '' })}>+ Add Education</button>
           </div>
+          {profile.education.map((edu, index) => (
+            <div key={index} className="array-item-card">
+              <button type="button" className="btn-remove" onClick={() => removeArrayItem(index, 'education')}>×</button>
+              <div className="form-group row">
+                <div className="col-1">
+                  <label>Degree / Course</label>
+                  <input type="text" name="degree" value={edu.degree} onChange={(e) => handleArrayChange(e, index, 'education')} placeholder="e.g. B.Sc. in Computer Science" />
+                </div>
+                <div className="col-1">
+                  <label>University / School</label>
+                  <input type="text" name="institution" value={edu.institution} onChange={(e) => handleArrayChange(e, index, 'education')} placeholder="e.g. MIT" />
+                </div>
+                <div className="col-small">
+                  <label>Year</label>
+                  <input type="text" name="year" value={edu.year} onChange={(e) => handleArrayChange(e, index, 'education')} placeholder="e.g. 2024" />
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
 
         {/* Section 4: Skills */}
-        <div className="form-section">
-          <h3>🔹 4. Skills</h3>
-          <div className="form-group row">
-            <div className="col-full">
-              <label>Technical Skills (comma separated)</label>
-              <input type="text" name="technicalSkills" value={profile.technicalSkills} onChange={handleChange} placeholder="Java, HTML, SQL, React" />
-            </div>
-            <div className="col-full">
-              <label>Soft Skills (comma separated)</label>
-              <input type="text" name="softSkills" value={profile.softSkills} onChange={handleChange} placeholder="Communication, Teamwork, Leadership" />
-            </div>
+        <div className="profile-section">
+          <h3>4. Skills</h3>
+          <div className="form-group">
+            <label>Technical Skills (comma separated)</label>
+            <input type="text" name="technicalSkills" value={profile.technicalSkills} onChange={handleChange} placeholder="e.g. Java, HTML, React, SQL" />
+          </div>
+          <div className="form-group">
+            <label>Soft Skills (comma separated)</label>
+            <input type="text" name="softSkills" value={profile.softSkills} onChange={handleChange} placeholder="e.g. Communication, Teamwork, Leadership" />
           </div>
         </div>
 
         {/* Section 5: Work Experience */}
-        <div className="form-section">
+        <div className="profile-section">
           <div className="section-header-flex">
-            <h3>🔹 5. Work Experience</h3>
-            <button type="button" className="btn-add" onClick={() => addArrayItem('experience', { jobTitle: '', company: '', duration: '', responsibilities: '' })}>+ Add Experience</button>
+            <h3>5. Work Experience</h3>
+            <button type="button" className="btn-add" onClick={() => addArrayItem('workExperience', { jobTitle: '', company: '', duration: '', responsibilities: '' })}>+ Add Experience</button>
           </div>
-          {profile.experience.length === 0 && <p className="empty-text">No work experience added yet.</p>}
-          {profile.experience.map((exp, index) => (
-            <div key={index} className="array-card">
-              <button type="button" className="btn-remove" onClick={() => removeArrayItem(index, 'experience')}>&times; Remove</button>
+          {profile.workExperience.map((exp, index) => (
+            <div key={index} className="array-item-card">
+              <button type="button" className="btn-remove" onClick={() => removeArrayItem(index, 'workExperience')}>×</button>
               <div className="form-group row">
                 <div className="col-half">
                   <label>Job Title</label>
-                  <input type="text" value={exp.jobTitle} onChange={(e) => handleArrayChange(index, 'jobTitle', e.target.value, 'experience')} placeholder="Software Engineer Intern" />
+                  <input type="text" name="jobTitle" value={exp.jobTitle} onChange={(e) => handleArrayChange(e, index, 'workExperience')} />
                 </div>
                 <div className="col-half">
                   <label>Company Name</label>
-                  <input type="text" value={exp.company} onChange={(e) => handleArrayChange(index, 'company', e.target.value, 'experience')} placeholder="Tech Solutions Corp" />
+                  <input type="text" name="company" value={exp.company} onChange={(e) => handleArrayChange(e, index, 'workExperience')} />
                 </div>
-                <div className="col-half">
-                  <label>Duration</label>
-                  <input type="text" value={exp.duration} onChange={(e) => handleArrayChange(index, 'duration', e.target.value, 'experience')} placeholder="Jan 2023 - Present" />
-                </div>
-                <div className="col-full">
-                  <label>Key Responsibilities</label>
-                  <textarea rows="2" value={exp.responsibilities} onChange={(e) => handleArrayChange(index, 'responsibilities', e.target.value, 'experience')} placeholder="Developed REST APIs using Node.js..."></textarea>
-                </div>
+              </div>
+              <div className="form-group">
+                <label>Duration</label>
+                <input type="text" name="duration" value={exp.duration} onChange={(e) => handleArrayChange(e, index, 'workExperience')} placeholder="e.g. Jan 2023 - Present" />
+              </div>
+              <div className="form-group">
+                <label>Key Responsibilities / Achievements</label>
+                <textarea name="responsibilities" value={exp.responsibilities} onChange={(e) => handleArrayChange(e, index, 'workExperience')} rows="2"></textarea>
               </div>
             </div>
           ))}
         </div>
 
         {/* Section 6: Projects */}
-        <div className="form-section">
+        <div className="profile-section">
           <div className="section-header-flex">
-            <h3>🔹 6. Projects</h3>
-            <button type="button" className="btn-add" onClick={() => addArrayItem('projects', { name: '', description: '', technologies: '' })}>+ Add Project</button>
+            <h3>6. Projects</h3>
+            <button type="button" className="btn-add" onClick={() => addArrayItem('projects', { projectName: '', description: '', technologies: '' })}>+ Add Project</button>
           </div>
-          {profile.projects.length === 0 && <p className="empty-text">No projects added yet.</p>}
           {profile.projects.map((proj, index) => (
-            <div key={index} className="array-card">
-              <button type="button" className="btn-remove" onClick={() => removeArrayItem(index, 'projects')}>&times; Remove</button>
+            <div key={index} className="array-item-card">
+              <button type="button" className="btn-remove" onClick={() => removeArrayItem(index, 'projects')}>×</button>
               <div className="form-group row">
                 <div className="col-half">
                   <label>Project Name</label>
-                  <input type="text" value={proj.name} onChange={(e) => handleArrayChange(index, 'name', e.target.value, 'projects')} placeholder="Auto Nexus Website" />
+                  <input type="text" name="projectName" value={proj.projectName} onChange={(e) => handleArrayChange(e, index, 'projects')} placeholder="e.g. Auto Nexus Website" />
                 </div>
                 <div className="col-half">
                   <label>Technologies Used</label>
-                  <input type="text" value={proj.technologies} onChange={(e) => handleArrayChange(index, 'technologies', e.target.value, 'projects')} placeholder="React, Spring Boot" />
+                  <input type="text" name="technologies" value={proj.technologies} onChange={(e) => handleArrayChange(e, index, 'projects')} placeholder="e.g. React, Spring Boot" />
                 </div>
-                <div className="col-full">
-                  <label>Short Description</label>
-                  <textarea rows="2" value={proj.description} onChange={(e) => handleArrayChange(index, 'description', e.target.value, 'projects')} placeholder="Online spare parts platform..."></textarea>
-                </div>
+              </div>
+              <div className="form-group">
+                <label>Short Description</label>
+                <textarea name="description" value={proj.description} onChange={(e) => handleArrayChange(e, index, 'projects')} rows="2" placeholder="Online spare parts platform..."></textarea>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Section 7, 8, 9: Additional Information */}
-        <div className="form-section">
-          <h3>🔹 Additional Information</h3>
+        {/* Section 7 & 8 & 9 */}
+        <div className="profile-section">
+          <h3>7. Additional Information</h3>
           <div className="form-group row">
-            <div className="col-full">
-              <label>Certifications (comma separated)</label>
-              <input type="text" name="certifications" value={profile.certifications} onChange={handleChange} placeholder="AWS Certified Developer, Coursera React Native" />
+            <div className="col-half">
+              <label>7. Certifications (comma separated)</label>
+              <input type="text" name="certifications" value={profile.certifications} onChange={handleChange} placeholder="e.g. AWS Cloud Practitioner" />
             </div>
-            <div className="col-full">
-              <label>Achievements / Activities (comma separated)</label>
-              <input type="text" name="achievements" value={profile.achievements} onChange={handleChange} placeholder="Hackathon Winner 2023, IT Club President" />
+            <div className="col-half">
+              <label>8. Achievements / Activities (comma separated)</label>
+              <input type="text" name="achievements" value={profile.achievements} onChange={handleChange} placeholder="e.g. Hackathon Winner, Club President" />
             </div>
-            <div className="col-full">
-              <label>References</label>
-              <input type="text" name="references" value={profile.references} onChange={handleChange} placeholder="Available upon request" />
-            </div>
+          </div>
+          <div className="form-group">
+            <label>9. References</label>
+            <input type="text" name="references" value={profile.references} onChange={handleChange} placeholder="e.g. Available upon request" />
           </div>
         </div>
 
-        <div className="form-actions sticky">
-          <button type="submit" className="btn-save btn-large" disabled={saving}>
-            {saving ? 'Saving...' : '💾 Save Complete Profile'}
+        <div className="form-actions sticky-actions">
+          <button type="submit" className="btn-save" disabled={saving}>
+            {saving ? 'Saving...' : 'Save All Profile Changes'}
           </button>
         </div>
+
       </form>
     </div>
   );
