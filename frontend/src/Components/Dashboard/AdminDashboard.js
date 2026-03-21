@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import './AdminDashboard.css';
 import ManageStudents from './ManageStudents';
 import ManageCompanies from './ManageCompanies';
+import AICVFilter from './AICVFilter';
 
 function AdminDashboard() {
   const navigate = useNavigate();
@@ -35,6 +36,9 @@ function AdminDashboard() {
           </a>
           <a href="#reports" className={`nav-item ${activeTab === 'reports' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); setActiveTab('reports'); }}>
              <span className="nav-icon">📑</span> Reports & Analytics
+          </a>
+          <a href="#ai-filter" className={`nav-item ${activeTab === 'ai-filter' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); setActiveTab('ai-filter'); }}>
+             <span className="nav-icon">🤖</span> AI CV Filter
           </a>
         </nav>
         
@@ -213,6 +217,7 @@ function AdminDashboard() {
           )}
           {activeTab === 'students' && <ManageStudents />}
           {activeTab === 'companies' && <ManageCompanies />}
+          {activeTab === 'ai-filter' && <AICVFilter />}
         </div>
       </main>
     </div>

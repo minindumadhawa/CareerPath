@@ -1,0 +1,206 @@
+.ai-filter-container {
+  width: 100%;
+}
+
+.ai-grid {
+  display: grid;
+  grid-template-columns: 350px 1fr;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .ai-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.filter-form {
+  margin-top: 1.5rem;
+}
+
+.filter-form .form-group {
+  margin-bottom: 1.5rem;
+}
+
+.filter-form label {
+  font-weight: 600;
+  color: #1a1a2e;
+  display: block;
+  margin-bottom: 0.3rem;
+  font-size: 0.95rem;
+}
+
+.filter-form .hint {
+  font-size: 0.8rem;
+  color: #666;
+  margin-bottom: 0.5rem;
+  margin-top: 0;
+}
+
+.filter-form input {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+
+.filter-form input:focus {
+  border-color: #667eea;
+  outline: none;
+}
+
+.btn-scan {
+  width: 100%;
+  padding: 1rem;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.btn-scan:hover:not(:disabled) {
+  background: #5a6edb;
+}
+
+.btn-scan:disabled {
+  background: #a8b4f0;
+  cursor: not-allowed;
+}
+
+/* Rank Results Styling */
+.results-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.result-card {
+  border: 1px solid #eaeaea;
+  border-radius: 12px;
+  background: #fdfdfd;
+  transition: box-shadow 0.2s;
+  overflow: hidden;
+}
+
+.result-card:hover {
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.result-header {
+  display: flex;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.rank-number {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #888;
+  width: 40px;
+}
+
+.cand-info {
+  flex: 1;
+  margin-left: 1rem;
+}
+
+.cand-name {
+  font-weight: 600;
+  color: #222;
+  font-size: 1.05rem;
+}
+
+.cand-uni {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.2rem;
+}
+
+.cand-score {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.score-badge {
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: white;
+}
+
+.score-high {
+  background-color: #4CAF50;
+}
+
+.score-med {
+  background-color: #FF9800;
+}
+
+.score-low {
+  background-color: #F44336;
+}
+
+.expand-icon {
+  color: #999;
+  font-size: 0.8rem;
+}
+
+/* Detailed expanded view */
+.result-details {
+  background: #fafafa;
+  padding: 1.5rem;
+  border-top: 1px solid #eaeaea;
+}
+
+.score-breakdown h4 {
+  margin: 0 0 1rem 0;
+  color: #333;
+}
+
+.breakdown-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.bk-item {
+  background: white;
+  border: 1px solid #eee;
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.bk-item span {
+  font-size: 0.8rem;
+  color: #666;
+  margin-bottom: 0.3rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.bk-item strong {
+  font-size: 1.1rem;
+  color: #222;
+}
+
+.result-actions {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+}
