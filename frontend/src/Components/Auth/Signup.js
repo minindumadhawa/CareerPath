@@ -73,43 +73,17 @@ const Signup = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="userType">Create account as a</label>
-            <div className="role-selection">
-              <div className="role-option">
-                <input
-                  type="radio"
-                  id="student"
-                  name="userType"
-                  value="student"
-                  checked={formData.userType === 'student'}
-                  onChange={handleChange}
-                />
-                <label htmlFor="student" className="role-label">
-                  <span className="role-icon">👨‍🎓</span>
-                  <span className="role-text">
-                    <strong>Student</strong>
-                    <small>Looking for internships and career opportunities</small>
-                  </span>
-                </label>
-              </div>
-              <div className="role-option">
-                <input
-                  type="radio"
-                  id="company"
-                  name="userType"
-                  value="company"
-                  checked={formData.userType === 'company'}
-                  onChange={handleChange}
-                />
-                <label htmlFor="company" className="role-label">
-                  <span className="role-icon">🏢</span>
-                  <span className="role-text">
-                    <strong>Company</strong>
-                    <small>Hiring interns and talent</small>
-                  </span>
-                </label>
-              </div>
-            </div>
+            <label htmlFor="userType">I am a</label>
+            <select
+              id="userType"
+              name="userType"
+              value={formData.userType}
+              onChange={handleChange}
+              className="form-select"
+            >
+              <option value="student">Student</option>
+              <option value="employer">Employer</option>
+            </select>
           </div>
 
           <div className="form-group">
