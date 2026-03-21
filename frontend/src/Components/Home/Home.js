@@ -1,7 +1,9 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Home.css';
 
 function Home() {
+  const navigate = useNavigate();
   return (
     <div className="career-home">
       {/* 1. Navbar */}
@@ -25,7 +27,7 @@ function Home() {
           </div>
           <div className="nav-actions">
             <button className="btn-login">Login</button>
-            <button className="btn-signup">Sign Up</button>
+            <button className="btn-signup" onClick={() => navigate('/signup/student')}>Sign Up</button>
           </div>
         </div>
       </nav>
@@ -37,8 +39,8 @@ function Home() {
             <h1>Find Your Dream Internship & <br/> Build Your Career</h1>
             <p>Connecting students with top companies and AI-powered career guidance.</p>
             <div className="hero-cta">
-              <button className="btn-primary">Get Started as Student</button>
-              <button className="btn-secondary">Hire Interns</button>
+              <button className="btn-primary" onClick={() => navigate('/signup/student')}>Get Started as Student</button>
+              <button className="btn-secondary" onClick={() => navigate('/signup/company')}>Hire Interns</button>
             </div>
             
             {/* Quick stats below hero buttons */}
