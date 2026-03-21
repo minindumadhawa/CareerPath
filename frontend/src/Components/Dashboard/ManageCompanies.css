@@ -1,0 +1,54 @@
+.manage-companies-container {
+  width: 100%;
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+.manage-loading {
+  padding: 3rem;
+  text-align: center;
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.btn-delete {
+  background-color: #ffebee;
+  color: #c62828 !important;
+  border: 1px solid #ef9a9a !important;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.btn-delete:hover {
+  background-color: #f4cfcf;
+}
+
+.btn-verify {
+  background-color: #e8f5e9;
+  color: #2e7d32 !important;
+  border: 1px solid #a5d6a7 !important;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.btn-verify:hover {
+  background-color: #c8e6c9;
+}
+
+.badge-count {
+  background: #edf2ff;
+  color: #4361ee;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 4rem 1rem !important;
+  color: #888;
+  font-style: italic;
+}

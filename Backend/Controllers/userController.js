@@ -98,3 +98,47 @@ exports.deleteStudent = async (req, res) => {
     res.status(500).json({ message: 'Server error deleting student', error: error.message });
   }
 };
+
+exports.getAllCompanies = async (req, res) => {
+  try {
+    const companies = await User.find({ role: 'company' }).select('-password').sort({ createdAt: -1 });
+    res.status(200).json(companies);
+  } catch (error) {
+    console.error('Error fetching companies:', error);
+    res.status(500).json({ message: 'Server error fetching companies', error: error.message });
+  }
+};
+
+exports.deleteCompany = async (req, res) => {
+  try {
+    const company = await User.findById(req.params.id);
+    if (!company) {
+      return res.status(404).json({ message: 'Company not found' });
+    }
+    await User.findByIdAndDelete(req.params.id);
+    res.status(200).json({ message: 'Company deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting company:', error);
+    res.status(500).json({ message: 'Server error deleting company', error: error.message });
+  }
+};
+
+exports.verifyCompany = async (req, res) => {
+  try {
+    const company = await User.findById(req.params.id);
+    if (!company) {
+      return res.status(404).json({ message: 'Company not found' });
+    }
+    if (company.role !== 'company') {
+      return res.status(400).json({ message: 'User is not a company' });
+    }
+    
+    company.isVerified = true;
+    await company.save();
+    
+    res.status(200).json({ message: 'Company verified successfully', company });
+  } catch (error) {
+    console.error('Error verifying company:', error);
+    res.status(500).json({ message: 'Server error verifying company', error: error.message });
+  }
+};

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './AdminDashboard.css';
 import ManageStudents from './ManageStudents';
+import ManageCompanies from './ManageCompanies';
 
 function AdminDashboard() {
   const navigate = useNavigate();
@@ -211,6 +212,7 @@ function AdminDashboard() {
           </>
           )}
           {activeTab === 'students' && <ManageStudents />}
+          {activeTab === 'companies' && <ManageCompanies />}
         </div>
       </main>
     </div>
