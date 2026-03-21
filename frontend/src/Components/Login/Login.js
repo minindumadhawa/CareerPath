@@ -29,6 +29,10 @@ function Login() {
       const data = await res.json();
       
       if (res.ok) {
+        if (data.user) {
+          localStorage.setItem('user', JSON.stringify(data.user));
+        }
+        
         // Redirect based on user role
         if (data.user && data.user.role === 'admin') {
           navigate('/admin-dashboard');

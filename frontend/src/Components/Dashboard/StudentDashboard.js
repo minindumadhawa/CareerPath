@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './StudentDashboard.css';
+import StudentProfile from './StudentProfile';
 
 function StudentDashboard() {
   const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState('dashboard');
 
   const handleLogout = () => {
     // Logic for logging out (clear local storage etc.)
@@ -18,19 +20,19 @@ function StudentDashboard() {
           <Link to="/">CareerPath</Link>
         </div>
         <nav className="sidebar-nav">
-          <a href="#dashboard" className="nav-item active">
+          <a href="#dashboard" className={`nav-item ${activeTab === 'dashboard' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); setActiveTab('dashboard'); }}>
              <span className="nav-icon">📊</span> Overview
           </a>
-          <a href="#profile" className="nav-item">
+          <a href="#profile" className={`nav-item ${activeTab === 'profile' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); setActiveTab('profile'); }}>
              <span className="nav-icon">👤</span> My Profile
           </a>
-          <a href="#applications" className="nav-item">
+          <a href="#applications" className={`nav-item ${activeTab === 'applications' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); setActiveTab('applications'); }}>
              <span className="nav-icon">📝</span> Applications
           </a>
-          <a href="#saved" className="nav-item">
+          <a href="#saved" className={`nav-item ${activeTab === 'saved' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); setActiveTab('saved'); }}>
              <span className="nav-icon">⭐</span> Saved Internships
           </a>
-          <a href="#interviews" className="nav-item">
+          <a href="#interviews" className={`nav-item ${activeTab === 'interviews' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); setActiveTab('interviews'); }}>
              <span className="nav-icon">🤝</span> Interviews
           </a>
         </nav>
@@ -64,7 +66,9 @@ function StudentDashboard() {
 
         {/* Content Area */}
         <div className="dashboard-content">
-          <div className="welcome-banner">
+          {activeTab === 'dashboard' && (
+            <>
+              <div className="welcome-banner">
             <div className="welcome-text">
                <h1>Welcome back! 👋</h1>
                <p>Here’s what’s happening with your internship search today.</p>
@@ -148,6 +152,9 @@ function StudentDashboard() {
                 </div>
              </div>
           </div>
+          </>
+          )}
+          {activeTab === 'profile' && <StudentProfile />}
         </div>
       </main>
     </div>
