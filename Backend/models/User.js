@@ -23,14 +23,32 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: function() { return this.role === 'student'; }
   },
+  phone: String,
+  location: String,
+  linkedin: String,
+  professionalSummary: String,
   university: {
     type: String,
     required: function() { return this.role === 'student'; }
   },
-  skills: {
-    type: [String],
-    default: []
-  },
+  educationLevel: String,
+  graduationYear: String,
+  technicalSkills: { type: [String], default: [] },
+  softSkills: { type: [String], default: [] },
+  experience: [{
+    jobTitle: String,
+    company: String,
+    duration: String,
+    responsibilities: String
+  }],
+  projects: [{
+    name: String,
+    description: String,
+    technologies: String
+  }],
+  certifications: { type: [String], default: [] },
+  achievements: { type: [String], default: [] },
+  references: String,
 
   // Company specific fields
   companyName: {

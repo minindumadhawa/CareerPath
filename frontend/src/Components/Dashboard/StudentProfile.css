@@ -1,6 +1,12 @@
+/* Base Profile Styles */
 .profile-container {
   padding: 1rem 0;
   max-width: 800px;
+}
+
+.profile-container.wide {
+  max-width: 900px;
+  margin: 0 auto;
 }
 
 .profile-header {
@@ -44,13 +50,48 @@
   border: 1px solid #ef9a9a;
 }
 
-.profile-card {
+/* Detailed Form Sections */
+.detailed-form .form-section {
   background: white;
   border-radius: 12px;
-  padding: 2.5rem;
+  padding: 2rem;
+  margin-bottom: 2rem;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f0f2f5;
 }
 
+.form-section h3 {
+  color: #1a1a2e;
+  font-size: 1.3rem;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 2px solid #f0f2f5;
+}
+
+.section-help {
+  color: #666;
+  font-size: 0.9rem;
+  margin-top: -1rem;
+  margin-bottom: 1.5rem;
+}
+
+.section-header-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #f0f2f5;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.8rem;
+}
+
+.section-header-flex h3 {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+/* Base Form Inputs */
 .profile-form .form-group {
   margin-bottom: 1.5rem;
 }
@@ -66,6 +107,10 @@
   min-width: 250px;
 }
 
+.profile-form .col-full {
+  flex: 1 1 100%;
+}
+
 .profile-form label {
   display: block;
   margin-bottom: 0.5rem;
@@ -73,17 +118,24 @@
   color: #333;
 }
 
-.profile-form input {
+.profile-form input,
+.profile-form textarea {
   width: 100%;
   padding: 0.8rem 1rem;
   border: 1px solid #ddd;
   border-radius: 8px;
   font-size: 1rem;
+  font-family: inherit;
   transition: all 0.3s ease;
   box-sizing: border-box;
 }
 
-.profile-form input:focus {
+.profile-form textarea {
+  resize: vertical;
+}
+
+.profile-form input:focus,
+.profile-form textarea:focus {
   outline: none;
   border-color: #4361ee;
   box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
@@ -95,17 +147,71 @@
   cursor: not-allowed;
 }
 
-.profile-form .help-text {
-  display: block;
-  font-size: 0.8rem;
-  color: #888;
-  margin-top: 0.4rem;
+/* Array Item Cards */
+.array-card {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  position: relative;
 }
 
+.btn-remove {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  color: #dc3545;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 4px;
+}
+
+.btn-remove:hover {
+  background: #ffebee;
+}
+
+.btn-add {
+  background: #e8f0fe;
+  color: #1a73e8;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-add:hover {
+  background: #d2e3fc;
+}
+
+.empty-text {
+  color: #888;
+  font-style: italic;
+  margin-bottom: 1.5rem;
+}
+
+/* Action Buttons */
 .form-actions {
   margin-top: 2.5rem;
   display: flex;
   justify-content: flex-end;
+}
+
+.form-actions.sticky {
+  position: sticky;
+  bottom: 0;
+  background: white;
+  padding: 1.5rem;
+  border-top: 1px solid #eee;
+  box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+  z-index: 10;
+  margin-bottom: 2rem;
 }
 
 .btn-save {
@@ -118,6 +224,12 @@
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.btn-save.btn-large {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1.1rem;
 }
 
 .btn-save:hover:not(:disabled) {

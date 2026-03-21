@@ -15,7 +15,12 @@ exports.getProfile = async (req, res) => {
 
 exports.updateProfile = async (req, res) => {
   try {
-    const { fullName, university, skills } = req.body;
+    const { 
+      fullName, phone, location, linkedin, professionalSummary,
+      university, educationLevel, graduationYear,
+      technicalSkills, softSkills, experience, projects,
+      certifications, achievements, references 
+    } = req.body;
     
     const user = await User.findById(req.params.id);
     if (!user) {
@@ -24,11 +29,24 @@ exports.updateProfile = async (req, res) => {
 
     if (user.role === 'student') {
       if (fullName) user.fullName = fullName;
+      if (phone !== undefined) user.phone = phone;
+      if (location !== undefined) user.location = location;
+      if (linkedin !== undefined) user.linkedin = linkedin;
+      if (professionalSummary !== undefined) user.professionalSummary = professionalSummary;
+      
       if (university) user.university = university;
-      if (skills) {
-          // ensure skills is an array
-          user.skills = Array.isArray(skills) ? skills : skills.split(',').map(s => s.trim());
-      }
+      if (educationLevel !== undefined) user.educationLevel = educationLevel;
+      if (graduationYear !== undefined) user.graduationYear = graduationYear;
+      
+      if (technicalSkills) user.technicalSkills = Array.isArray(technicalSkills) ? technicalSkills : technicalSkills.split(',').map(s => s.trim());
+      if (softSkills) user.softSkills = Array.isArray(softSkills) ? softSkills : softSkills.split(',').map(s => s.trim());
+      
+      if (experience) user.experience = experience;
+      if (projects) user.projects = projects;
+      
+      if (certifications) user.certifications = Array.isArray(certifications) ? certifications : certifications.split(',').map(s => s.trim());
+      if (achievements) user.achievements = Array.isArray(achievements) ? achievements : achievements.split(',').map(s => s.trim());
+      if (references !== undefined) user.references = references;
     }
 
     await user.save();
@@ -39,9 +57,7 @@ exports.updateProfile = async (req, res) => {
         id: user._id,
         email: user.email,
         role: user.role,
-        fullName: user.fullName,
-        university: user.university,
-        skills: user.skills
+        fullName: user.fullName
       }
     });
   } catch (error) {
