@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './StudentDashboard.css';
 import StudentProfile from './StudentProfile';
+import CVPreview from './CVPreview';
 
 function StudentDashboard() {
   const navigate = useNavigate();
@@ -25,6 +26,9 @@ function StudentDashboard() {
           </a>
           <a href="#profile" className={`nav-item ${activeTab === 'profile' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); setActiveTab('profile'); }}>
              <span className="nav-icon">👤</span> My Profile
+          </a>
+          <a href="#cv" className={`nav-item ${activeTab === 'cv' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); setActiveTab('cv'); }}>
+             <span className="nav-icon">📄</span> Generate CV
           </a>
           <a href="#applications" className={`nav-item ${activeTab === 'applications' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); setActiveTab('applications'); }}>
              <span className="nav-icon">📝</span> Applications
@@ -155,6 +159,7 @@ function StudentDashboard() {
           </>
           )}
           {activeTab === 'profile' && <StudentProfile />}
+          {activeTab === 'cv' && <CVPreview />}
         </div>
       </main>
     </div>

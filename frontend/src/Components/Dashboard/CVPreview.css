@@ -1,0 +1,215 @@
+/* Container for screen view */
+.cv-wrapper {
+  padding: 1rem 0;
+  max-width: 900px;
+}
+
+.cv-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  background: white;
+  padding: 1.5rem 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.cv-actions h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #1a1a2e;
+}
+
+.btn-print {
+  background-color: #4361ee;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.6rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-print:hover {
+  background-color: #3f51b5;
+}
+
+.cv-loading, .cv-error {
+  text-align: center;
+  font-size: 1.2rem;
+  padding: 3rem;
+  color: #666;
+}
+
+/* 
+  ATS Friendly Clean CV styling 
+  This visualizes an A4 sheet.
+*/
+.cv-print-container {
+  display: flex;
+  justify-content: center;
+}
+
+.cv-document {
+  background: white;
+  padding: 3rem 4rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 210mm; /* A4 width */
+  min-height: 297mm; /* A4 height proportional */
+  color: #000;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  line-height: 1.4;
+  box-sizing: border-box;
+}
+
+.cv-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid #222;
+  padding-bottom: 1.2rem;
+}
+
+.cv-name {
+  font-size: 2.2rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0 0 0.5rem 0;
+  color: #111;
+}
+
+.cv-contact-info {
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.cv-section {
+  margin-bottom: 1.5rem;
+}
+
+.cv-section-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 0.3rem;
+  margin-bottom: 0.8rem;
+  color: #222;
+}
+
+.cv-summary-text, .cv-references-text {
+  font-size: 1rem;
+  color: #333;
+  margin: 0;
+}
+
+.cv-item {
+  margin-bottom: 1.2rem;
+}
+
+.cv-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.2rem;
+}
+
+.cv-item-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.cv-item-date {
+  font-style: italic;
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.cv-item-subtitle {
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 0.3rem;
+  font-size: 1rem;
+}
+
+.cv-item-desc {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #333;
+  white-space: pre-wrap;
+}
+
+.cv-item-tech {
+  font-size: 0.9rem;
+  color: #555;
+  font-style: italic;
+  background: #f0f0f0;
+  padding: 0.1rem 0.5rem;
+  border-radius: 4px;
+}
+
+.cv-skills .cv-skill-group {
+  margin-bottom: 0.4rem;
+  font-size: 1rem;
+}
+
+.cv-additional {
+  margin-bottom: 0.4rem;
+  font-size: 1rem;
+}
+
+/* ====== PRINT MEDIA QUERIES ====== */
+
+@media print {
+  /* Hide EVERYTHING except the CV */
+  body * {
+    visibility: hidden;
+  }
+
+  /* Reset body styling that might interfere */
+  body, html {
+    background: white !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Make only the CV and its contents visible */
+  #cv-document, #cv-document * {
+    visibility: visible;
+  }
+
+  /* Position it perfectly at top-left of the page */
+  #cv-document {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    margin: 0;
+    padding: 1cm; /* margin instead of window spacing */
+    box-shadow: none;
+    border: none;
+    min-height: auto;
+  }
+
+  .cv-document {
+    padding: 0;
+    box-shadow: none;
+    max-width: 100%;
+  }
+
+  /* Hide the action button entirely */
+  .no-print {
+    display: none !important;
+  }
+
+  @page {
+    margin: 0.5cm; /* Set PDF margins to a slight bleed */
+  }
+}
