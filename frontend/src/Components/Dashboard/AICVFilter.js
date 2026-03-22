@@ -204,146 +204,154 @@ function AICVFilter() {
 
   return (
     <div className="ai-filter-container">
-      <div className="welcome-banner" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
+      <div className="welcome-banner admin-banner">
         <div className="welcome-text">
            <h1>🤖 AI CV Filter & ATS Ranking</h1>
            <p>Automatically rank student profiles against your specific job requirements using our 6-factor AI heuristic engine.</p>
         </div>
       </div>
 
-      <div className="dashboard-grid ai-grid">
-        {/* Left Column: Filter Form */}
-        <div className="filter-form-section">
+      <div className="ai-stack-modern">
+        {/* Top: Filter Form */}
+        <div className="filter-bar-section">
            <div className="section-card">
-             <h2>Job Criteria Configuration</h2>
-             <form onSubmit={handleScan} className="filter-form">
-                <div className="form-group">
-                  <label>1. Required Skills (Comma separated)</label>
-                  <p className="hint">Scores highly if candidates have exact or related technical/soft skills.</p>
-                  <input 
-                    type="text" 
-                    placeholder="e.g. Java, React, SQL, Problem Solving" 
-                    value={criteria.skills}
-                    onChange={(e) => setCriteria({...criteria, skills: e.target.value})}
-                  />
-                </div>
-                
-                <div className="form-group">
-                  <label>2. Required Degree / Field (Comma separated)</label>
-                  <p className="hint">Scores highly for exact degree matches (e.g. Software Engineering).</p>
-                  <input 
-                    type="text" 
-                    placeholder="e.g. Software Engineering, Computer Science, IT" 
-                    value={criteria.degrees}
-                    onChange={(e) => setCriteria({...criteria, degrees: e.target.value})}
-                  />
+             <h2 style={{margin: '0 0 1rem 0', fontSize: '1.1rem', fontWeight: 800}}>Job Criteria</h2>
+             <form onSubmit={handleScan} className="modern-filter-form">
+                <div className="filter-inputs-col">
+                  <div className="form-group">
+                    <label>1. Required Skills</label>
+                    <p className="hint">Comma separated (e.g. Java, React)</p>
+                    <input 
+                      type="text" 
+                      placeholder="e.g. Java, React, SQL" 
+                      value={criteria.skills}
+                      onChange={(e) => setCriteria({...criteria, skills: e.target.value})}
+                    />
+                  </div>
+                  
+                  <div className="form-group">
+                    <label>2. Required Degree / Field</label>
+                    <p className="hint">Matches field of study (e.g. Software)</p>
+                    <input 
+                      type="text" 
+                      placeholder="e.g. Software Engineering" 
+                      value={criteria.degrees}
+                      onChange={(e) => setCriteria({...criteria, degrees: e.target.value})}
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>3. Search Keywords</label>
+                    <p className="hint">Specific ATS buzzwords (e.g. Agile)</p>
+                    <input 
+                      type="text" 
+                      placeholder="e.g. Agile, SpringBoot, AWS" 
+                      value={criteria.keywords}
+                      onChange={(e) => setCriteria({...criteria, keywords: e.target.value})}
+                    />
+                  </div>
                 </div>
 
-                <div className="form-group">
-                  <label>3. Search Keywords & ATS Match (Comma separated)</label>
-                  <p className="hint">Scans the entire candidate profile for these specific buzzwords.</p>
-                  <input 
-                    type="text" 
-                    placeholder="e.g. Agile, SpringBoot, AWS, Communication" 
-                    value={criteria.keywords}
-                    onChange={(e) => setCriteria({...criteria, keywords: e.target.value})}
-                  />
+                <div className="filter-actions-row">
+                  <button type="submit" className="btn-scan-wide" disabled={loading} style={{width: '100%'}}>
+                    {loading ? 'Running AI Scan...' : '🔍 Scan Database'}
+                  </button>
                 </div>
-
-                <button type="submit" className="btn-scan" disabled={loading}>
-                  {loading ? 'Scanning Base...' : '🔍 Run AI CV Scan'}
-                </button>
              </form>
            </div>
         </div>
 
-        {/* Right Column: Ranked Results */}
+        {/* Bottom: Ranked Results */}
         <div className="filter-results-section">
            <div className="section-card">
               <div className="card-header">
-                <h2>Ranked Candidates</h2>
-                {results.length > 0 && <span className="badge-count">Found: {results.length}</span>}
+                <h2 style={{fontSize: '1.25rem', fontWeight: 800}}>Ranked Candidates</h2>
+                {results.length > 0 && <span className="badge-admin" style={{fontSize: '0.85rem'}}>Found: {results.length}</span>}
               </div>
               
-              {error && <div className="error-alert">{error}</div>}
+              {error && <div className="alert-item warning " style={{marginBottom: '1rem'}}><div className="alert-info"><h4>Error</h4><p>{error}</p></div></div>}
               
               {!loading && results.length === 0 && !error && (
-                <div className="empty-state">
-                  Configure criteria and run a scan to rank tracking applicants.
+                <div className="empty-state" style={{padding: '3rem', textAlign: 'center', color: '#64748b'}}>
+                  Configure criteria in the left panel and run a scan to rank tracking applicants.
                 </div>
               )}
 
-              {loading && <div className="manage-loading">Running AI Algorithms...</div>}
+              {loading && <div className="manage-loading" style={{padding: '3rem', textAlign: 'center'}}>Extracting and ranking ATS profiles...</div>}
 
               {!loading && results.length > 0 && (
-                <div className="results-list">
+                <div className="results-list-modern">
                   {results.map((student, index) => {
                     const initials = student.fullName ? student.fullName.charAt(0) : 'S';
                     const score = student.scoreBreakdown.total;
-                    let badgeColor = 'score-low';
-                    if (score >= 80) badgeColor = 'score-high';
-                    else if (score >= 50) badgeColor = 'score-med';
+                  
+                  let badgeClass = 'score-poor';
+                  if (score >= 90) badgeClass = 'score-master';
+                  else if (score >= 75) badgeClass = 'score-great';
+                  else if (score >= 50) badgeClass = 'score-good';
 
-                    return (
-                      <div key={student._id} className="result-card">
-                        <div className="result-header" onClick={() => toggleRow(student._id)}>
-                          <div className="rank-number">#{index + 1}</div>
-                          <div className="cand-avatar bg-indigo">{initials}</div>
-                          <div className="cand-info">
-                            <div className="cand-name">{student.fullName || student.email}</div>
-                            <div className="cand-uni">{student.university || 'No University Listed'}</div>
-                          </div>
-                          <div className="cand-score">
-                             <span className={`score-badge ${badgeColor}`}>{score} / 100</span>
-                             <span className="expand-icon">{expandedRow === student._id ? '▲' : '▼'}</span>
-                          </div>
+                  return (
+                    <div key={student._id} className="result-card-modern">
+                      <div className="result-header-modern" onClick={() => toggleRow(student._id)}>
+                        <div className="rank-pill">#{index + 1}</div>
+                        <div className="cand-avatar bg-blue">{initials}</div>
+                        
+                        <div className="cand-info-modern">
+                          <div className="cand-name-modern">{student.fullName || student.email}</div>
+                          <div className="cand-uni-modern">{student.university || 'No University Listed'}</div>
                         </div>
                         
-                        {expandedRow === student._id && (
-                          <div className="result-details">
-                            <div className="score-breakdown">
-                              <h4>AI Evaluation Breakdown</h4>
-                              <div className="breakdown-grid">
-                                <div className="bk-item">
-                                  <span>Skills Match (40)</span>
-                                  <strong>{student.scoreBreakdown.skills} pts</strong>
-                                </div>
-                                <div className="bk-item">
-                                  <span>Education (15)</span>
-                                  <strong>{student.scoreBreakdown.education} pts</strong>
-                                </div>
-                                <div className="bk-item">
-                                  <span>Experience/Projects (20)</span>
-                                  <strong>{student.scoreBreakdown.experience} pts</strong>
-                                </div>
-                                <div className="bk-item">
-                                  <span>Certifications (10)</span>
-                                  <strong>{student.scoreBreakdown.certs} pts</strong>
-                                </div>
-                                <div className="bk-item">
-                                  <span>CV Structure (10)</span>
-                                  <strong>{student.scoreBreakdown.quality} pts</strong>
-                                </div>
-                                <div className="bk-item">
-                                  <span>Keywords & ATS (5)</span>
-                                  <strong>{student.scoreBreakdown.keywords} pts</strong>
-                                </div>
+                        <div className="score-cluster">
+                           <span className={`modern-badge ${badgeClass}`}>{score} / 100 ATS</span>
+                           <span className="expand-chevron">{expandedRow === student._id ? '▲' : '▼'}</span>
+                        </div>
+                      </div>
+                      
+                      {expandedRow === student._id && (
+                        <div className="result-details-modern">
+                          <div className="score-breakdown-modern">
+                            <h4>AI Evaluation Breakdown</h4>
+                            <div className="breakdown-grid-modern">
+                              <div className="bk-item-modern">
+                                <span>Skills Match</span>
+                                <strong>{student.scoreBreakdown.skills} <small style={{fontSize:'0.8rem', color:'#64748b'}}>/40</small></strong>
+                              </div>
+                              <div className="bk-item-modern">
+                                <span>Education</span>
+                                <strong>{student.scoreBreakdown.education} <small style={{fontSize:'0.8rem', color:'#64748b'}}>/15</small></strong>
+                              </div>
+                              <div className="bk-item-modern">
+                                <span>Experience</span>
+                                <strong>{student.scoreBreakdown.experience} <small style={{fontSize:'0.8rem', color:'#64748b'}}>/20</small></strong>
+                              </div>
+                              <div className="bk-item-modern">
+                                <span>Certificates</span>
+                                <strong>{student.scoreBreakdown.certs} <small style={{fontSize:'0.8rem', color:'#64748b'}}>/10</small></strong>
+                              </div>
+                              <div className="bk-item-modern">
+                                <span>CV Quality</span>
+                                <strong>{student.scoreBreakdown.quality} <small style={{fontSize:'0.8rem', color:'#64748b'}}>/10</small></strong>
+                              </div>
+                              <div className="bk-item-modern">
+                                <span>ATS Keywords</span>
+                                <strong>{student.scoreBreakdown.keywords} <small style={{fontSize:'0.8rem', color:'#64748b'}}>/5</small></strong>
                               </div>
                             </div>
-                            <div className="result-actions">
-                              <button className="btn-table btn-view-cv" onClick={() => setViewingCvFor(student._id)}>
-                                View Full ATS CV
-                              </button>
-                            </div>
                           </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-           </div>
-        </div>
+                          <div className="result-actions-modern">
+                            <button className="btn-view-cv-modern" onClick={() => setViewingCvFor(student._id)}>
+                              View Full ATS CV
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+         </div>
+      </div>
       </div>
     </div>
   );
