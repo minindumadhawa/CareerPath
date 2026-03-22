@@ -8,10 +8,10 @@ function AICVFilter() {
     degrees: 'Software Engineering, Computer Science, IT',
     keywords: ''
   });
-  
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState([]);
   const [error, setError] = useState('');
+  const [fieldErrors, setFieldErrors] = useState({});
   const [viewingCvFor, setViewingCvFor] = useState(null);
   const [expandedRow, setExpandedRow] = useState(null);
 
@@ -144,15 +144,37 @@ function AICVFilter() {
 
   const handleScan = async (e) => {
     e.preventDefault();
-    setLoading(true);
     setError('');
-    
+    setFieldErrors({});
+
+    // Field-level Validation
+    let hasError = false;
+    let newFieldErrors = {};
+
+    if (!criteria.skills || !criteria.skills.trim()) {
+      newFieldErrors.skills = 'Skills are required for ranking.';
+      hasError = true;
+    }
+
+    if (!criteria.degrees || !criteria.degrees.trim()) {
+      newFieldErrors.degrees = 'Target degree/field is required.';
+      hasError = true;
+    }
+
+    if (hasError) {
+      setFieldErrors(newFieldErrors);
+      setError('Please resolve the missing required fields to analyze candidates.');
+      return;
+    }
+
     // Parse criteria into arrays
     const parsedCriteria = {
       skills: criteria.skills.split(',').map(s => s.trim()).filter(s => s),
       degrees: criteria.degrees.split(',').map(s => s.trim()).filter(s => s),
       keywords: criteria.keywords.split(',').map(s => s.trim()).filter(s => s)
     };
+
+    setLoading(true);
 
     try {
       const res = await fetch('http://localhost:5000/api/users/students');
@@ -219,29 +241,39 @@ function AICVFilter() {
              <form onSubmit={handleScan} className="modern-filter-form">
                 <div className="filter-inputs-col">
                   <div className="form-group">
-                    <label>1. Required Skills</label>
+                    <label>1. Required Skills <span style={{color: '#ef4444'}}>*</span></label>
                     <p className="hint">Comma separated (e.g. Java, React)</p>
                     <input 
                       type="text" 
+                      className={fieldErrors.skills ? 'input-error' : ''}
                       placeholder="e.g. Java, React, SQL" 
                       value={criteria.skills}
-                      onChange={(e) => setCriteria({...criteria, skills: e.target.value})}
+                      onChange={(e) => {
+                        setCriteria({...criteria, skills: e.target.value});
+                        if (fieldErrors.skills) setFieldErrors({...fieldErrors, skills: null});
+                      }}
                     />
+                    {fieldErrors.skills && <span className="error-text">{fieldErrors.skills}</span>}
                   </div>
                   
                   <div className="form-group">
-                    <label>2. Required Degree / Field</label>
+                    <label>2. Required Degree / Field <span style={{color: '#ef4444'}}>*</span></label>
                     <p className="hint">Matches field of study (e.g. Software)</p>
                     <input 
                       type="text" 
+                      className={fieldErrors.degrees ? 'input-error' : ''}
                       placeholder="e.g. Software Engineering" 
                       value={criteria.degrees}
-                      onChange={(e) => setCriteria({...criteria, degrees: e.target.value})}
+                      onChange={(e) => {
+                        setCriteria({...criteria, degrees: e.target.value});
+                        if (fieldErrors.degrees) setFieldErrors({...fieldErrors, degrees: null});
+                      }}
                     />
+                    {fieldErrors.degrees && <span className="error-text">{fieldErrors.degrees}</span>}
                   </div>
 
                   <div className="form-group">
-                    <label>3. Search Keywords</label>
+                    <label>3. Search Keywords (Optional)</label>
                     <p className="hint">Specific ATS buzzwords (e.g. Agile)</p>
                     <input 
                       type="text" 

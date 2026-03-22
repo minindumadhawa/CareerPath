@@ -52,10 +52,23 @@ function AdminSettings() {
     e.preventDefault();
     setError('');
     setMessage('');
+
+    // --- Input Validations ---
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!profile.fullName || profile.fullName.trim().length < 2) {
+      return setError('Full Name must be at least 2 characters.');
+    }
+    if (!profile.email || !emailRegex.test(profile.email.trim())) {
+      return setError('Please enter a valid email address.');
+    }
+    if (profile.newPassword && profile.newPassword.length < 6) {
+      return setError('New password must be at least 6 characters long.');
+    }
+
     try {
       const payload = { 
-        fullName: profile.fullName, 
-        email: profile.email 
+        fullName: profile.fullName.trim(), 
+        email: profile.email.trim() 
       };
       if (profile.newPassword) {
         payload.password = profile.newPassword;
