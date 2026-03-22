@@ -12,6 +12,12 @@ function AdminSettings() {
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
 
+  const handleNameChange = (e) => {
+    // Allow only letters, spaces, hyphens, and apostrophes (e.g. Mary-Jane O'Connor)
+    const sanitizedValue = e.target.value.replace(/[^a-zA-Z\s\-']/g, '');
+    setProfile({...profile, fullName: sanitizedValue});
+  };
+
   const user = JSON.parse(localStorage.getItem('user'));
 
   useEffect(() => {
@@ -129,7 +135,7 @@ function AdminSettings() {
                  <input 
                    type="text" 
                    value={profile.fullName} 
-                   onChange={(e) => setProfile({...profile, fullName: e.target.value})} 
+                   onChange={handleNameChange} 
                    required 
                  />
                </div>

@@ -15,6 +15,15 @@ function AICVFilter() {
   const [viewingCvFor, setViewingCvFor] = useState(null);
   const [expandedRow, setExpandedRow] = useState(null);
 
+  // Sanitizer: Allows letters, numbers, spaces, commas, dots, dashes, plus, and hash. Strips all other special chars.
+  const handleInputChange = (field, value) => {
+    const sanitizedValue = value.replace(/[^a-zA-Z0-9\s,\.\-\+#]/g, '');
+    setCriteria({...criteria, [field]: sanitizedValue});
+    if (fieldErrors[field]) {
+      setFieldErrors({...fieldErrors, [field]: null});
+    }
+  };
+
   const calculateScore = (student, parsedCriteria) => {
     let marks = {
       skills: 0,
@@ -246,12 +255,9 @@ function AICVFilter() {
                     <input 
                       type="text" 
                       className={fieldErrors.skills ? 'input-error' : ''}
-                      placeholder="e.g. Java, React, SQL" 
+                      placeholder="e.g. Java, React, SQL, C#" 
                       value={criteria.skills}
-                      onChange={(e) => {
-                        setCriteria({...criteria, skills: e.target.value});
-                        if (fieldErrors.skills) setFieldErrors({...fieldErrors, skills: null});
-                      }}
+                      onChange={(e) => handleInputChange('skills', e.target.value)}
                     />
                     {fieldErrors.skills && <span className="error-text">{fieldErrors.skills}</span>}
                   </div>
@@ -264,10 +270,7 @@ function AICVFilter() {
                       className={fieldErrors.degrees ? 'input-error' : ''}
                       placeholder="e.g. Software Engineering" 
                       value={criteria.degrees}
-                      onChange={(e) => {
-                        setCriteria({...criteria, degrees: e.target.value});
-                        if (fieldErrors.degrees) setFieldErrors({...fieldErrors, degrees: null});
-                      }}
+                      onChange={(e) => handleInputChange('degrees', e.target.value)}
                     />
                     {fieldErrors.degrees && <span className="error-text">{fieldErrors.degrees}</span>}
                   </div>
@@ -279,7 +282,7 @@ function AICVFilter() {
                       type="text" 
                       placeholder="e.g. Agile, SpringBoot, AWS" 
                       value={criteria.keywords}
-                      onChange={(e) => setCriteria({...criteria, keywords: e.target.value})}
+                      onChange={(e) => handleInputChange('keywords', e.target.value)}
                     />
                   </div>
                 </div>
