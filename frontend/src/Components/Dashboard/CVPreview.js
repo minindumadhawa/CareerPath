@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import html2pdf from 'html2pdf.js';
 import './CVPreview.css';
 
 function CVPreview({ studentId }) {
@@ -57,6 +58,21 @@ function CVPreview({ studentId }) {
     window.print();
   };
 
+  const downloadPDF = () => {
+    const element = document.getElementById('cv-document');
+    if (!element) return;
+    
+    const opt = {
+      margin: 10,
+      filename: `${profile.fullName || 'resume'}-${template}.pdf`,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' }
+    };
+    
+    html2pdf().set(opt).from(element).save();
+  };
+
   if (loading) return <div className="cv-loading">Loading resume data...</div>;
   if (error) return <div className="cv-error">{error}</div>;
   if (!profile) return <div className="cv-error">No profile data found.</div>;
@@ -65,9 +81,14 @@ function CVPreview({ studentId }) {
     <div className="cv-wrapper">
       <div className="cv-actions no-print">
         <h2>Resume Preview - {template.charAt(0).toUpperCase() + template.slice(1)}</h2>
-        <button onClick={handlePrint} className="btn-print">
-          <span className="icon">⬇️</span> Download PDF / Print
-        </button>
+        <div style={{ display: 'flex', gap: '1rem' }}>
+          <button onClick={downloadPDF} className="btn-print" style={{ backgroundColor: '#10b981' }}>
+            <span className="icon">⬇️</span> Download PDF
+          </button>
+          <button onClick={handlePrint} className="btn-print">
+            <span className="icon">🖨️</span> Print
+          </button>
+        </div>
       </div>
 
       {/* Wrapping container for the print view */}
