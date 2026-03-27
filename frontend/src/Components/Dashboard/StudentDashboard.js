@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './StudentDashboard.css';
 import StudentProfile from './StudentProfile';
+import ResumeTemplates from './ResumeTemplates';
 import CVPreview from './CVPreview';
 
 function StudentDashboard() {
@@ -159,7 +160,7 @@ function StudentDashboard() {
           </>
           )}
           {activeTab === 'profile' && <StudentProfile />}
-          {activeTab === 'cv' && <CVPreview />}
+          {activeTab === 'cv' && <ResumeTemplates />}
         </div>
       </main>
     </div>

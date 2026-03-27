@@ -17,6 +17,9 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  profileImage: {
+    type: String
+  },
   
   // Student specific fields
   fullName: {
@@ -30,6 +33,9 @@ const userSchema = new mongoose.Schema({
   phoneNumber: { type: String },
   location: { type: String },
   linkedin: { type: String },
+  github: { type: String },
+  portfolio: { type: String },
+  dateOfBirth: { type: Date },
   summary: { type: String },
   
   technicalSkills: { type: [String], default: [] },

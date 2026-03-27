@@ -5,11 +5,14 @@ function CVPreview({ studentId }) {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [template, setTemplate] = useState('classic');
 
   const user = JSON.parse(localStorage.getItem('user'));
   const fetchId = studentId || (user ? user.id : null);
 
   useEffect(() => {
+    const selectedTemp = localStorage.getItem('selectedTemplate') || 'classic';
+    setTemplate(selectedTemp);
     if (fetchId) {
       fetchProfile(fetchId);
     } else {
@@ -61,7 +64,7 @@ function CVPreview({ studentId }) {
   return (
     <div className="cv-wrapper">
       <div className="cv-actions no-print">
-        <h2>Resume Preview</h2>
+        <h2>Resume Preview - {template.charAt(0).toUpperCase() + template.slice(1)}</h2>
         <button onClick={handlePrint} className="btn-print">
           <span className="icon">⬇️</span> Download PDF / Print
         </button>
@@ -69,7 +72,7 @@ function CVPreview({ studentId }) {
 
       {/* Wrapping container for the print view */}
       <div className="cv-print-container" id="cv-document">
-        <div className="cv-document">
+        <div className={`cv-document cv-template-${template}`}>
           {/* Header */}
           <header className="cv-header">
             <h1 className="cv-name">{profile.fullName}</h1>

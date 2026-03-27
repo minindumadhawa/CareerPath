@@ -20,6 +20,12 @@ router.put('/companies/:id/verify', userController.verifyCompany);
 // Get user profile
 router.get('/profile/:id', userController.getProfile);
 
+// Create user profile
+router.post('/profile', userController.createProfile);
+
+// Upload profile photo
+router.post('/profile/:id/upload-photo', userController.uploadPhoto);
+
 // Update user profile
 router.put('/profile/:id', userController.updateProfile);
 
