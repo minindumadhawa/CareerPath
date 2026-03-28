@@ -147,7 +147,7 @@ function StudentProfile() {
             </div>
             <div className="col-half">
               <label>Email Address</label>
-              <input type="email" name="email" value={profile.email} disabled className="input-disabled" />
+              <input type="email" name="email" value={profile.email} onChange={handleChange} required />
             </div>
           </div>
           <div className="form-group row">

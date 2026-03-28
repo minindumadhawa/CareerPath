@@ -9,6 +9,7 @@ import CompanyDashboard from './Components/Dashboard/CompanyDashboard';
 import AdminDashboard from './Components/Dashboard/AdminDashboard';
 import StudentProfileResume from './Components/Dashboard/StudentProfileResume';
 import ResumeTemplates from './Components/Dashboard/ResumeTemplates';
+import CVPreview from './Components/Dashboard/CVPreview';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="/student-dashboard" element={<StudentDashboard />} />
           <Route path="/student-profile-resume" element={<StudentProfileResume />} />
           <Route path="/resume-templates" element={<ResumeTemplates />} />
+          <Route path="/cv-preview" element={<CVPreview />} />
           <Route path="/company-dashboard" element={<CompanyDashboard />} />
           <Route path="/admin-dashboard" element={<AdminDashboard />} />
         </Routes>

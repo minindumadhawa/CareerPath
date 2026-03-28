@@ -217,51 +217,109 @@
 /* ====== TEMPLATE SPECIFIC STYLES ====== */
 
 /* CLASSIC TEMPLATE */
-.cv-template-classic .cv-header {
-  border-bottom: 2px solid #1e293b;
+.cv-template-corporate .cv-header {
+  border-bottom: 2px solid #d1d5db;
 }
 
-.cv-template-classic .cv-section-title {
-  color: #1e293b;
-  border-color: #1e293b;
+.cv-template-corporate .cv-section-title {
+  color: #111827;
+  border-color: #d1d5db;
 }
 
-/* MODERN TEMPLATE */
-.cv-template-modern .cv-header {
-  border-bottom: 3px solid #1e3a5f;
-  background-color: #f8f9fa;
+.cv-template-corporate .cv-name {
+  color: #111827;
+}
+
+/* MODERN TECH TEMPLATE */
+.cv-template-modernTech .cv-header {
+  border-bottom: 3px solid #0ea5e9;
+  background-color: #eff6ff;
   border-radius: 8px;
   padding: 1.5rem !important;
 }
 
-.cv-template-modern .cv-name {
-  color: #1e3a5f;
+.cv-template-modernTech .cv-name {
+  color: #0f172a;
 }
 
-.cv-template-modern .cv-section-title {
-  color: #1e3a5f;
-  border-color: #1e3a5f;
+.cv-template-modernTech .cv-section-title {
+  color: #0f172a;
+  border-color: #0ea5e9;
   letter-spacing: 1px;
 }
 
-.cv-template-modern .cv-skills {
-  background: #eff6ff;
+.cv-template-modernTech .cv-skills {
+  background: #e0f2fe;
   padding: 1.2rem;
   border-radius: 8px;
-  border-left: 4px solid #1e3a5f;
+  border-left: 4px solid #0ea5e9;
 }
 
-.cv-template-modern .cv-item-title {
-  color: #1e3a5f;
+.cv-template-modernTech .cv-item-title {
+  color: #0f172a;
 }
 
-/* MINIMAL TEMPLATE */
-.cv-template-minimal .cv-header {
-  border-bottom: 1px solid #e5e7eb;
+/* ATS-FRIENDLY TEMPLATE */
+.cv-template-ats .cv-header {
+  border-bottom: 1px dashed #d1d5db;
   padding-bottom: 1.5rem;
 }
 
-.cv-template-minimal .cv-section {
+.cv-template-ats .cv-section {
+  margin-bottom: 1.8rem;
+}
+
+.cv-template-ats .cv-section-title {
+  color: #111827;
+  border-color: #cbd5e1;
+  font-weight: 600;
+  font-size: 1.1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.cv-template-ats .cv-item-title {
+  color: #111827;
+  font-weight: 600;
+}
+
+.cv-template-ats .cv-document {
+  background: #fff;
+  color: #111827;
+}
+
+/* PROFESSIONAL TEMPLATE */
+.cv-template-enterprise .cv-header {
+  background: #1a2b4c;
+  color: #ffffff;
+  border-radius: 8px;
+  padding: 1.5rem !important;
+  margin-bottom: 1.2rem;
+  border-bottom: none;
+  text-align: center;
+}
+
+.cv-template-enterprise .cv-name {
+  color: #ffffff;
+  font-size: 2.4rem;
+  letter-spacing: 1px;
+}
+
+.cv-template-enterprise .cv-contact-info {
+  color: rgba(255,255,255,0.89);
+  font-weight: 500;
+}
+
+.cv-template-enterprise .cv-section-title {
+  color: #1a2b4c;
+  border-color: #dbeafe;
+  background: #f8fafc;
+  padding: 0.45rem 0.5rem;
+  border-left: 4px solid #1a2b4c;
+  border-radius: 4px;
+}
+
+.cv-template-enterprise .cv-item-title {
+  color: #1a2b4c;
   margin-bottom: 2rem;
 }
 

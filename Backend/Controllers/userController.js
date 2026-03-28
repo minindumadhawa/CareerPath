@@ -67,6 +67,7 @@ exports.createProfile = async (req, res) => {
 exports.updateProfile = async (req, res) => {
   try {
     const { 
+      email,
       fullName, university, 
       phoneNumber, location, linkedin, summary,
       technicalSkills, softSkills, 
@@ -80,7 +81,7 @@ exports.updateProfile = async (req, res) => {
     }
 
     if (user.role === 'student') {
-      if (fullName !== undefined) user.fullName = fullName;
+      if (email !== undefined) user.email = email;
       if (university !== undefined) user.university = university;
       if (phoneNumber !== undefined) user.phoneNumber = phoneNumber;
       if (location !== undefined) user.location = location;

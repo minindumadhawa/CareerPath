@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import html2pdf from 'html2pdf.js';
+import { environment } from '../../environments/environment';
 import './CVPreview.css';
 
 function CVPreview({ studentId }) {
@@ -10,6 +11,7 @@ function CVPreview({ studentId }) {
 
   const user = JSON.parse(localStorage.getItem('user'));
   const fetchId = studentId || (user ? user.id : null);
+  const apiUrl = environment.apiUrl;
 
   useEffect(() => {
     const selectedTemp = localStorage.getItem('selectedTemplate') || 'classic';
@@ -25,12 +27,12 @@ function CVPreview({ studentId }) {
 
   const fetchProfile = async (id) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/users/profile/${id}`);
+      const res = await fetch(`${apiUrl}/profile/${id}`);
       const data = await res.json();
       if (res.ok) {
         setProfile({
-          fullName: data.fullName || user.name || 'Your Name',
-          email: data.email || user.email || 'email@example.com',
+          fullName: data.fullName || user?.name || 'Your Name',
+          email: data.email || user?.email || 'email@example.com',
           phoneNumber: data.phoneNumber || '',
           location: data.location || '',
           linkedin: data.linkedin || '',
@@ -98,7 +100,7 @@ function CVPreview({ studentId }) {
           <header className="cv-header">
             <h1 className="cv-name">{profile.fullName}</h1>
             <div className="cv-contact-info">
-              {profile.email && <span>{profile.email}</span>}
+              {profile.email && <span><a href={`mailto:${profile.email}`} style={{ color: '#1f2937', textDecoration: 'underline' }}>{profile.email}</a></span>}
               {profile.phoneNumber && <span> • {profile.phoneNumber}</span>}
               {profile.location && <span> • {profile.location}</span>}
               {profile.linkedin && <span> • {profile.linkedin}</span>}
