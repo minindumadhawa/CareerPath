@@ -11,6 +11,7 @@ import Login from './Components/Login/Login';
 import StudentDashboard from './Components/Dashboard/StudentDashboard';
 import CompanyDashboard from './Components/Dashboard/CompanyDashboard';
 import AdminDashboard from './Components/Dashboard/AdminDashboard';
+import CVPreview from './Components/Dashboard/CVPreview';
 
 // Career Advice Module
 import CareerAdviceLayout from './Components/CareerAdviceModule/CareerAdviceLayout';
@@ -45,6 +46,7 @@ function App() {
           <Route path="/signup/student" element={<StudentSignup />} />
           <Route path="/signup/company" element={<CompanySignup />} />
           <Route path="/student-dashboard" element={<StudentDashboard />} />
+          <Route path="/cv-preview" element={<CVPreview />} />
           <Route path="/company-dashboard" element={<CompanyDashboard />} />
           <Route path="/admin-dashboard" element={<AdminDashboard />} />
 

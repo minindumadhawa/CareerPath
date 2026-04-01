@@ -213,3 +213,160 @@
     margin: 0.5cm; /* Set PDF margins to a slight bleed */
   }
 }
+
+/* ====== TEMPLATE SPECIFIC STYLES ====== */
+
+/* CLASSIC TEMPLATE */
+.cv-template-corporate .cv-header {
+  border-bottom: 2px solid #d1d5db;
+}
+
+.cv-template-corporate .cv-section-title {
+  color: #111827;
+  border-color: #d1d5db;
+}
+
+.cv-template-corporate .cv-name {
+  color: #111827;
+}
+
+/* MODERN TECH TEMPLATE */
+.cv-template-modernTech .cv-header {
+  border-bottom: 3px solid #0ea5e9;
+  background-color: #eff6ff;
+  border-radius: 8px;
+  padding: 1.5rem !important;
+}
+
+.cv-template-modernTech .cv-name {
+  color: #0f172a;
+}
+
+.cv-template-modernTech .cv-section-title {
+  color: #0f172a;
+  border-color: #0ea5e9;
+  letter-spacing: 1px;
+}
+
+.cv-template-modernTech .cv-skills {
+  background: #e0f2fe;
+  padding: 1.2rem;
+  border-radius: 8px;
+  border-left: 4px solid #0ea5e9;
+}
+
+.cv-template-modernTech .cv-item-title {
+  color: #0f172a;
+}
+
+/* ATS-FRIENDLY TEMPLATE */
+.cv-template-ats .cv-header {
+  border-bottom: 1px dashed #d1d5db;
+  padding-bottom: 1.5rem;
+}
+
+.cv-template-ats .cv-section {
+  margin-bottom: 1.8rem;
+}
+
+.cv-template-ats .cv-section-title {
+  color: #111827;
+  border-color: #cbd5e1;
+  font-weight: 600;
+  font-size: 1.1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.cv-template-ats .cv-item-title {
+  color: #111827;
+  font-weight: 600;
+}
+
+.cv-template-ats .cv-document {
+  background: #fff;
+  color: #111827;
+}
+
+/* PROFESSIONAL TEMPLATE */
+.cv-template-enterprise .cv-header {
+  background: #1a2b4c;
+  color: #ffffff;
+  border-radius: 8px;
+  padding: 1.5rem !important;
+  margin-bottom: 1.2rem;
+  border-bottom: none;
+  text-align: center;
+}
+
+.cv-template-enterprise .cv-name {
+  color: #ffffff;
+  font-size: 2.4rem;
+  letter-spacing: 1px;
+}
+
+.cv-template-enterprise .cv-contact-info {
+  color: rgba(255,255,255,0.89);
+  font-weight: 500;
+}
+
+.cv-template-enterprise .cv-section-title {
+  color: #1a2b4c;
+  border-color: #dbeafe;
+  background: #f8fafc;
+  padding: 0.45rem 0.5rem;
+  border-left: 4px solid #1a2b4c;
+  border-radius: 4px;
+}
+
+.cv-template-enterprise .cv-item-title {
+  color: #1a2b4c;
+  margin-bottom: 2rem;
+}
+
+.cv-template-minimal .cv-section-title {
+  color: #10b981;
+  border-color: #10b981;
+  border-bottom: 2px solid #10b981;
+  font-weight: 500;
+}
+
+.cv-template-minimal .cv-item-title {
+  color: #10b981;
+}
+
+/* PROFESSIONAL TEMPLATE */
+.cv-template-professional .cv-header {
+  background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+  color: white;
+  border-radius: 8px;
+  padding: 1.5rem !important;
+  margin-bottom: 2rem;
+  border-bottom: none;
+  text-align: center;
+}
+
+.cv-template-professional .cv-name {
+  color: white;
+  border: none;
+  margin-bottom: 0.5rem;
+}
+
+.cv-template-professional .cv-contact-info {
+  color: rgba(255,255,255,0.95);
+}
+
+.cv-template-professional .cv-section-title {
+  color: #7c3aed;
+  border-color: #7c3aed;
+  background: linear-gradient(90deg, #7c3aed 0%, #a855f7 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  border: none;
+  margin-bottom: 1rem;
+}
+
+.cv-template-professional .cv-item-title {
+  color: #7c3aed;
+  font-weight: 700;
+}

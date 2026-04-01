@@ -1,4 +1,16 @@
 const User = require('../models/User');
+const multer = require('multer');
+
+// Configure multer for photo upload
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/'); // Make sure this directory exists
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${req.params.id}-${Date.now()}-${file.originalname}`);
+  }
+});
+const upload = multer({ storage });
 
 exports.getProfile = async (req, res) => {
   try {
@@ -13,9 +25,49 @@ exports.getProfile = async (req, res) => {
   }
 };
 
+exports.createProfile = async (req, res) => {
+  try {
+    const { firstName, lastName, email, phone, dateOfBirth, linkedIn, github, portfolio, summary, address } = req.body;
+
+    // Check if user with email already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: 'User with this email already exists.' });
+    }
+
+    // Create new user with role student
+    const newUser = new User({
+      role: 'student',
+      email,
+      password: 'defaultpassword', // This should be changed later
+      fullName: `${firstName} ${lastName}`,
+      phoneNumber: phone,
+      location: `${address.city}, ${address.state}, ${address.country}`,
+      linkedin: linkedIn,
+      github,
+      portfolio,
+      dateOfBirth: new Date(dateOfBirth),
+      summary,
+      // Add other fields if needed
+    });
+
+    await newUser.save();
+
+    res.status(201).json({
+      message: 'Profile created successfully',
+      _id: newUser._id,
+      user: newUser
+    });
+  } catch (error) {
+    console.error('Error creating profile:', error);
+    res.status(500).json({ message: 'Server error creating profile', error: error.message });
+  }
+};
+
 exports.updateProfile = async (req, res) => {
   try {
     const { 
+      email,
       fullName, university, 
       phoneNumber, location, linkedin, summary,
       technicalSkills, softSkills, 
@@ -29,7 +81,7 @@ exports.updateProfile = async (req, res) => {
     }
 
     if (user.role === 'student') {
-      if (fullName !== undefined) user.fullName = fullName;
+      if (email !== undefined) user.email = email;
       if (university !== undefined) user.university = university;
       if (phoneNumber !== undefined) user.phoneNumber = phoneNumber;
       if (location !== undefined) user.location = location;
@@ -142,3 +194,26 @@ exports.verifyCompany = async (req, res) => {
     res.status(500).json({ message: 'Server error verifying company', error: error.message });
   }
 };
+
+exports.uploadPhoto = [
+  upload.single('profileImage'),
+  async (req, res) => {
+    try {
+      const user = await User.findById(req.params.id);
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+
+      if (req.file) {
+        user.profileImage = req.file.path; // Or URL if using cloud storage
+        await user.save();
+        res.status(200).json({ message: 'Photo uploaded successfully', path: req.file.path });
+      } else {
+        res.status(400).json({ message: 'No file uploaded' });
+      }
+    } catch (error) {
+      console.error('Error uploading photo:', error);
+      res.status(500).json({ message: 'Server error uploading photo', error: error.message });
+    }
+  }
+];
