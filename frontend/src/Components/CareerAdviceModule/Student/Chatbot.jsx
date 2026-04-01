@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import axios from 'axios';
 import './Chatbot.css';
 
 const Chatbot = () => {
@@ -7,6 +8,7 @@ const Chatbot = () => {
         { text: "Hello! I'm your Career AI Assistant. How can I help you today?", sender: 'bot' }
     ]);
     const [inputMessage, setInputMessage] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
     const messagesEndRef = useRef(null);
 
     const toggleChat = () => setIsOpen(!isOpen);
@@ -19,19 +21,21 @@ const Chatbot = () => {
         scrollToBottom();
     }, [messages, isOpen]);
 
-    const sendToChat = (text) => {
+    const sendToChat = async (text) => {
         const newMessages = [...messages, { text, sender: 'user' }];
         setMessages(newMessages);
+        setIsLoading(true);
 
-        // Simulate bot typing effect & response
-        setTimeout(() => {
-            let botReply = "I'm currently a UI demo. In the future, I will provide personalized career advice based on your skills and goals!";
-            if (text === "Resume Tips") botReply = "Here are some resume tips: keep it to one page, highlight your achievements, and use action verbs.";
-            if (text === "Interview Prep") botReply = "For interview prep: research the company, practice behavioral questions, and prepare some questions to ask the interviewer.";
-            if (text === "Program Details") botReply = "Our programs cover both technical skills and leadership development to ensure you are completely industry-ready.";
-
-            setMessages(prev => [...prev, { text: botReply, sender: 'bot' }]);
-        }, 1000);
+        try {
+            const response = await axios.post("http://localhost:5000/api/chat/ask", { message: text });
+            setMessages(prev => [...prev, { text: response.data.reply, sender: 'bot' }]);
+        } catch (error) {
+            console.error("Error connecting to Chatbot AI:", error);
+            const errorMessage = error.response?.data?.reply || "I'm sorry, I am having trouble connecting to my brain right now.";
+            setMessages(prev => [...prev, { text: errorMessage, sender: 'bot' }]);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const handleSendMessage = (e) => {
@@ -83,6 +87,11 @@ const Chatbot = () => {
                             <div className="message-bubble">{msg.text}</div>
                         </div>
                     ))}
+                    {isLoading && (
+                        <div className="chat-message bot">
+                            <div className="message-bubble">Typing...</div>
+                        </div>
+                    )}
                     <div ref={messagesEndRef} />
                 </div>
 

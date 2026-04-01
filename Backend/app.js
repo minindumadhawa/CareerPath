@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -7,6 +8,7 @@ const leadershipRoutes = require("./Routes/leadershipRoutes");
 const technicalRoutes = require("./Routes/technicalRoutes");
 const quizRoutes = require("./Routes/quizRoutes");
 const enrollmentRoutes = require("./Routes/enrollmentRoutes");
+const chatRoutes = require("./Routes/chatRoutes");
 
 const app = express();
 
@@ -26,6 +28,7 @@ app.use("/api/leadership", leadershipRoutes);
 app.use("/api/technical", technicalRoutes);
 app.use("/api/quiz", quizRoutes);
 app.use("/api/enrollments", enrollmentRoutes);
+app.use("/api/chat", chatRoutes);
 
 mongoose.connect("mongodb+srv://admin:H4eQUj4fjzqgjrlX@cluster0.j4bshhl.mongodb.net/")
 .then(()=> console.log("Connected to mongoDB"))
