@@ -40,6 +40,9 @@ function StudentDashboard() {
           <a href="#interviews" className={`nav-item ${activeTab === 'interviews' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); setActiveTab('interviews'); }}>
              <span className="nav-icon">🤝</span> Interviews
           </a>
+          <Link to="/student/dashboard" className="nav-item">
+             <span className="nav-icon">🧭</span> Career Guidance
+          </Link>
         </nav>
         
         <div className="sidebar-footer">

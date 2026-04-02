@@ -17,16 +17,10 @@ const Navbar = () => {
       <div className="navbar-right">
         <div className="role-switch">
           <button
-            className={`role-btn ${!isAdmin ? 'active' : ''}`}
-            onClick={() => navigate('/student/dashboard')}
+            className="role-btn active"
+            onClick={() => navigate(isAdmin ? '/admin-dashboard' : '/student-dashboard')}
           >
-            👨‍🎓 Student
-          </button>
-          <button
-            className={`role-btn ${isAdmin ? 'active' : ''}`}
-            onClick={() => navigate('/admin/dashboard')}
-          >
-            ⚙️ Admin
+            ⬅️ Back to Portal
           </button>
         </div>
         <div className="user-avatar">AD</div>
