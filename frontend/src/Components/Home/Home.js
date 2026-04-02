@@ -20,7 +20,7 @@ function Home() {
           <div className="nav-menu">
             <a href="#home">Home</a>
             <a href="#internships">Internships</a>
-            <a href="#programs">Career Programs</a>
+            <button className="nav-btn-link" onClick={() => navigate('/student/leadership')} style={{ background: 'transparent', border: 'none', fontSize: '0.875rem', fontWeight: 500, color: 'var(--dark-2)', cursor: 'pointer', padding: 0 }}>Career Programs</button>
             <a href="#companies">Companies</a>
             <a href="#about">About</a>
             <a href="#contact">Contact</a>
@@ -205,7 +205,7 @@ function Home() {
              <h4>Quick Links</h4>
              <a href="#home">Home</a>
              <a href="#internships">Internships</a>
-             <a href="#programs">Programs</a>
+             <a href="/student/leadership" onClick={(e) => { e.preventDefault(); navigate('/student/leadership'); }}>Programs</a>
              <a href="#about">About Us</a>
            </div>
            <div className="footer-links-group">

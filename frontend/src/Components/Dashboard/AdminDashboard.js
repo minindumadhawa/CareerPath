@@ -44,6 +44,9 @@ function AdminDashboard() {
           <a href="#ai-filter" className={`nav-item ${activeTab === 'ai-filter' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); setActiveTab('ai-filter'); }}>
              <span className="nav-icon">🤖</span> AI CV Filter
           </a>
+          <Link to="/admin/dashboard" className="nav-item">
+             <span className="nav-icon">🎓</span> Career Guidance System
+          </Link>
         </nav>
         
         <div className="sidebar-footer">
