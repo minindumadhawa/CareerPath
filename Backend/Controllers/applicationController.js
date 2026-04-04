@@ -90,3 +90,17 @@ exports.getApplicationsForCompany = async (req, res) => {
     res.status(500).json({ success: false, message: 'Server error' });
   }
 };
+
+exports.getAllApplications = async (req, res) => {
+  try {
+    const applications = await Application.find()
+      .populate('internshipId', 'title companyName')
+      .populate('studentId', 'fullName profileImage')
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({ success: true, data: applications });
+  } catch (error) {
+    console.error('Error fetching all applications:', error);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+};

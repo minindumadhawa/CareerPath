@@ -11,4 +11,7 @@ router.get('/student/:studentId', applicationController.getApplicationsForStuden
 // Get all applications for a specific company
 router.get('/company/:companyId', applicationController.getApplicationsForCompany);
 
+// Get all applications globally
+router.get('/', applicationController.getAllApplications);
+
 module.exports = router;
