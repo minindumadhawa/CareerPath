@@ -4,5 +4,7 @@ const internshipController = require('../Controllers/internshipController');
 
 router.post('/', internshipController.createInternship);
 router.get('/company/:companyId', internshipController.getCompanyInternships);
+router.put('/:id', internshipController.updateInternship);
+router.delete('/:id', internshipController.deleteInternship);
 
 module.exports = router;

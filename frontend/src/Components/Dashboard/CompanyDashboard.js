@@ -9,6 +9,7 @@ function CompanyDashboard() {
   // Internship states
   const [internships, setInternships] = useState([]);
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [editingInternshipId, setEditingInternshipId] = useState(null);
   const [formData, setFormData] = useState({
     title: '', description: '', position: '', location: '', 
     duration: '', stipend: '', requirements: '', skills: '', 
@@ -32,7 +33,8 @@ function CompanyDashboard() {
     try {
       const userStr = localStorage.getItem('user');
       if (userStr) {
-        const companyId = JSON.parse(userStr)._id;
+        const parsedUser = JSON.parse(userStr);
+        const companyId = parsedUser.id || parsedUser._id;
         const res = await fetch(`http://localhost:5000/api/internships/company/${companyId}`);
         if (res.ok) {
           const data = await res.json();
@@ -58,17 +60,29 @@ function CompanyDashboard() {
         alert('Please log in again');
         return;
       }
-      const companyId = JSON.parse(userStr)._id;
-      const skillsArray = formData.skills.split(',').map(s => s.trim()).filter(Boolean);
+      const parsedUser = JSON.parse(userStr);
+      const companyId = parsedUser.id || parsedUser._id;
+      const skillsArray = typeof formData.skills === 'string' ? formData.skills.split(',').map(s => s.trim()).filter(Boolean) : formData.skills;
 
-      const res = await fetch('http://localhost:5000/api/internships', {
-        method: 'POST',
+      const payload = { ...formData, skills: skillsArray, companyId };
+      if (!payload.startDate) delete payload.startDate;
+      if (!payload.applicationDeadline) delete payload.applicationDeadline;
+
+      const url = editingInternshipId 
+        ? `http://localhost:5000/api/internships/${editingInternshipId}` 
+        : 'http://localhost:5000/api/internships';
+      
+      const method = editingInternshipId ? 'PUT' : 'POST';
+
+      const res = await fetch(url, {
+        method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formData, skills: skillsArray, companyId })
+        body: JSON.stringify(payload)
       });
 
       if (res.ok) {
         setShowCreateForm(false);
+        setEditingInternshipId(null);
         setFormData({
           title: '', description: '', position: '', location: '', 
           duration: '', stipend: '', requirements: '', skills: '', 
@@ -76,12 +90,61 @@ function CompanyDashboard() {
         });
         fetchInternships();
       } else {
-        alert('Failed to post internship');
+        const errorData = await res.json().catch(() => ({}));
+        alert(`Failed to save internship: ${errorData.message || 'Unknown server error'}`);
       }
     } catch (err) {
       console.error(err);
       alert('Error connecting to server');
     }
+  };
+
+  const handleEdit = (intern) => {
+    setFormData({
+      title: intern.title || '',
+      description: intern.description || '',
+      position: intern.position || '',
+      location: intern.location || '',
+      duration: intern.duration || '',
+      stipend: intern.stipend || '',
+      requirements: intern.requirements || '',
+      skills: intern.skills ? intern.skills.join(', ') : '',
+      applicationDeadline: intern.applicationDeadline ? intern.applicationDeadline.split('T')[0] : '',
+      startDate: intern.startDate ? intern.startDate.split('T')[0] : '',
+      totalPositions: intern.totalPositions || 1
+    });
+    setEditingInternshipId(intern._id);
+    setShowCreateForm(true);
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this internship posting?")) return;
+    try {
+      const res = await fetch(`http://localhost:5000/api/internships/${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        fetchInternships();
+      } else {
+        alert("Failed to delete internship");
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleAutoFill = () => {
+    setFormData({
+      title: 'Full Stack Engineering Intern',
+      description: 'We are looking for a passionate Full Stack Engineering intern to join our dynamic team. You will be working on building real features using React, Node.js, and MongoDB.',
+      position: 'Full Stack Developer',
+      location: 'San Francisco, CA (Hybrid)',
+      duration: '6 Months',
+      stipend: '$45/hr',
+      requirements: 'Currently pursuing a B.S. or M.S. in Computer Science or related field. Strong understanding of web fundamentals, APIs, and modern Javascript.',
+      skills: 'JavaScript, React, Node.js, MongoDB, Git',
+      applicationDeadline: new Date(new Date().setDate(new Date().getDate() + 14)).toISOString().split('T')[0],
+      startDate: new Date(new Date().setDate(new Date().getDate() + 30)).toISOString().split('T')[0],
+      totalPositions: 3
+    });
   };
 
   const handleLogout = () => {
@@ -296,15 +359,28 @@ function CompanyDashboard() {
                     <p>Manage your active and past internship postings</p>
                   </div>
                   {!showCreateForm && (
-                     <button className="btn-post-job" onClick={() => setShowCreateForm(true)}>+ Create New</button>
+                     <button className="btn-post-job" onClick={() => {
+                        setEditingInternshipId(null);
+                        setFormData({
+                          title: '', description: '', position: '', location: '', 
+                          duration: '', stipend: '', requirements: '', skills: '', 
+                          applicationDeadline: '', startDate: '', totalPositions: 1
+                        });
+                        setShowCreateForm(true);
+                     }}>+ Create New</button>
                   )}
                </div>
 
                {showCreateForm ? (
                   <div className="internship-form-card">
                      <div className="form-header-row">
-                        <h3>Post a New Internship</h3>
-                        <button className="btn-icon" onClick={() => setShowCreateForm(false)}>✖</button>
+                        <h3>{editingInternshipId ? 'Edit Internship' : 'Post a New Internship'}</h3>
+                        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                          {!editingInternshipId && (
+                            <button type="button" className="btn-outline-company" onClick={handleAutoFill} style={{ padding: '0.4rem 1rem', fontSize: '0.85rem' }}>Auto-fill Data</button>
+                          )}
+                          <button className="btn-icon" onClick={() => setShowCreateForm(false)}>✖</button>
+                        </div>
                      </div>
                      <form onSubmit={handleCreateInternship} className="premium-form">
                         <div className="form-grid-2">
@@ -357,7 +433,7 @@ function CompanyDashboard() {
 
                         <div className="form-actions mt-4">
                            <button type="button" className="btn-secondary" onClick={() => setShowCreateForm(false)}>Cancel</button>
-                           <button type="submit" className="btn-primary-gradient">Publish Internship</button>
+                           <button type="submit" className="btn-primary-gradient">{editingInternshipId ? 'Save Changes' : 'Publish Internship'}</button>
                         </div>
                      </form>
                   </div>
@@ -395,7 +471,8 @@ function CompanyDashboard() {
                             </div>
                             <div className="icard-actions">
                               <button className="btn-outline-company">View Applicants</button>
-                              <button className="btn-icon">✏️</button>
+                              <button className="btn-icon" onClick={() => handleEdit(intern)}>✏️</button>
+                              <button className="btn-icon text-danger" onClick={() => handleDelete(intern._id)}>🗑️</button>
                             </div>
                          </div>
                        ))}
