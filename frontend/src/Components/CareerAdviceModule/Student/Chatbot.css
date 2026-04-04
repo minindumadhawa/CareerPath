@@ -201,6 +201,7 @@
   font-size: 14px;
   line-height: 1.5;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  white-space: pre-wrap; /* Allows formatting such as newlines to be preserved cleanly in chat */
 }
 
 .chat-message.bot .message-bubble {
