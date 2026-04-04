@@ -80,11 +80,11 @@ const CareerAdviceLayout = () => {
 
   return (
     <StudentProvider>
-      <div className="app-wrapper">
+      <div className="dashboard-layout">
         <Sidebar />
-        <div className="main-content">
+        <main className="dashboard-main">
           <Navbar />
-          <div className="content-area">
+          <div className="dashboard-content" style={{ padding: '2rem', overflowY: 'auto' }}>
             {showTeaser ? (
               <CareerAdviceTeaser />
             ) : (
@@ -94,7 +94,7 @@ const CareerAdviceLayout = () => {
               </>
             )}
           </div>
-        </div>
+        </main>
       </div>
     </StudentProvider>
   );

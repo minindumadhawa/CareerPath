@@ -26,37 +26,41 @@ const Sidebar = () => {
   ];
 
   return (
-    <aside className="sidebar">
-      <div className="sidebar-brand">
-        <div className="brand-logo">
-          <div className="brand-icon">🎯</div>
-          <div>
-            <div className="brand-text">CareerPath</div>
-            <div className="brand-sub">Career Advice Module</div>
-          </div>
-        </div>
+    <aside className="dashboard-sidebar">
+      <div className="sidebar-logo">
+        <NavLink to="/" style={{ fontSize: '1.5rem', fontWeight: 700, color: '#2563eb', textDecoration: 'none' }}>CareerPath</NavLink>
+        {isAdmin && <span className="badge-admin" style={{ marginLeft: 8, fontSize: '0.7rem', background: '#e0e7ff', color: '#4338ca', padding: '2px 6px', borderRadius: 10 }}>Admin Panel</span>}
       </div>
-      {isAdmin ? (
-        <div className="sidebar-section">
-          <div className="sidebar-section-label">Admin Panel</div>
-          {adminLinks.map(link => (
-            <NavLink key={link.to} to={link.to} className={({ isActive }) => `sidebar-nav-item ${isActive ? 'active' : ''}`}>
-              <span className="nav-icon">{link.icon}</span>
-              {link.label}
-            </NavLink>
-          ))}
-        </div>
-      ) : (
-        <div className="sidebar-section">
-          <div className="sidebar-section-label">Student Portal</div>
-          {studentLinks.map(link => (
-            <NavLink key={link.to} to={link.to} className={({ isActive }) => `sidebar-nav-item ${isActive ? 'active' : ''}`}>
-              <span className="nav-icon">{link.icon}</span>
-              {link.label}
-            </NavLink>
-          ))}
-        </div>
-      )}
+      
+      <nav className="sidebar-nav">
+        {isAdmin ? (
+          <>
+            <div style={{ padding: '1rem 1rem 0.5rem', fontSize: '0.75rem', fontWeight: 600, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '1px' }}>Career Guidance Admin</div>
+            {adminLinks.map(link => (
+              <NavLink key={link.to} to={link.to} className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+                <span className="nav-icon">{link.icon}</span>
+                {link.label}
+              </NavLink>
+            ))}
+          </>
+        ) : (
+          <>
+            <div style={{ padding: '1rem 1rem 0.5rem', fontSize: '0.75rem', fontWeight: 600, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '1px' }}>Career Guidance</div>
+            {studentLinks.map(link => (
+              <NavLink key={link.to} to={link.to} className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+                <span className="nav-icon">{link.icon}</span>
+                {link.label}
+              </NavLink>
+            ))}
+          </>
+        )}
+      </nav>
+
+      <div className="sidebar-footer">
+        <NavLink to={isAdmin ? '/admin-dashboard' : '/student-dashboard'} className="nav-item" style={{ background: '#f1f5f9' }}>
+          <span className="nav-icon">⬅️</span> Back to Portal
+        </NavLink>
+      </div>
     </aside>
   );
 };

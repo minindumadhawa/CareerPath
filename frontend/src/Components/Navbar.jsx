@@ -36,25 +36,21 @@ const Navbar = () => {
   }
 
   return (
-    <nav className="navbar">
-      <div className="navbar-left">
-        <span className="navbar-breadcrumb">CareerPath /</span>
-        <span className="navbar-page-title">
-          {isAdmin ? 'Admin Panel' : 'Student Portal'}
-        </span>
+    <header className="dashboard-header">
+      <div className="search-bar">
+        <span className="search-icon">🔍</span>
+        <input type="text" placeholder="Search career resources, quizzes..." />
       </div>
-      <div className="navbar-right">
-        <div className="role-switch">
-          <button
-            className="role-btn active"
-            onClick={() => navigate(isAdmin ? '/admin-dashboard' : '/student-dashboard')}
-          >
-            ⬅️ Back to Portal
-          </button>
+      
+      <div className="header-actions">
+        {isAdmin && <button className="btn-add-admin">+ New Resource</button>}
+        <button className="icon-btn" aria-label="Notifications">🔔</button>
+        <div className="user-profile">
+          <div className="avatar" style={isAdmin ? {backgroundColor: '#4338ca'} : {}}>{initials}</div>
+          <span>{isAdmin ? 'Admin' : 'Student'}</span>
         </div>
-        <div className="user-avatar">{initials}</div>
       </div>
-    </nav>
+    </header>
   );
 };
 
