@@ -43,7 +43,6 @@ const Navbar = () => {
       </div>
       
       <div className="header-actions">
-        {isAdmin && <button className="btn-add-admin">+ New Resource</button>}
         <button className="icon-btn" aria-label="Notifications">🔔</button>
         <div className="user-profile">
           <div className="avatar" style={isAdmin ? {backgroundColor: '#4338ca'} : {}}>{initials}</div>
