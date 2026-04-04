@@ -45,3 +45,15 @@ exports.deleteInternship = async (req, res) => {
         res.status(500).json({ success: false, message: error.message });
     }
 };
+
+// Get all public active internships
+exports.getAllActiveInternships = async (req, res) => {
+    try {
+        const internships = await Internship.find({ status: 'Active' })
+            .populate('companyId', 'companyName industry')
+            .sort({ createdAt: -1 });
+        res.status(200).json({ success: true, data: internships });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};

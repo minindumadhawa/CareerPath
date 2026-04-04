@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import './Home.css';
 
 function Home() {
@@ -44,7 +44,7 @@ function Home() {
           </div>
           <div className="nav-menu">
             <a href="#home">Home</a>
-            <a href="#internships">Internships</a>
+            <Link to="/internships">Internships</Link>
             <a href="#career-overview">Career Programs</a>
             <a href="#companies">Companies</a>
             <a href="#about">About</a>
@@ -253,7 +253,7 @@ function Home() {
            <div className="footer-links-group">
              <h4>Quick Links</h4>
              <a href="#home">Home</a>
-             <a href="#internships">Internships</a>
+             <Link to="/internships">Internships</Link>
              <a href="#career-overview">Programs</a>
              <a href="#about">About Us</a>
            </div>
