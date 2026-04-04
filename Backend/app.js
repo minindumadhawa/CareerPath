@@ -10,6 +10,7 @@ const quizRoutes = require("./Routes/quizRoutes");
 const enrollmentRoutes = require("./Routes/enrollmentRoutes");
 const chatRoutes = require("./Routes/chatRoutes");
 const internshipRoutes = require("./Routes/internshipRoutes");
+const applicationRoutes = require("./Routes/applicationRoutes");
 
 const app = express();
 
@@ -32,6 +33,7 @@ app.use("/api/quiz", quizRoutes);
 app.use("/api/enrollments", enrollmentRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/internships", internshipRoutes);
+app.use("/api/applications", applicationRoutes);
 
 mongoose.connect("mongodb+srv://admin:H4eQUj4fjzqgjrlX@cluster0.j4bshhl.mongodb.net/")
 .then(()=> console.log("Connected to mongoDB"))

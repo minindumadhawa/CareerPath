@@ -18,16 +18,26 @@ function CompanyDashboard() {
   
   // Applications states
   const [appFilter, setAppFilter] = useState('All');
+  const [applications, setApplications] = useState([]);
   
-  const mockApplications = [
-    { id: 1, candName: "John Doe", uni: "Harvard University", role: "Software Engineer Intern", score: 98, status: "Pending", avatarColor: "bg-blue", initials: "JD", date: "2 days ago" },
-    { id: 2, candName: "Alice Smith", uni: "Stanford University", role: "Product Designer Intern", score: 92, status: "Interviewing", avatarColor: "bg-purple", initials: "AS", date: "1 week ago" },
-    { id: 3, candName: "Robert Jones", uni: "MIT", role: "Data Science Intern", score: 75, status: "Reviewed", avatarColor: "bg-green", initials: "RJ", date: "3 days ago" },
-    { id: 4, candName: "Emily Chen", uni: "UC Berkeley", role: "Software Engineer Intern", score: 88, status: "Pending", avatarColor: "bg-orange", initials: "EC", date: "4 days ago" },
-    { id: 5, candName: "Michael Brown", uni: "NYU", role: "UX/UI Intern", score: 65, status: "Rejected", avatarColor: "bg-teal", initials: "MB", date: "2 weeks ago" },
-  ];
+  const filteredApps = appFilter === 'All' ? applications : applications.filter(a => a.status === appFilter);
 
-  const filteredApps = appFilter === 'All' ? mockApplications : mockApplications.filter(a => a.status === appFilter);
+  const fetchApplications = async () => {
+    try {
+      const userStr = localStorage.getItem('user');
+      if (userStr) {
+        const parsedUser = JSON.parse(userStr);
+        const companyId = parsedUser.id || parsedUser._id;
+        const res = await fetch(`http://localhost:5000/api/applications/company/${companyId}`);
+        if (res.ok) {
+          const data = await res.json();
+          setApplications(data.data || []);
+        }
+      }
+    } catch (e) {
+      console.error('Error fetching applications:', e);
+    }
+  };
 
   const fetchInternships = async () => {
     try {
@@ -49,6 +59,8 @@ function CompanyDashboard() {
   useEffect(() => {
     if (activeTab === 'postings') {
       fetchInternships();
+    } else if (activeTab === 'applications') {
+      fetchApplications();
     }
   }, [activeTab]);
 
@@ -510,7 +522,7 @@ function CompanyDashboard() {
                          <th>Candidate</th>
                          <th>Role Applied</th>
                          <th>Applied On</th>
-                         <th>Match Score</th>
+                         <th>CGPA</th>
                          <th>Status</th>
                          <th>Action</th>
                        </tr>
@@ -518,20 +530,25 @@ function CompanyDashboard() {
                      <tbody>
                        {filteredApps.length === 0 ? (
                          <tr><td colSpan="6" style={{textAlign: 'center', padding: '2rem'}}>No applications found for this filter.</td></tr>
-                       ) : filteredApps.map(app => (
-                         <tr key={app.id}>
+                       ) : filteredApps.map(app => {
+                         const colors = ['bg-blue', 'bg-purple', 'bg-green', 'bg-orange', 'bg-teal'];
+                         const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                         const initials = app.name ? app.name.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase() : 'ST';
+                         
+                         return (
+                         <tr key={app._id}>
                            <td>
                              <div className="candidate-cell">
-                               <div className={`cand-avatar ${app.avatarColor}`}>{app.initials}</div>
+                               <div className={`cand-avatar ${randomColor}`}>{initials}</div>
                                <div>
-                                 <div className="cand-name">{app.candName}</div>
-                                 <div className="cand-uni">{app.uni}</div>
+                                 <div className="cand-name">{app.name}</div>
+                                 <div className="cand-uni">{app.university}</div>
                                </div>
                              </div>
                            </td>
-                           <td>{app.role}</td>
-                           <td>{app.date}</td>
-                           <td><span className={`score ${app.score > 85 ? 'high' : app.score > 70 ? 'med' : 'low'}`}>{app.score}%</span></td>
+                           <td>{app.internshipId?.title || 'Unknown Role'}</td>
+                           <td>{new Date(app.createdAt).toLocaleDateString()}</td>
+                           <td><span className={`score ${app.cgpa > 3.5 ? 'high' : app.cgpa > 3.0 ? 'med' : 'low'}`}>{app.cgpa}/4.0</span></td>
                            <td><span className={`badge ${app.status.toLowerCase()}`}>{app.status}</span></td>
                            <td>
                              <select className="status-select" defaultValue={app.status}>
@@ -542,7 +559,7 @@ function CompanyDashboard() {
                              </select>
                            </td>
                          </tr>
-                       ))}
+                       )})}
                      </tbody>
                    </table>
                </div>

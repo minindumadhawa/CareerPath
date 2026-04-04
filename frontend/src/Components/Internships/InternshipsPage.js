@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './InternshipsPage.css';
 import '../Home/Home.css';
+import ApplicationModal from './ApplicationModal';
 
 function InternshipsPage() {
   const navigate = useNavigate();
@@ -10,7 +11,14 @@ function InternshipsPage() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  const [activeModalInternship, setActiveModalInternship] = useState(null);
+  const [user, setUser] = useState(null);
+
   useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
     const fetchInternships = async () => {
       try {
         const res = await fetch('http://localhost:5000/api/internships/active');
@@ -150,7 +158,14 @@ function InternshipsPage() {
 
                 <div className="card-bottom">
                   <p className="posted-date">Posted: {new Date(intern.createdAt).toLocaleDateString()}</p>
-                  <button className="btn-apply-now" onClick={() => alert('Log in as a student to apply!')}>Apply Now</button>
+                  <button className="btn-apply-now" onClick={() => {
+                    if (user && user.role === 'student') {
+                      setActiveModalInternship(intern);
+                    } else {
+                      alert('Log in as a student to apply!');
+                      navigate('/login');
+                    }
+                  }}>Apply Now</button>
                 </div>
               </div>
             ))}
@@ -162,6 +177,14 @@ function InternshipsPage() {
           </div>
         )}
       </main>
+
+      {activeModalInternship && (
+        <ApplicationModal 
+          internship={activeModalInternship} 
+          onClose={() => setActiveModalInternship(null)} 
+          user={user}
+        />
+      )}
     </div>
   );
 }

@@ -1,12 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import '../Internships/InternshipsPage.css'; // Leverage existing premium card styles
+import ApplicationModal from '../Internships/ApplicationModal';
 
 function StudentInternships() {
   const [internships, setInternships] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
+  const [activeModalInternship, setActiveModalInternship] = useState(null);
+
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
     const fetchInternships = async () => {
       try {
         const res = await fetch('http://localhost:5000/api/internships/active');
@@ -84,7 +92,7 @@ function StudentInternships() {
 
               <div className="card-bottom">
                 <p className="posted-date" style={{ fontSize: '0.8rem' }}>Posted: {new Date(intern.createdAt).toLocaleDateString()}</p>
-                <button className="btn-apply-now" style={{ padding: '0.4rem 1rem', fontSize: '0.85rem' }} onClick={() => alert(`Successfully Applied to ${intern.title} at ${intern.companyId?.companyName || 'Company'}!`)}>Apply Now</button>
+                <button className="btn-apply-now" style={{ padding: '0.4rem 1rem', fontSize: '0.85rem' }} onClick={() => setActiveModalInternship(intern)}>Apply Now</button>
               </div>
             </div>
           ))}
@@ -94,6 +102,14 @@ function StudentInternships() {
           <h3 style={{ color: '#1e293b', marginBottom: '0.5rem', fontWeight: 600 }}>No internships found</h3>
           <p style={{ color: '#64748b' }}>Try relaxing your search terms or checking back later.</p>
         </div>
+      )}
+
+      {activeModalInternship && (
+        <ApplicationModal 
+          internship={activeModalInternship} 
+          onClose={() => setActiveModalInternship(null)} 
+          user={user}
+        />
       )}
     </div>
   );
