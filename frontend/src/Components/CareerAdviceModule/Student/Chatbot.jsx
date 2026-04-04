@@ -45,7 +45,7 @@ const Chatbot = () => {
         setInputMessage('');
     };
 
-    const quickActions = ["Resume Tips", "Interview Prep", "Program Details"];
+    const quickActions = ["Resume Tips", "Interview Prep", "Internships", "Salary Negotiation", "Networking", "Skill Development"];
 
     return (
         <div className={`chatbot-container ${isOpen ? 'open' : ''}`}>

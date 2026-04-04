@@ -47,7 +47,7 @@ const AdminDashboard = () => {
         background: 'linear-gradient(135deg, #0f172a, #1e293b)',
         borderRadius: 'var(--radius-lg)', padding: '28px 36px', color: 'white', marginBottom: 28
       }}>
-        <h1 style={{ fontSize: '1.5rem', marginBottom: 6 }}>⚙️ Admin Dashboard</h1>
+        <h1 style={{ fontSize: '1.5rem', marginBottom: 6 }}>⚙️ Career Guide Admin Dashboard</h1>
         <p style={{ opacity: 0.7, fontSize: '0.9rem' }}>
           Career Advice Management System — Manage all content from here
         </p>
