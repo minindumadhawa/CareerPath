@@ -1,10 +1,75 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './CompanyDashboard.css';
 
 function CompanyDashboard() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('dashboard');
+  
+  // Internship states
+  const [internships, setInternships] = useState([]);
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [formData, setFormData] = useState({
+    title: '', description: '', position: '', location: '', 
+    duration: '', stipend: '', requirements: '', skills: '', 
+    applicationDeadline: '', startDate: '', totalPositions: 1
+  });
+
+  const fetchInternships = async () => {
+    try {
+      const userStr = localStorage.getItem('user');
+      if (userStr) {
+        const companyId = JSON.parse(userStr)._id;
+        const res = await fetch(`http://localhost:5000/api/internships/company/${companyId}`);
+        if (res.ok) {
+          const data = await res.json();
+          setInternships(data.data || []);
+        }
+      }
+    } catch (e) {
+      console.error('Error fetching internships:', e);
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab === 'postings') {
+      fetchInternships();
+    }
+  }, [activeTab]);
+
+  const handleCreateInternship = async (e) => {
+    e.preventDefault();
+    try {
+      const userStr = localStorage.getItem('user');
+      if (!userStr) {
+        alert('Please log in again');
+        return;
+      }
+      const companyId = JSON.parse(userStr)._id;
+      const skillsArray = formData.skills.split(',').map(s => s.trim()).filter(Boolean);
+
+      const res = await fetch('http://localhost:5000/api/internships', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...formData, skills: skillsArray, companyId })
+      });
+
+      if (res.ok) {
+        setShowCreateForm(false);
+        setFormData({
+          title: '', description: '', position: '', location: '', 
+          duration: '', stipend: '', requirements: '', skills: '', 
+          applicationDeadline: '', startDate: '', totalPositions: 1
+        });
+        fetchInternships();
+      } else {
+        alert('Failed to post internship');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Error connecting to server');
+    }
+  };
 
   const handleLogout = () => {
     navigate('/login');
@@ -217,81 +282,113 @@ function CompanyDashboard() {
                     <h2>My Internships</h2>
                     <p>Manage your active and past internship postings</p>
                   </div>
-                  <button className="btn-post-job">+ Create New</button>
-               </div>
-               
-               <div className="internships-filters">
-                 <button className="filter-btn active">All (5)</button>
-                 <button className="filter-btn">Active (3)</button>
-                 <button className="filter-btn">Drafts (1)</button>
-                 <button className="filter-btn">Closed (1)</button>
+                  {!showCreateForm && (
+                     <button className="btn-post-job" onClick={() => setShowCreateForm(true)}>+ Create New</button>
+                  )}
                </div>
 
-               <div className="internships-list">
-                 {/* Internship Card 1 */}
-                 <div className="internship-card">
-                    <div className="icard-header">
-                      <h3>Software Engineering Intern</h3>
-                      <span className="badge badge-active">Active</span>
-                    </div>
-                    <div className="icard-details">
-                      <span>📍 San Francisco, CA (Hybrid)</span>
-                      <span>💰 $45/hr</span>
-                      <span>📅 Posted 3 days ago</span>
-                    </div>
-                    <div className="icard-metrics">
-                      <div className="metric"><strong>128</strong> Views</div>
-                      <div className="metric"><strong>34</strong> Applicants</div>
-                      <div className="metric"><strong>5</strong> Shortlisted</div>
-                    </div>
-                    <div className="icard-actions">
-                      <button className="btn-outline-company">View Applicants</button>
-                      <button className="btn-icon">✏️</button>
-                    </div>
-                 </div>
+               {showCreateForm ? (
+                  <div className="internship-form-card">
+                     <div className="form-header-row">
+                        <h3>Post a New Internship</h3>
+                        <button className="btn-icon" onClick={() => setShowCreateForm(false)}>✖</button>
+                     </div>
+                     <form onSubmit={handleCreateInternship} className="premium-form">
+                        <div className="form-grid-2">
+                           <div className="input-group">
+                              <label>Job Title</label>
+                              <input type="text" required placeholder="e.g. Software Engineer Intern" value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} />
+                           </div>
+                           <div className="input-group">
+                              <label>Position / Role</label>
+                              <input type="text" required placeholder="e.g. Full Stack Developer" value={formData.position} onChange={e => setFormData({...formData, position: e.target.value})} />
+                           </div>
+                           <div className="input-group">
+                              <label>Location</label>
+                              <input type="text" required placeholder="e.g. Remote, San Francisco" value={formData.location} onChange={e => setFormData({...formData, location: e.target.value})} />
+                           </div>
+                           <div className="input-group">
+                              <label>Duration</label>
+                              <input type="text" required placeholder="e.g. 3 Months, 6 Months" value={formData.duration} onChange={e => setFormData({...formData, duration: e.target.value})} />
+                           </div>
+                           <div className="input-group">
+                              <label>Stipend / Salary</label>
+                              <input type="text" required placeholder="e.g. $40/hr or Unpaid" value={formData.stipend} onChange={e => setFormData({...formData, stipend: e.target.value})} />
+                           </div>
+                           <div className="input-group">
+                              <label>Total Positions</label>
+                              <input type="number" required min="1" value={formData.totalPositions} onChange={e => setFormData({...formData, totalPositions: e.target.value})} />
+                           </div>
+                           <div className="input-group">
+                              <label>Start Date</label>
+                              <input type="date" value={formData.startDate} onChange={e => setFormData({...formData, startDate: e.target.value})} />
+                           </div>
+                           <div className="input-group">
+                              <label>Application Deadline</label>
+                              <input type="date" value={formData.applicationDeadline} onChange={e => setFormData({...formData, applicationDeadline: e.target.value})} />
+                           </div>
+                        </div>
 
-                 {/* Internship Card 2 */}
-                 <div className="internship-card">
-                    <div className="icard-header">
-                      <h3>Product Design Intern</h3>
-                      <span className="badge badge-active">Active</span>
-                    </div>
-                    <div className="icard-details">
-                      <span>📍 Remote</span>
-                      <span>💰 $40/hr</span>
-                      <span>📅 Posted 1 week ago</span>
-                    </div>
-                    <div className="icard-metrics">
-                      <div className="metric"><strong>312</strong> Views</div>
-                      <div className="metric"><strong>85</strong> Applicants</div>
-                      <div className="metric"><strong>12</strong> Shortlisted</div>
-                    </div>
-                    <div className="icard-actions">
-                      <button className="btn-outline-company">View Applicants</button>
-                      <button className="btn-icon">✏️</button>
-                    </div>
-                 </div>
+                        <div className="input-group full-width mt-3">
+                           <label>Required Skills (Comma separated)</label>
+                           <input type="text" placeholder="React, Node.js, Python" value={formData.skills} onChange={e => setFormData({...formData, skills: e.target.value})} />
+                        </div>
+                        <div className="input-group full-width mt-3">
+                           <label>Requirements & Qualifications</label>
+                           <textarea rows="3" required placeholder="Describe what you are looking for..." value={formData.requirements} onChange={e => setFormData({...formData, requirements: e.target.value})}></textarea>
+                        </div>
+                        <div className="input-group full-width mt-3">
+                           <label>Job Description</label>
+                           <textarea rows="4" required placeholder="Detailed description of the role..." value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})}></textarea>
+                        </div>
 
-                 {/* Internship Card 3 */}
-                 <div className="internship-card">
-                    <div className="icard-header">
-                      <h3>Data Science Intern</h3>
-                      <span className="badge badge-draft">Draft</span>
-                    </div>
-                    <div className="icard-details">
-                      <span>📍 New York, NY</span>
-                      <span>💰 TBD</span>
-                      <span>📅 Last edited 2 days ago</span>
-                    </div>
-                    <div className="icard-metrics">
-                      <div className="metric text-muted">Not published</div>
-                    </div>
-                    <div className="icard-actions">
-                      <button className="btn-outline-company">Edit & Publish</button>
-                      <button className="btn-icon text-danger">🗑️</button>
-                    </div>
-                 </div>
-               </div>
+                        <div className="form-actions mt-4">
+                           <button type="button" className="btn-secondary" onClick={() => setShowCreateForm(false)}>Cancel</button>
+                           <button type="submit" className="btn-primary-gradient">Publish Internship</button>
+                        </div>
+                     </form>
+                  </div>
+               ) : (
+                  <>
+                     <div className="internships-filters">
+                       <button className="filter-btn active">All ({internships.length})</button>
+                       <button className="filter-btn">Active ({internships.filter(i => i.status === 'Active').length})</button>
+                       <button className="filter-btn">Drafts ({internships.filter(i => i.status === 'Draft').length})</button>
+                       <button className="filter-btn">Closed ({internships.filter(i => i.status === 'Closed').length})</button>
+                     </div>
+
+                     <div className="internships-list">
+                       {internships.length === 0 ? (
+                         <div className="coming-soon">
+                            <h2>No Internships Posted Yet</h2>
+                            <p>Click "+ Create New" to post your first internship opportunity.</p>
+                         </div>
+                       ) : internships.map(intern => (
+                         <div className="internship-card" key={intern._id}>
+                            <div className="icard-header">
+                              <h3>{intern.title}</h3>
+                              <span className={`badge badge-${intern.status.toLowerCase()}`}>{intern.status}</span>
+                            </div>
+                            <div className="icard-details">
+                              <span>📍 {intern.location}</span>
+                              <span>💰 {intern.stipend}</span>
+                              <span>⏱️ {intern.duration}</span>
+                              <span>📅 {new Date(intern.createdAt).toLocaleDateString()}</span>
+                            </div>
+                            <div className="icard-metrics">
+                              <div className="metric"><strong>0</strong> Views</div>
+                              <div className="metric"><strong>0</strong> Applicants</div>
+                              <div className="metric"><strong>{intern.totalPositions}</strong> Spots</div>
+                            </div>
+                            <div className="icard-actions">
+                              <button className="btn-outline-company">View Applicants</button>
+                              <button className="btn-icon">✏️</button>
+                            </div>
+                         </div>
+                       ))}
+                     </div>
+                  </>
+               )}
             </div>
           )}
 

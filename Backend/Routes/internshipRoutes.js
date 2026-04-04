@@ -1,0 +1,8 @@
+const express = require('express');
+const router = express.Router();
+const internshipController = require('../Controllers/internshipController');
+
+router.post('/', internshipController.createInternship);
+router.get('/company/:companyId', internshipController.getCompanyInternships);
+
+module.exports = router;
