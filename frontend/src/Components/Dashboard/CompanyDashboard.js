@@ -14,6 +14,19 @@ function CompanyDashboard() {
     duration: '', stipend: '', requirements: '', skills: '', 
     applicationDeadline: '', startDate: '', totalPositions: 1
   });
+  
+  // Applications states
+  const [appFilter, setAppFilter] = useState('All');
+  
+  const mockApplications = [
+    { id: 1, candName: "John Doe", uni: "Harvard University", role: "Software Engineer Intern", score: 98, status: "Pending", avatarColor: "bg-blue", initials: "JD", date: "2 days ago" },
+    { id: 2, candName: "Alice Smith", uni: "Stanford University", role: "Product Designer Intern", score: 92, status: "Interviewing", avatarColor: "bg-purple", initials: "AS", date: "1 week ago" },
+    { id: 3, candName: "Robert Jones", uni: "MIT", role: "Data Science Intern", score: 75, status: "Reviewed", avatarColor: "bg-green", initials: "RJ", date: "3 days ago" },
+    { id: 4, candName: "Emily Chen", uni: "UC Berkeley", role: "Software Engineer Intern", score: 88, status: "Pending", avatarColor: "bg-orange", initials: "EC", date: "4 days ago" },
+    { id: 5, candName: "Michael Brown", uni: "NYU", role: "UX/UI Intern", score: 65, status: "Rejected", avatarColor: "bg-teal", initials: "MB", date: "2 weeks ago" },
+  ];
+
+  const filteredApps = appFilter === 'All' ? mockApplications : mockApplications.filter(a => a.status === appFilter);
 
   const fetchInternships = async () => {
     try {
@@ -392,7 +405,74 @@ function CompanyDashboard() {
             </div>
           )}
 
-          {['applications', 'candidates', 'interviews'].includes(activeTab) && (
+          {activeTab === 'applications' && (
+            <div className="applications-tab">
+               <div className="tab-header">
+                  <div>
+                    <h2>Applications Management</h2>
+                    <p>Review and filter candidates applying to your positions.</p>
+                  </div>
+               </div>
+               
+               <div className="internships-filters">
+                 {['All', 'Pending', 'Reviewed', 'Interviewing', 'Rejected'].map(filter => (
+                   <button 
+                     key={filter}
+                     className={`filter-btn ${appFilter === filter ? 'active' : ''}`}
+                     onClick={() => setAppFilter(filter)}
+                   >
+                     {filter}
+                   </button>
+                 ))}
+               </div>
+
+               <div className="section-card">
+                   <table className="data-table">
+                     <thead>
+                       <tr>
+                         <th>Candidate</th>
+                         <th>Role Applied</th>
+                         <th>Applied On</th>
+                         <th>Match Score</th>
+                         <th>Status</th>
+                         <th>Action</th>
+                       </tr>
+                     </thead>
+                     <tbody>
+                       {filteredApps.length === 0 ? (
+                         <tr><td colSpan="6" style={{textAlign: 'center', padding: '2rem'}}>No applications found for this filter.</td></tr>
+                       ) : filteredApps.map(app => (
+                         <tr key={app.id}>
+                           <td>
+                             <div className="candidate-cell">
+                               <div className={`cand-avatar ${app.avatarColor}`}>{app.initials}</div>
+                               <div>
+                                 <div className="cand-name">{app.candName}</div>
+                                 <div className="cand-uni">{app.uni}</div>
+                               </div>
+                             </div>
+                           </td>
+                           <td>{app.role}</td>
+                           <td>{app.date}</td>
+                           <td><span className={`score ${app.score > 85 ? 'high' : app.score > 70 ? 'med' : 'low'}`}>{app.score}%</span></td>
+                           <td><span className={`badge ${app.status.toLowerCase()}`}>{app.status}</span></td>
+                           <td>
+                             <select className="status-select" defaultValue={app.status}>
+                               <option value="Pending">Pending</option>
+                               <option value="Reviewed">Reviewed</option>
+                               <option value="Interviewing">Interviewing</option>
+                               <option value="Rejected">Rejected</option>
+                             </select>
+                           </td>
+                         </tr>
+                       ))}
+                     </tbody>
+                   </table>
+               </div>
+            </div>
+          )}
+
+          {['candidates', 'interviews'].includes(activeTab) && (
             <div className="coming-soon">
                <h2>More Features Coming Soon</h2>
                <p>We are currently building out this section of your dashboard.</p>

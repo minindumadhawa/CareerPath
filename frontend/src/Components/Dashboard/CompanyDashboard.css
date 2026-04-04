@@ -599,6 +599,27 @@
   background: #dcfce7;
   color: #166534;
 }
+.badge.rejected {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.status-select {
+  padding: 0.4rem 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background: var(--bg-color);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-dark);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.status-select:focus {
+  outline: none;
+  border-color: var(--company-primary);
+  box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.15);
+}
 
 .coming-soon {
   text-align: center;
