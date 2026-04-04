@@ -5,6 +5,7 @@ import './Home.css';
 function Home() {
   const navigate = useNavigate();
   const [programStats, setProgramStats] = useState({ leadership: 0, technical: 0, quizzes: 0 });
+  const [isScrolled, setIsScrolled] = useState(false);
 
   // Fetch basic stats for the overview
   useEffect(() => {
@@ -21,10 +22,17 @@ function Home() {
     });
   }, []);
 
+  // Track window scroll for dynamic navbar
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <div className="career-home">
       {/* 1. Navbar */}
-      <nav className="navbar">
+      <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
         <div className="nav-container">
           <div className="logo">
             <span className="logo-icon">
