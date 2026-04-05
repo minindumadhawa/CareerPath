@@ -6,32 +6,32 @@ import './CVPreview.css';
 
 // ─── Constants ─────────────────────────────────────────────────
 const COLOR_OPTIONS = [
-  { name: 'Blue', value: '#3b82f6' },
-  { name: 'Green', value: '#10b981' },
-  { name: 'Red', value: '#ef4444' },
+  { name: 'Blue',   value: '#3b82f6' },
+  { name: 'Green',  value: '#10b981' },
+  { name: 'Red',    value: '#ef4444' },
   { name: 'Orange', value: '#f59e0b' },
   { name: 'Purple', value: '#8b5cf6' },
-  { name: 'Pink', value: '#ec489a' },
-  { name: 'Teal', value: '#06b6d4' },
+  { name: 'Pink',   value: '#ec489a' },
+  { name: 'Teal',   value: '#06b6d4' },
   { name: 'Indigo', value: '#6366f1' },
 ];
 
 const TEMPLATES = [
   { id: 'corporate', name: 'Corporate Professional', icon: '💼', desc: 'Classic universally accepted CV' },
-  { id: 'modern', name: 'Modern Tech CV', icon: '⚡', desc: 'Tech-focused clean layout with skills segments' },
-  { id: 'ats', name: 'ATS-Friendly Minimal', icon: '📝', desc: 'Clean text-focused resume for scanners' },
-  { id: 'premium', name: 'Premium Enterprise', icon: '👑', desc: 'High-end corporate CV for top companies' },
+  { id: 'modern',    name: 'Modern Tech CV',          icon: '⚡', desc: 'Tech-focused clean layout with skills segments' },
+  { id: 'ats',       name: 'ATS-Friendly Minimal',    icon: '📝', desc: 'Clean text-focused resume for scanners' },
+  { id: 'premium',   name: 'Premium Enterprise',      icon: '👑', desc: 'High-end corporate CV for top companies' },
 ];
 
 const FONT_OPTIONS = [
-  { id: 'default', name: 'Default (System)', family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' },
-  { id: 'serif', name: 'Libre Baskerville', family: '"Libre Baskerville", Georgia, serif', url: 'https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap' },
-  { id: 'garamond', name: 'Cormorant Garamond', family: '"Cormorant Garamond", Georgia, serif', url: 'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&display=swap' },
-  { id: 'dm-sans', name: 'DM Sans', family: '"DM Sans", sans-serif', url: 'https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap' },
-  { id: 'plex', name: 'IBM Plex Sans', family: '"IBM Plex Sans", sans-serif', url: 'https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap' },
-  { id: 'outfit', name: 'Outfit', family: '"Outfit", sans-serif', url: 'https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap' },
-  { id: 'lora', name: 'Lora', family: '"Lora", Georgia, serif', url: 'https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&display=swap' },
-  { id: 'source-serif', name: 'Source Serif Pro', family: '"Source Serif Pro", Georgia, serif', url: 'https://fonts.googleapis.com/css2?family=Source+Serif+Pro:wght@400;600;700&display=swap' },
+  { id: 'default',      name: 'Default (System)',      family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' },
+  { id: 'serif',        name: 'Libre Baskerville',     family: '"Libre Baskerville", Georgia, serif',                              url: 'https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap' },
+  { id: 'garamond',     name: 'Cormorant Garamond',    family: '"Cormorant Garamond", Georgia, serif',                             url: 'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&display=swap' },
+  { id: 'dm-sans',      name: 'DM Sans',               family: '"DM Sans", sans-serif',                                            url: 'https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap' },
+  { id: 'plex',         name: 'IBM Plex Sans',         family: '"IBM Plex Sans", sans-serif',                                      url: 'https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap' },
+  { id: 'outfit',       name: 'Outfit',                family: '"Outfit", sans-serif',                                             url: 'https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap' },
+  { id: 'lora',         name: 'Lora',                  family: '"Lora", Georgia, serif',                                           url: 'https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&display=swap' },
+  { id: 'source-serif', name: 'Source Serif Pro',      family: '"Source Serif Pro", Georgia, serif',                               url: 'https://fonts.googleapis.com/css2?family=Source+Serif+Pro:wght@400;600;700&display=swap' },
 ];
 
 const DEMO_PROFILE = {
@@ -40,16 +40,16 @@ const DEMO_PROFILE = {
   phoneNumber: '+1 (555) 234-5678',
   location: 'Austin, Texas',
   linkedin: 'linkedin.com/in/michaelanderson',
-  summary: 'Results-driven Full Stack Developer with 8+ years of experience in building scalable web applications. Expertise in React, Node.js, and cloud technologies.',
+  summary: 'Results-driven Full Stack Developer with 8+ years of experience building scalable web applications.',
   technicalSkills: ['JavaScript/TypeScript', 'React.js', 'Node.js', 'Python', 'MongoDB', 'PostgreSQL', 'AWS', 'Docker'],
   softSkills: ['Team Leadership', 'Agile Methodologies', 'Problem Solving', 'Communication'],
   education: [
-    { degree: 'Master of Science in Computer Science', institution: 'University of Texas at Austin', year: '2015 - 2017' },
-    { degree: 'Bachelor of Engineering in Software Engineering', institution: 'Texas A&M University', year: '2011 - 2015' },
+    { degree: 'Master of Science in Computer Science',         institution: 'University of Texas at Austin', year: '2015 - 2017' },
+    { degree: 'Bachelor of Engineering in Software Engineering', institution: 'Texas A&M University',          year: '2011 - 2015' },
   ],
   workExperience: [
-    { jobTitle: 'Senior Full Stack Developer', company: 'Tech Innovations Inc.', duration: '2021 — Present', responsibilities: 'Lead a team of 6 developers. Architected microservices using Node.js and Docker.' },
-    { jobTitle: 'Software Engineer', company: 'Digital Solutions LLC', duration: '2017 — 2021', responsibilities: 'Developed 15+ full-stack applications using React and Node.js.' },
+    { jobTitle: 'Senior Full Stack Developer', company: 'Tech Innovations Inc.',   duration: '2021 — Present', responsibilities: 'Lead a team of 6 developers. Architected microservices using Node.js and Docker.' },
+    { jobTitle: 'Software Engineer',           company: 'Digital Solutions LLC',   duration: '2017 — 2021',   responsibilities: 'Developed 15+ full-stack applications using React and Node.js.' },
   ],
   projects: [
     { projectName: 'E-Commerce Platform', technologies: 'React, Node.js, MongoDB', description: 'Built e-commerce platform handling 10,000+ transactions' },
@@ -58,59 +58,35 @@ const DEMO_PROFILE = {
   achievements: ['Best Developer Award 2023'],
   languages: ['English (Native)', 'Spanish (Professional)'],
   references: 'Available upon request.',
+  profilePicture: null,   // ← filled from API
 };
 
-const DEMO_SOCIAL = {
-  github: 'github.com/michaelanderson',
-  portfolio: 'michaelanderson.dev',
-  twitter: '',
-  website: '',
-};
+const DEMO_SOCIAL = { github: 'github.com/michaelanderson', portfolio: 'michaelanderson.dev', twitter: '', website: '' };
 
 // ─── Helpers ───────────────────────────────────────────────────
-const getUser = () => {
-  try {
-    return JSON.parse(localStorage.getItem('user')) || {};
-  } catch {
-    return {};
-  }
-};
-
+const getUser = () => { try { return JSON.parse(localStorage.getItem('user')) || {}; } catch { return {}; } };
 const ensureArray = (val) => {
   if (Array.isArray(val)) return val;
   if (typeof val === 'string' && val.trim()) return val.split(',').map((s) => s.trim()).filter(Boolean);
   return [];
 };
-
 const esc = (str) => (str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
 // ─── DOCX Generator ───────────────────────────────────────────
 const generateDOCX = (profile, template, primaryColor, socialLinks) => {
-  const skillsList = ensureArray(profile.technicalSkills).map(esc).join(', ');
+  const skillsList     = ensureArray(profile.technicalSkills).map(esc).join(', ');
   const softSkillsList = ensureArray(profile.softSkills).map(esc).join(', ');
-
-  const experienceHtml = (profile.workExperience || []).map((exp) => `
-    <p><b>${esc(exp.jobTitle)}</b> — ${esc(exp.company)}<br/><i>${esc(exp.duration)}</i></p>
-    <p>${esc(exp.responsibilities)}</p>
-  `).join('');
-
-  const educationHtml = (profile.education || []).map((edu) => `
-    <p><b>${esc(edu.degree)}</b><br/>${esc(edu.institution)} — ${esc(edu.year)}</p>
-  `).join('');
-
-  const projectsHtml = (profile.projects || []).map((proj) => `
-    <p><b>${esc(proj.projectName)}</b> (${esc(proj.technologies)})<br/>${esc(proj.description)}</p>
-  `).join('');
-
-  const certsHtml = ensureArray(profile.certifications).map((c) => `<li>${esc(c)}</li>`).join('');
-  const achieveHtml = ensureArray(profile.achievements).map((a) => `<li>${esc(a)}</li>`).join('');
-  const langsHtml = ensureArray(profile.languages).map(esc).join(', ');
-
-  const socialHtml = [
-    socialLinks.github ? `<p>GitHub: ${esc(socialLinks.github)}</p>` : '',
+  const experienceHtml = (profile.workExperience || []).map((exp) => `<p><b>${esc(exp.jobTitle)}</b> — ${esc(exp.company)}<br/><i>${esc(exp.duration)}</i></p><p>${esc(exp.responsibilities)}</p>`).join('');
+  const educationHtml  = (profile.education      || []).map((edu) => `<p><b>${esc(edu.degree)}</b><br/>${esc(edu.institution)} — ${esc(edu.year)}</p>`).join('');
+  const projectsHtml   = (profile.projects       || []).map((proj) => `<p><b>${esc(proj.projectName)}</b> (${esc(proj.technologies)})<br/>${esc(proj.description)}</p>`).join('');
+  const certsHtml      = ensureArray(profile.certifications).map((c) => `<li>${esc(c)}</li>`).join('');
+  const achieveHtml    = ensureArray(profile.achievements).map((a) => `<li>${esc(a)}</li>`).join('');
+  const langsHtml      = ensureArray(profile.languages).map(esc).join(', ');
+  const socialHtml     = [
+    socialLinks.github    ? `<p>GitHub: ${esc(socialLinks.github)}</p>`    : '',
     socialLinks.portfolio ? `<p>Portfolio: ${esc(socialLinks.portfolio)}</p>` : '',
-    socialLinks.twitter ? `<p>Twitter: ${esc(socialLinks.twitter)}</p>` : '',
-    socialLinks.website ? `<p>Website: ${esc(socialLinks.website)}</p>` : '',
+    socialLinks.twitter   ? `<p>Twitter: ${esc(socialLinks.twitter)}</p>`  : '',
+    socialLinks.website   ? `<p>Website: ${esc(socialLinks.website)}</p>`  : '',
   ].filter(Boolean).join('');
 
   const htmlContent = `
@@ -119,37 +95,33 @@ const generateDOCX = (profile, template, primaryColor, socialLinks) => {
           xmlns="http://www.w3.org/TR/REC-html40">
     <head><meta charset="utf-8">
     <style>
-      body { font-family: Calibri, sans-serif; font-size: 11pt; color: #222; margin: 40px; }
-      h1 { color: ${primaryColor}; font-size: 22pt; margin-bottom: 2px; }
-      h2 { color: ${primaryColor}; font-size: 13pt; border-bottom: 2px solid ${primaryColor}; padding-bottom: 4px; margin-top: 18px; }
-      .subtitle { color: #555; font-size: 12pt; }
-      .contact { color: #666; font-size: 10pt; }
-      p { margin: 4px 0; line-height: 1.5; }
-      li { margin: 2px 0; }
+      body{font-family:Calibri,sans-serif;font-size:11pt;color:#222;margin:40px;}
+      h1{color:${primaryColor};font-size:22pt;margin-bottom:2px;}
+      h2{color:${primaryColor};font-size:13pt;border-bottom:2px solid ${primaryColor};padding-bottom:4px;margin-top:18px;}
+      p{margin:4px 0;line-height:1.5;}li{margin:2px 0;}
     </style></head>
     <body>
       <h1>${esc(profile.fullName)}</h1>
-      <p class="subtitle">${esc(profile.workExperience?.[0]?.jobTitle || 'Professional')}</p>
-      <p class="contact">${[profile.email, profile.phoneNumber, profile.location].filter(Boolean).map(esc).join(' • ')}</p>
-      ${profile.linkedin ? `<p class="contact">LinkedIn: ${esc(profile.linkedin)}</p>` : ''}
+      <p>${esc(profile.workExperience?.[0]?.jobTitle || 'Professional')}</p>
+      <p>${[profile.email, profile.phoneNumber, profile.location].filter(Boolean).map(esc).join(' • ')}</p>
+      ${profile.linkedin ? `<p>LinkedIn: ${esc(profile.linkedin)}</p>` : ''}
       ${socialHtml}
-      ${profile.summary ? `<h2>Professional Summary</h2><p>${esc(profile.summary)}</p>` : ''}
-      ${experienceHtml ? `<h2>Work Experience</h2>${experienceHtml}` : ''}
-      ${educationHtml ? `<h2>Education</h2>${educationHtml}` : ''}
-      ${skillsList ? `<h2>Technical Skills</h2><p>${skillsList}</p>` : ''}
-      ${softSkillsList ? `<h2>Soft Skills</h2><p>${softSkillsList}</p>` : ''}
-      ${projectsHtml ? `<h2>Projects</h2>${projectsHtml}` : ''}
-      ${certsHtml ? `<h2>Certifications</h2><ul>${certsHtml}</ul>` : ''}
-      ${achieveHtml ? `<h2>Achievements</h2><ul>${achieveHtml}</ul>` : ''}
-      ${langsHtml ? `<h2>Languages</h2><p>${langsHtml}</p>` : ''}
-      ${profile.references ? `<h2>References</h2><p>${esc(profile.references)}</p>` : ''}
-    </body></html>
-  `;
+      ${profile.summary       ? `<h2>Professional Summary</h2><p>${esc(profile.summary)}</p>`          : ''}
+      ${experienceHtml        ? `<h2>Work Experience</h2>${experienceHtml}`                             : ''}
+      ${educationHtml         ? `<h2>Education</h2>${educationHtml}`                                    : ''}
+      ${skillsList            ? `<h2>Technical Skills</h2><p>${skillsList}</p>`                         : ''}
+      ${softSkillsList        ? `<h2>Soft Skills</h2><p>${softSkillsList}</p>`                          : ''}
+      ${projectsHtml          ? `<h2>Projects</h2>${projectsHtml}`                                      : ''}
+      ${certsHtml             ? `<h2>Certifications</h2><ul>${certsHtml}</ul>`                          : ''}
+      ${achieveHtml           ? `<h2>Achievements</h2><ul>${achieveHtml}</ul>`                          : ''}
+      ${langsHtml             ? `<h2>Languages</h2><p>${langsHtml}</p>`                                 : ''}
+      ${profile.references    ? `<h2>References</h2><p>${esc(profile.references)}</p>`                  : ''}
+    </body></html>`;
 
   const blob = new Blob(['\ufeff', htmlContent], { type: 'application/msword' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
   a.download = `${(profile.fullName || 'Resume').replace(/\s/g, '_')}_${template}_resume.doc`;
   document.body.appendChild(a);
   a.click();
@@ -160,10 +132,10 @@ const generateDOCX = (profile, template, primaryColor, socialLinks) => {
 // ─── Template Thumbnail ────────────────────────────────────────
 function TemplateThumbnail({ templateId, primaryColor }) {
   const configs = {
-    corporate: { style: 'full-header' },
-    modern: { style: 'sidebar' },
-    ats: { style: 'minimal-header' },
-    premium: { style: 'gradient-header' },
+    corporate: { style: 'full-header'     },
+    modern:    { style: 'sidebar'         },
+    ats:       { style: 'minimal-header'  },
+    premium:   { style: 'gradient-header' },
   };
   const cfg = configs[templateId] || configs.corporate;
 
@@ -188,16 +160,12 @@ function TemplateThumbnail({ templateId, primaryColor }) {
       </div>
     );
   }
-
   return (
     <div className="tmpl-thumb tmpl-thumb-col">
-      <div
-        className="tmpl-thumb-header"
-        style={{
-          background: cfg.style === 'minimal-header' ? '#fff' : cfg.style === 'gradient-header' ? `linear-gradient(135deg, ${primaryColor}, ${primaryColor}cc)` : primaryColor,
-          borderBottom: cfg.style === 'minimal-header' ? `2px solid ${primaryColor}` : 'none',
-        }}
-      >
+      <div className="tmpl-thumb-header" style={{
+        background:   cfg.style === 'minimal-header'  ? '#fff' : cfg.style === 'gradient-header' ? `linear-gradient(135deg, ${primaryColor}, ${primaryColor}cc)` : primaryColor,
+        borderBottom: cfg.style === 'minimal-header'  ? `2px solid ${primaryColor}` : 'none',
+      }}>
         <div className="tmpl-thumb-line" style={{ width: '55%', background: cfg.style === 'minimal-header' ? '#333' : '#fff', opacity: 0.9, height: 7 }} />
         <div className="tmpl-thumb-line" style={{ width: '35%', background: cfg.style === 'minimal-header' ? '#666' : '#fff', opacity: 0.5 }} />
       </div>
@@ -218,64 +186,79 @@ function TemplateThumbnail({ templateId, primaryColor }) {
 // MAIN COMPONENT
 // ═══════════════════════════════════════════════════════════════
 function CVPreview({ studentId }) {
-  const [profile, setProfile] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [template, setTemplate] = useState('corporate');
-  const [primaryColor, setPrimaryColor] = useState('#3b82f6');
-  const [showColorPicker, setShowColorPicker] = useState(false);
+  const [profile,          setProfile]          = useState(null);
+  const [loading,          setLoading]          = useState(true);
+  const [error,            setError]            = useState('');
+  const [template,         setTemplate]         = useState('corporate');
+  const [primaryColor,     setPrimaryColor]     = useState('#3b82f6');
+  const [showColorPicker,  setShowColorPicker]  = useState(false);
   const [showPreviewModal, setShowPreviewModal] = useState(false);
-  const [modalAnimateIn, setModalAnimateIn] = useState(false);
-  const [profilePhoto, setProfilePhoto] = useState(null);
-  const [selectedFont, setSelectedFont] = useState('default');
-  const [showFontPicker, setShowFontPicker] = useState(false);
+  const [modalAnimateIn,   setModalAnimateIn]   = useState(false);
+
+  // ─── Profile Photo State ───────────────────────────────────
+  // Priority: 1) manually uploaded in CVPreview  2) profilePicture from API/StudentProfile  3) null
+  const [profilePhoto,     setProfilePhoto]     = useState(null);
+  const [photoSource,      setPhotoSource]      = useState('none'); // 'api' | 'manual' | 'none'
+
+  const [selectedFont,     setSelectedFont]     = useState('default');
+  const [showFontPicker,   setShowFontPicker]   = useState(false);
   const [showSocialEditor, setShowSocialEditor] = useState(false);
-  const [socialLinks, setSocialLinks] = useState({ github: '', portfolio: '', twitter: '', website: '' });
-  const [pdfGenerating, setPdfGenerating] = useState(false);
+  const [socialLinks,      setSocialLinks]      = useState({ github: '', portfolio: '', twitter: '', website: '' });
+  const [pdfGenerating,    setPdfGenerating]    = useState(false);
 
   const photoInputRef = useRef(null);
-  const user = getUser();
-  const fetchId = studentId || user?.id || null;
-  const apiUrl = environment?.apiUrl || 'http://localhost:5000/api/users';
+  const user          = getUser();
+  const fetchId       = studentId || user?.id || null;
+  const apiUrl        = environment?.apiUrl || 'http://localhost:5000/api/users';
 
   // ─── Load Demo Data ───────────────────────────────────────
   const loadDemoData = useCallback(() => {
     setProfile(DEMO_PROFILE);
     setSocialLinks(DEMO_SOCIAL);
+    // Demo has no real photo — keep whatever is already set
   }, []);
 
   // ─── Normalize profile data from API ──────────────────────
   const normalizeProfile = useCallback((data) => ({
-    fullName: data.fullName || user?.name || 'Your Name',
-    email: data.email || user?.email || 'email@example.com',
-    phoneNumber: data.phoneNumber || '',
-    location: data.location || '',
-    linkedin: data.linkedin || '',
-    summary: data.summary || '',
+    fullName:        data.fullName        || user?.name  || 'Your Name',
+    email:           data.email           || user?.email || 'email@example.com',
+    phoneNumber:     data.phoneNumber     || '',
+    location:        data.location        || '',
+    linkedin:        data.linkedin        || '',
+    summary:         data.summary         || '',
     technicalSkills: ensureArray(data.technicalSkills),
-    softSkills: ensureArray(data.softSkills),
-    education: Array.isArray(data.education) ? data.education : [],
-    workExperience: Array.isArray(data.workExperience) ? data.workExperience : [],
-    projects: Array.isArray(data.projects) ? data.projects : [],
-    certifications: ensureArray(data.certifications),
-    achievements: ensureArray(data.achievements),
-    references: data.references || '',
-    languages: ensureArray(data.languages),
+    softSkills:      ensureArray(data.softSkills),
+    education:       Array.isArray(data.education)      ? data.education      : [],
+    workExperience:  Array.isArray(data.workExperience) ? data.workExperience : [],
+    projects:        Array.isArray(data.projects)       ? data.projects       : [],
+    certifications:  ensureArray(data.certifications),
+    achievements:    ensureArray(data.achievements),
+    references:      data.references      || '',
+    languages:       ensureArray(data.languages),
+    profilePicture:  data.profilePicture  || null,   // ← from StudentProfile
   }), [user?.name, user?.email]);
 
   // ─── Fetch Profile ────────────────────────────────────────
   const fetchProfile = useCallback(async (id) => {
     try {
-      const res = await fetch(`${apiUrl}/profile/${id}`);
+      const res  = await fetch(`${apiUrl}/profile/${id}`);
       const data = await res.json();
 
       if (res.ok) {
-        setProfile(normalizeProfile(data));
-        // Sync social links from API if available
+        const norm = normalizeProfile(data);
+        setProfile(norm);
+
+        // ── Auto-load profile picture from StudentProfile ──
+        // Only set from API if the user hasn't manually uploaded one this session
+        if (norm.profilePicture && photoSource !== 'manual') {
+          setProfilePhoto(norm.profilePicture);
+          setPhotoSource('api');
+        }
+
         if (data.github || data.portfolio) {
           setSocialLinks((prev) => ({
             ...prev,
-            github: data.github || prev.github,
+            github:    data.github    || prev.github,
             portfolio: data.portfolio || prev.portfolio,
           }));
         }
@@ -290,19 +273,26 @@ function CVPreview({ studentId }) {
     } finally {
       setLoading(false);
     }
-  }, [apiUrl, normalizeProfile, loadDemoData]);
+  }, [apiUrl, normalizeProfile, loadDemoData, photoSource]);
 
   // ─── Load saved preferences + fetch profile ───────────────
   useEffect(() => {
     try {
-      setTemplate(localStorage.getItem('selectedTemplate') || 'corporate');
-      setPrimaryColor(localStorage.getItem('selectedColor') || '#3b82f6');
-      setSelectedFont(localStorage.getItem('selectedFont') || 'default');
-      setProfilePhoto(localStorage.getItem('profilePhoto') || null);
+      setTemplate(localStorage.getItem('selectedTemplate')   || 'corporate');
+      setPrimaryColor(localStorage.getItem('selectedColor')  || '#3b82f6');
+      setSelectedFont(localStorage.getItem('selectedFont')   || 'default');
+
+      // If user had manually uploaded a photo in a previous session, restore it
+      const savedPhoto = localStorage.getItem('cvManualPhoto');
+      if (savedPhoto) {
+        setProfilePhoto(savedPhoto);
+        setPhotoSource('manual');
+      }
+
       const savedSocial = JSON.parse(localStorage.getItem('socialLinks') || 'null');
       if (savedSocial) setSocialLinks(savedSocial);
     } catch {
-      // Ignore localStorage errors
+      // ignore
     }
 
     if (fetchId) {
@@ -320,9 +310,9 @@ function CVPreview({ studentId }) {
     if (font?.url) {
       const existing = document.querySelector(`link[data-font-id="${font.id}"]`);
       if (!existing) {
-        const link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.href = font.url;
+        const link         = document.createElement('link');
+        link.rel           = 'stylesheet';
+        link.href          = font.url;
         link.dataset.fontId = font.id;
         document.head.appendChild(link);
       }
@@ -342,9 +332,9 @@ function CVPreview({ studentId }) {
   }, [showPreviewModal]);
 
   // ─── Handlers ─────────────────────────────────────────────
-  const handleTemplateChange = (templateId) => {
-    setTemplate(templateId);
-    try { localStorage.setItem('selectedTemplate', templateId); } catch {}
+  const handleTemplateChange = (id) => {
+    setTemplate(id);
+    try { localStorage.setItem('selectedTemplate', id); } catch {}
   };
 
   const handleColorChange = (color) => {
@@ -359,26 +349,34 @@ function CVPreview({ studentId }) {
     setShowFontPicker(false);
   };
 
+  // Manual photo upload (overrides the API photo)
   const handlePhotoUpload = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    if (file.size > 2 * 1024 * 1024) {
-      alert('Photo must be under 2MB');
-      return;
-    }
-    const reader = new FileReader();
-    reader.onload = (ev) => {
+    if (file.size > 2 * 1024 * 1024) { alert('Photo must be under 2 MB'); return; }
+    const reader    = new FileReader();
+    reader.onload   = (ev) => {
       const dataUrl = ev.target.result;
       setProfilePhoto(dataUrl);
-      try { localStorage.setItem('profilePhoto', dataUrl); } catch {}
+      setPhotoSource('manual');
+      try { localStorage.setItem('cvManualPhoto', dataUrl); } catch {}
     };
     reader.readAsDataURL(file);
   };
 
+  // Remove manual override — fall back to API photo if available
   const handleRemovePhoto = () => {
-    setProfilePhoto(null);
-    try { localStorage.removeItem('profilePhoto'); } catch {}
+    try { localStorage.removeItem('cvManualPhoto'); } catch {}
     if (photoInputRef.current) photoInputRef.current.value = '';
+
+    // If profile has an API photo, revert to it
+    if (profile?.profilePicture) {
+      setProfilePhoto(profile.profilePicture);
+      setPhotoSource('api');
+    } else {
+      setProfilePhoto(null);
+      setPhotoSource('none');
+    }
   };
 
   const handleSocialChange = (key, value) => {
@@ -392,102 +390,58 @@ function CVPreview({ studentId }) {
     setTimeout(() => setShowPreviewModal(false), 280);
   };
 
-  const handlePrint = () => window.print();
-
   const getSelectedFontFamily = () => {
     const font = FONT_OPTIONS.find((f) => f.id === selectedFont);
     return font ? font.family : FONT_OPTIONS[0].family;
   };
 
-  // ─── PDF Download (multi-page) ────────────────────────────
+  // ─── PDF Download ─────────────────────────────────────────
   const downloadPDF = async () => {
     if (!profile || pdfGenerating) return;
     setPdfGenerating(true);
-
     const element = document.getElementById('cv-document');
-    if (!element) {
-      setPdfGenerating(false);
-      return;
-    }
+    if (!element) { setPdfGenerating(false); return; }
 
-    // Show loading overlay
     const overlay = document.createElement('div');
     overlay.className = 'pdf-loading-overlay';
-    overlay.innerHTML = `
-      <div class="pdf-loading-content">
-        <div class="pdf-spinner"></div>
-        <p>Generating PDF... Please wait</p>
-      </div>
-    `;
+    overlay.innerHTML = `<div class="pdf-loading-content"><div class="pdf-spinner"></div><p>Generating PDF…</p></div>`;
     document.body.appendChild(overlay);
 
     try {
-      // Save original styles
-      const originalStyles = {
-        width: element.style.width,
-        maxWidth: element.style.maxWidth,
-        margin: element.style.margin,
-        padding: element.style.padding,
-        boxShadow: element.style.boxShadow,
-      };
-
-      // Apply PDF rendering styles
-      Object.assign(element.style, {
-        width: '794px',
-        maxWidth: '794px',
-        margin: '0',
-        padding: '0',
-        boxShadow: 'none',
-      });
-
+      const orig = { width: element.style.width, maxWidth: element.style.maxWidth, margin: element.style.margin, boxShadow: element.style.boxShadow };
+      Object.assign(element.style, { width: '794px', maxWidth: '794px', margin: '0', boxShadow: 'none' });
       await new Promise((r) => setTimeout(r, 200));
 
       const canvas = await html2canvas(element, {
-        scale: 2,
-        logging: false,
-        useCORS: true,
-        backgroundColor: '#ffffff',
-        width: 794,
-        windowWidth: 794,
+        scale: 2, logging: false, useCORS: true, backgroundColor: '#ffffff', width: 794, windowWidth: 794,
       });
+      Object.assign(element.style, orig);
 
-      // Restore original styles
-      Object.assign(element.style, originalStyles);
-
-      const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4', compress: true });
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const pageHeight = pdf.internal.pageSize.getHeight();
-      const imgWidth = pageWidth;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      const pageCanvasHeight = (pageHeight / imgHeight) * canvas.height;
-
-      let yOffset = 0;
-      let pageNum = 0;
+      const pdf           = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4', compress: true });
+      const pageWidth     = pdf.internal.pageSize.getWidth();
+      const pageHeight    = pdf.internal.pageSize.getHeight();
+      const imgWidth      = pageWidth;
+      const imgHeight     = (canvas.height * imgWidth) / canvas.width;
+      const pgCanvasH     = (pageHeight / imgHeight) * canvas.height;
+      let yOffset = 0, pageNum = 0;
 
       while (yOffset < canvas.height) {
         if (pageNum > 0) pdf.addPage();
-
-        const sliceHeight = Math.min(pageCanvasHeight, canvas.height - yOffset);
-        const pageCanvas = document.createElement('canvas');
-        pageCanvas.width = canvas.width;
-        pageCanvas.height = sliceHeight;
-        const ctx = pageCanvas.getContext('2d');
+        const sliceH  = Math.min(pgCanvasH, canvas.height - yOffset);
+        const pc      = document.createElement('canvas');
+        pc.width      = canvas.width;
+        pc.height     = sliceH;
+        const ctx     = pc.getContext('2d');
         ctx.fillStyle = '#ffffff';
-        ctx.fillRect(0, 0, pageCanvas.width, pageCanvas.height);
-        ctx.drawImage(canvas, 0, yOffset, canvas.width, sliceHeight, 0, 0, canvas.width, sliceHeight);
-
-        const pageImgData = pageCanvas.toDataURL('image/png', 1.0);
-        const sliceImgHeight = (sliceHeight * imgWidth) / canvas.width;
-        pdf.addImage(pageImgData, 'PNG', 0, 0, imgWidth, sliceImgHeight);
-
-        yOffset += pageCanvasHeight;
+        ctx.fillRect(0, 0, pc.width, pc.height);
+        ctx.drawImage(canvas, 0, yOffset, canvas.width, sliceH, 0, 0, canvas.width, sliceH);
+        pdf.addImage(pc.toDataURL('image/png', 1.0), 'PNG', 0, 0, imgWidth, (sliceH * imgWidth) / canvas.width);
+        yOffset += pgCanvasH;
         pageNum++;
       }
-
-      const fileName = `${(profile.fullName || 'Resume').replace(/\s/g, '_')}_${template}_resume.pdf`;
-      pdf.save(fileName);
+      pdf.save(`${(profile.fullName || 'Resume').replace(/\s/g, '_')}_${template}_resume.pdf`);
     } catch (err) {
-      console.error('PDF generation failed:', err);
+      console.error('PDF error:', err);
       setError('Failed to generate PDF. Please try again.');
     } finally {
       if (document.body.contains(overlay)) document.body.removeChild(overlay);
@@ -495,19 +449,16 @@ function CVPreview({ studentId }) {
     }
   };
 
-  const downloadDOCX = () => {
-    if (!profile) return;
-    generateDOCX(profile, template, primaryColor, socialLinks);
-  };
+  const downloadDOCX = () => { if (profile) generateDOCX(profile, template, primaryColor, socialLinks); };
 
   // ─── Social Links Renderer ────────────────────────────────
   const renderSocialLinks = (style = 'default') => {
     const links = [
-      { key: 'linkedin', icon: '🔗', value: profile.linkedin },
-      { key: 'github', icon: '💻', value: socialLinks.github },
-      { key: 'portfolio', icon: '🌐', value: socialLinks.portfolio },
-      { key: 'twitter', icon: '🐦', value: socialLinks.twitter },
-      { key: 'website', icon: '🏠', value: socialLinks.website },
+      { key: 'linkedin',  icon: '🔗', value: profile.linkedin        },
+      { key: 'github',    icon: '💻', value: socialLinks.github      },
+      { key: 'portfolio', icon: '🌐', value: socialLinks.portfolio   },
+      { key: 'twitter',   icon: '🐦', value: socialLinks.twitter     },
+      { key: 'website',   icon: '🏠', value: socialLinks.website     },
     ].filter((l) => l.value);
     if (links.length === 0) return null;
     return (
@@ -523,11 +474,17 @@ function CVPreview({ studentId }) {
   };
 
   // ─── Profile Photo Renderer ───────────────────────────────
+  // Uses the unified `profilePhoto` state (API photo OR manually uploaded)
   const renderProfilePhoto = (size = 80, borderColor = '#fff') => {
     if (!profilePhoto) return null;
     return (
-      <div className="cv-profile-photo-wrapper" style={{ width: size, height: size }}>
-        <img src={profilePhoto} alt="Profile" className="cv-profile-photo" style={{ width: size, height: size, border: `3px solid ${borderColor}` }} />
+      <div className="cv-profile-photo-wrapper" style={{ width: size, height: size, flexShrink: 0 }}>
+        <img
+          src={profilePhoto}
+          alt="Profile"
+          className="cv-profile-photo"
+          style={{ width: size, height: size, borderRadius: '50%', objectFit: 'cover', border: `3px solid ${borderColor}`, display: 'block' }}
+        />
       </div>
     );
   };
@@ -545,112 +502,73 @@ function CVPreview({ studentId }) {
             <h1 className="cv-name">{profile.fullName}</h1>
             <div className="cv-title">{profile.workExperience?.[0]?.jobTitle || 'Professional'}</div>
             <div className="cv-contact-info">
-              {profile.email && <span>📧 {profile.email}</span>}
+              {profile.email       && <span>📧 {profile.email}</span>}
               {profile.phoneNumber && <span>📞 {profile.phoneNumber}</span>}
-              {profile.location && <span>📍 {profile.location}</span>}
+              {profile.location    && <span>📍 {profile.location}</span>}
             </div>
             {renderSocialLinks('header')}
           </div>
         </div>
       </div>
-
-      {profile.summary && (
-        <section className="cv-section">
-          <h3 className="cv-section-title">Professional Summary</h3>
-          <p className="cv-summary-text">{profile.summary}</p>
-        </section>
-      )}
-
+      {profile.summary && <section className="cv-section"><h3 className="cv-section-title">Professional Summary</h3><p className="cv-summary-text">{profile.summary}</p></section>}
       {profile.workExperience?.length > 0 && (
         <section className="cv-section">
           <h3 className="cv-section-title">Work Experience</h3>
           {profile.workExperience.map((exp, i) => (
             <div key={i} className="cv-item">
-              <div className="cv-item-header">
-                <span className="cv-item-title">{exp.jobTitle}</span>
-                <span className="cv-item-date">{exp.duration}</span>
-              </div>
+              <div className="cv-item-header"><span className="cv-item-title">{exp.jobTitle}</span><span className="cv-item-date">{exp.duration}</span></div>
               <div className="cv-item-subtitle">{exp.company}</div>
               <p className="cv-item-desc">{exp.responsibilities}</p>
             </div>
           ))}
         </section>
       )}
-
       {profile.education?.length > 0 && (
         <section className="cv-section">
           <h3 className="cv-section-title">Education</h3>
           {profile.education.map((edu, i) => (
             <div key={i} className="cv-item">
-              <div className="cv-item-header">
-                <span className="cv-item-title">{edu.degree}</span>
-                <span className="cv-item-date">{edu.year}</span>
-              </div>
+              <div className="cv-item-header"><span className="cv-item-title">{edu.degree}</span><span className="cv-item-date">{edu.year}</span></div>
               <div className="cv-item-subtitle">{edu.institution}</div>
             </div>
           ))}
         </section>
       )}
-
       {profile.technicalSkills?.length > 0 && (
         <section className="cv-section">
           <h3 className="cv-section-title">Technical Skills</h3>
           <div className="cv-skills">
-            {profile.technicalSkills.map((skill, i) => (
-              <span key={i} className="skill-tag" style={{ background: primaryColor }}>{skill}</span>
-            ))}
+            {profile.technicalSkills.map((skill, i) => <span key={i} className="skill-tag" style={{ background: primaryColor }}>{skill}</span>)}
           </div>
         </section>
       )}
-
       {profile.softSkills?.length > 0 && (
         <section className="cv-section">
           <h3 className="cv-section-title">Soft Skills</h3>
           <div className="cv-skills">
-            {profile.softSkills.map((skill, i) => (
-              <span key={i} className="skill-tag skill-tag-outline" style={{ borderColor: primaryColor, color: primaryColor }}>{skill}</span>
-            ))}
+            {profile.softSkills.map((skill, i) => <span key={i} className="skill-tag skill-tag-outline" style={{ borderColor: primaryColor, color: primaryColor }}>{skill}</span>)}
           </div>
         </section>
       )}
-
       {profile.projects?.length > 0 && (
         <section className="cv-section">
           <h3 className="cv-section-title">Projects</h3>
           {profile.projects.map((proj, i) => (
             <div key={i} className="cv-item">
-              <div className="cv-item-header">
-                <span className="cv-item-title">{proj.projectName}</span>
-                <span className="cv-item-tech">{proj.technologies}</span>
-              </div>
+              <div className="cv-item-header"><span className="cv-item-title">{proj.projectName}</span><span className="cv-item-tech">{proj.technologies}</span></div>
               <p className="cv-item-desc">{proj.description}</p>
             </div>
           ))}
         </section>
       )}
-
       {profile.certifications?.length > 0 && (
         <section className="cv-section">
           <h3 className="cv-section-title">Certifications</h3>
-          <div className="cv-cert-list">
-            {profile.certifications.map((cert, i) => <span key={i} className="cert-item">🏆 {cert}</span>)}
-          </div>
+          <div className="cv-cert-list">{profile.certifications.map((cert, i) => <span key={i} className="cert-item">🏆 {cert}</span>)}</div>
         </section>
       )}
-
-      {profile.languages?.length > 0 && (
-        <section className="cv-section">
-          <h3 className="cv-section-title">Languages</h3>
-          <p>{profile.languages.join(' • ')}</p>
-        </section>
-      )}
-
-      {profile.references && (
-        <section className="cv-section">
-          <h3 className="cv-section-title">References</h3>
-          <p>{profile.references}</p>
-        </section>
-      )}
+      {profile.languages?.length > 0 && <section className="cv-section"><h3 className="cv-section-title">Languages</h3><p>{profile.languages.join(' • ')}</p></section>}
+      {profile.references && <section className="cv-section"><h3 className="cv-section-title">References</h3><p>{profile.references}</p></section>}
     </div>
   );
 
@@ -662,32 +580,19 @@ function CVPreview({ studentId }) {
         <div className="cv-title-sidebar">{profile.workExperience?.[0]?.jobTitle || 'Professional'}</div>
         <hr />
         <div className="cv-contact-sidebar">
-          {profile.email && <div><strong>📧 Email</strong><br />{profile.email}</div>}
+          {profile.email       && <div><strong>📧 Email</strong><br />{profile.email}</div>}
           {profile.phoneNumber && <div><strong>📞 Phone</strong><br />{profile.phoneNumber}</div>}
-          {profile.location && <div><strong>📍 Location</strong><br />{profile.location}</div>}
+          {profile.location    && <div><strong>📍 Location</strong><br />{profile.location}</div>}
         </div>
         {(() => {
-          const links = [
-            { icon: '🔗', value: profile.linkedin },
-            { icon: '💻', value: socialLinks.github },
-            { icon: '🌐', value: socialLinks.portfolio },
-          ].filter((l) => l.value);
-          if (links.length === 0) return null;
-          return (
-            <div className="cv-social-sidebar">
-              <strong>🔗 Links</strong>
-              {links.map((l, i) => <div key={i} className="social-sidebar-item">{l.icon} {l.value}</div>)}
-            </div>
-          );
+          const links = [{ icon: '🔗', value: profile.linkedin }, { icon: '💻', value: socialLinks.github }, { icon: '🌐', value: socialLinks.portfolio }].filter((l) => l.value);
+          if (!links.length) return null;
+          return <div className="cv-social-sidebar"><strong>🔗 Links</strong>{links.map((l, i) => <div key={i} className="social-sidebar-item">{l.icon} {l.value}</div>)}</div>;
         })()}
         {profile.technicalSkills?.length > 0 && (
           <div className="cv-skills-sidebar">
             <strong>⚡ Skills</strong>
-            <div className="cv-skills-list">
-              {profile.technicalSkills.map((skill, i) => (
-                <span key={i} className="skill-tag-sidebar">{skill}</span>
-              ))}
-            </div>
+            <div className="cv-skills-list">{profile.technicalSkills.map((skill, i) => <span key={i} className="skill-tag-sidebar">{skill}</span>)}</div>
           </div>
         )}
         {profile.languages?.length > 0 && (
@@ -698,21 +603,13 @@ function CVPreview({ studentId }) {
         )}
       </div>
       <div className="cv-main">
-        {profile.summary && (
-          <section>
-            <h3 className="cv-section-title-modern">Profile</h3>
-            <p>{profile.summary}</p>
-          </section>
-        )}
+        {profile.summary && <section><h3 className="cv-section-title-modern">Profile</h3><p>{profile.summary}</p></section>}
         {profile.workExperience?.length > 0 && (
           <section>
             <h3 className="cv-section-title-modern">Experience</h3>
             {profile.workExperience.map((exp, i) => (
               <div key={i} className="cv-item-modern">
-                <div className="cv-item-header-modern">
-                  <span className="cv-item-title">{exp.jobTitle}</span>
-                  <span className="cv-item-date">{exp.duration}</span>
-                </div>
+                <div className="cv-item-header-modern"><span className="cv-item-title">{exp.jobTitle}</span><span className="cv-item-date">{exp.duration}</span></div>
                 <div className="cv-item-subtitle">{exp.company}</div>
                 <p className="cv-item-desc">{exp.responsibilities}</p>
               </div>
@@ -761,32 +658,22 @@ function CVPreview({ studentId }) {
           <div>
             <h1>{profile.fullName}</h1>
             <p>{profile.workExperience?.[0]?.jobTitle || 'Professional'}</p>
-            <div className="cv-contact-ats">
-              {[profile.email, profile.phoneNumber, profile.location].filter(Boolean).join(' | ')}
-            </div>
+            <div className="cv-contact-ats">{[profile.email, profile.phoneNumber, profile.location].filter(Boolean).join(' | ')}</div>
             {renderSocialLinks('ats')}
           </div>
         </div>
       </div>
-      {profile.summary && (<div className="cv-section-ats"><h3>SUMMARY</h3><p>{profile.summary}</p></div>)}
+      {profile.summary && <div className="cv-section-ats"><h3>SUMMARY</h3><p>{profile.summary}</p></div>}
       {profile.workExperience?.length > 0 && (
         <div className="cv-section-ats">
           <h3>WORK EXPERIENCE</h3>
-          {profile.workExperience.map((exp, i) => (
-            <div key={i} className="cv-item-ats">
-              <strong>{exp.jobTitle}</strong> | {exp.company}<br />
-              <em>{exp.duration}</em>
-              <p>{exp.responsibilities}</p>
-            </div>
-          ))}
+          {profile.workExperience.map((exp, i) => <div key={i} className="cv-item-ats"><strong>{exp.jobTitle}</strong> | {exp.company}<br /><em>{exp.duration}</em><p>{exp.responsibilities}</p></div>)}
         </div>
       )}
       {profile.education?.length > 0 && (
         <div className="cv-section-ats">
           <h3>EDUCATION</h3>
-          {profile.education.map((edu, i) => (
-            <div key={i}><strong>{edu.degree}</strong><br />{edu.institution}, {edu.year}</div>
-          ))}
+          {profile.education.map((edu, i) => <div key={i}><strong>{edu.degree}</strong><br />{edu.institution}, {edu.year}</div>)}
         </div>
       )}
       {profile.technicalSkills?.length > 0 && (
@@ -796,17 +683,10 @@ function CVPreview({ studentId }) {
           {profile.softSkills?.length > 0 && <p><strong>Soft Skills:</strong> {profile.softSkills.join(', ')}</p>}
         </div>
       )}
-      {profile.projects?.length > 0 && (
-        <div className="cv-section-ats">
-          <h3>PROJECTS</h3>
-          {profile.projects.map((proj, i) => (
-            <div key={i} className="cv-item-ats"><strong>{proj.projectName}</strong> ({proj.technologies})<br />{proj.description}</div>
-          ))}
-        </div>
-      )}
-      {profile.certifications?.length > 0 && (<div className="cv-section-ats"><h3>CERTIFICATIONS</h3><p>{profile.certifications.join(', ')}</p></div>)}
-      {profile.languages?.length > 0 && (<div className="cv-section-ats"><h3>LANGUAGES</h3><p>{profile.languages.join(', ')}</p></div>)}
-      {profile.references && (<div className="cv-section-ats"><h3>REFERENCES</h3><p>{profile.references}</p></div>)}
+      {profile.projects?.length > 0 && <div className="cv-section-ats"><h3>PROJECTS</h3>{profile.projects.map((proj, i) => <div key={i} className="cv-item-ats"><strong>{proj.projectName}</strong> ({proj.technologies})<br />{proj.description}</div>)}</div>}
+      {profile.certifications?.length > 0 && <div className="cv-section-ats"><h3>CERTIFICATIONS</h3><p>{profile.certifications.join(', ')}</p></div>}
+      {profile.languages?.length > 0 && <div className="cv-section-ats"><h3>LANGUAGES</h3><p>{profile.languages.join(', ')}</p></div>}
+      {profile.references && <div className="cv-section-ats"><h3>REFERENCES</h3><p>{profile.references}</p></div>}
     </div>
   );
 
@@ -818,14 +698,12 @@ function CVPreview({ studentId }) {
           <div className="cv-premium-header-text">
             <h1>{profile.fullName}</h1>
             <p>{profile.workExperience?.[0]?.jobTitle || 'Professional'}</p>
-            <div className="cv-premium-contact">
-              {[profile.email, profile.phoneNumber, profile.location].filter(Boolean).join(' • ')}
-            </div>
+            <div className="cv-premium-contact">{[profile.email, profile.phoneNumber, profile.location].filter(Boolean).join(' • ')}</div>
             {renderSocialLinks('premium')}
           </div>
         </div>
       </div>
-      {profile.summary && (<div className="cv-premium-section"><h3 style={{ color: primaryColor }}>Executive Summary</h3><p>{profile.summary}</p></div>)}
+      {profile.summary && <div className="cv-premium-section"><h3 style={{ color: primaryColor }}>Executive Summary</h3><p>{profile.summary}</p></div>}
       {profile.workExperience?.length > 0 && (
         <div className="cv-premium-section">
           <h3 style={{ color: primaryColor }}>Professional Experience</h3>
@@ -852,11 +730,7 @@ function CVPreview({ studentId }) {
       {profile.technicalSkills?.length > 0 && (
         <div className="cv-premium-section">
           <h3 style={{ color: primaryColor }}>Core Competencies</h3>
-          <div className="cv-premium-skills">
-            {profile.technicalSkills.map((skill, i) => (
-              <span key={i} className="premium-skill-tag" style={{ background: primaryColor }}>{skill}</span>
-            ))}
-          </div>
+          <div className="cv-premium-skills">{profile.technicalSkills.map((skill, i) => <span key={i} className="premium-skill-tag" style={{ background: primaryColor }}>{skill}</span>)}</div>
         </div>
       )}
       {profile.projects?.length > 0 && (
@@ -879,43 +753,23 @@ function CVPreview({ studentId }) {
           </div>
         </div>
       )}
-      {profile.languages?.length > 0 && (<div className="cv-premium-section"><h3 style={{ color: primaryColor }}>Languages</h3><p>{profile.languages.join(' • ')}</p></div>)}
+      {profile.languages?.length > 0 && <div className="cv-premium-section"><h3 style={{ color: primaryColor }}>Languages</h3><p>{profile.languages.join(' • ')}</p></div>}
     </div>
   );
 
   const renderCurrentTemplate = () => {
     switch (template) {
-      case 'modern': return renderModernTemplate();
-      case 'ats': return renderATSTemplate();
+      case 'modern':  return renderModernTemplate();
+      case 'ats':     return renderATSTemplate();
       case 'premium': return renderPremiumTemplate();
-      default: return renderCorporateTemplate();
+      default:        return renderCorporateTemplate();
     }
   };
 
-  // ─── Loading / Error States ───────────────────────────────
-  if (loading) {
-    return (
-      <div className="cv-wrapper">
-        <div className="cv-loading"><div className="loading-spinner"></div><p>Loading resume data...</p></div>
-      </div>
-    );
-  }
-
-  if (error && !profile) {
-    return (
-      <div className="cv-wrapper">
-        <div className="cv-error"><p>{error}</p></div>
-      </div>
-    );
-  }
-
-  if (!profile) {
-    return (
-      <div className="cv-wrapper">
-        <div className="cv-error"><p>No profile data found. Please complete your profile first.</p></div>
-      </div>
-    );
-  }
+  // ─── Loading / Error ──────────────────────────────────────
+  if (loading) return <div className="cv-wrapper"><div className="cv-loading"><div className="loading-spinner" /><p>Loading resume data…</p></div></div>;
+  if (error && !profile) return <div className="cv-wrapper"><div className="cv-error"><p>{error}</p></div></div>;
+  if (!profile) return <div className="cv-wrapper"><div className="cv-error"><p>No profile data found. Please complete your profile first.</p></div></div>;
 
   // ═══════════════════════════════════════════════════════════════
   // MAIN RENDER
@@ -930,7 +784,12 @@ function CVPreview({ studentId }) {
 
         <div className="profile-status">
           <i className="status-icon">✓</i>
-          <span>Profile found. Choose a template and click Preview or Download.</span>
+          <span>
+            Profile found.
+            {photoSource === 'api'    && ' Profile photo loaded from your Student Profile.'}
+            {photoSource === 'manual' && ' Using manually uploaded photo.'}
+            {photoSource === 'none'   && ' No profile photo — add one in Student Profile or upload here.'}
+          </span>
         </div>
 
         {/* Template Cards */}
@@ -951,19 +810,14 @@ function CVPreview({ studentId }) {
 
         {/* Action Buttons */}
         <div className="action-buttons">
-          <button className="btn-preview" onClick={() => setShowPreviewModal(true)}>
-            <span className="btn-icon">👁️</span> Preview Resume
-          </button>
-          <button className="btn-download" onClick={downloadPDF} disabled={pdfGenerating}>
-            <span className="btn-icon">⬇️</span> {pdfGenerating ? 'Generating...' : 'Download PDF'}
-          </button>
-          <button className="btn-docx" onClick={downloadDOCX}>
-            <span className="btn-icon">📄</span> Download DOCX
-          </button>
+          <button className="btn-preview" onClick={() => setShowPreviewModal(true)}><span className="btn-icon">👁️</span> Preview Resume</button>
+          <button className="btn-download" onClick={downloadPDF} disabled={pdfGenerating}><span className="btn-icon">⬇️</span> {pdfGenerating ? 'Generating…' : 'Download PDF'}</button>
+          <button className="btn-docx" onClick={downloadDOCX}><span className="btn-icon">📄</span> Download DOCX</button>
         </div>
 
         {/* Customization Toolbar */}
         <div className="customization-toolbar">
+          {/* Color */}
           <div className="toolbar-item">
             <button className="color-trigger" onClick={() => { setShowColorPicker(!showColorPicker); setShowFontPicker(false); }} style={{ backgroundColor: primaryColor }}>
               <span>🎨</span> Accent Color
@@ -976,6 +830,8 @@ function CVPreview({ studentId }) {
               </div>
             )}
           </div>
+
+          {/* Font */}
           <div className="toolbar-item">
             <button className="font-trigger" onClick={() => { setShowFontPicker(!showFontPicker); setShowColorPicker(false); }}>
               <span>🔤</span> {FONT_OPTIONS.find((f) => f.id === selectedFont)?.name || 'Font'}
@@ -984,24 +840,30 @@ function CVPreview({ studentId }) {
               <div className="font-dropdown">
                 {FONT_OPTIONS.map((font) => (
                   <div key={font.id} className={`font-option ${selectedFont === font.id ? 'active' : ''}`} style={{ fontFamily: font.family }} onClick={() => handleFontChange(font.id)}>
-                    {font.name}
-                    {selectedFont === font.id && <span className="font-check">✓</span>}
+                    {font.name}{selectedFont === font.id && <span className="font-check">✓</span>}
                   </div>
                 ))}
               </div>
             )}
           </div>
+
+          {/* Photo — shows source badge */}
           <div className="toolbar-item">
             <input ref={photoInputRef} type="file" accept="image/jpeg,image/png,image/webp" onChange={handlePhotoUpload} style={{ display: 'none' }} id="photo-upload" />
             <button className="photo-trigger" onClick={() => photoInputRef.current?.click()}>
-              <span>📸</span> {profilePhoto ? 'Change Photo' : 'Add Photo'}
+              <span>📸</span>
+              {profilePhoto
+                ? photoSource === 'api' ? 'Change Photo (from Profile)' : 'Change Photo'
+                : 'Add Photo'}
             </button>
-            {profilePhoto && <button className="photo-remove" onClick={handleRemovePhoto} title="Remove photo">✕</button>}
+            {profilePhoto && (
+              <button className="photo-remove" onClick={handleRemovePhoto} title={photoSource === 'manual' ? 'Remove manual photo (revert to profile photo if available)' : 'Remove photo'}>✕</button>
+            )}
           </div>
+
+          {/* Social */}
           <div className="toolbar-item">
-            <button className="social-trigger" onClick={() => setShowSocialEditor(!showSocialEditor)}>
-              <span>🔗</span> Social Links
-            </button>
+            <button className="social-trigger" onClick={() => setShowSocialEditor(!showSocialEditor)}><span>🔗</span> Social Links</button>
           </div>
         </div>
 
@@ -1010,22 +872,12 @@ function CVPreview({ studentId }) {
           <div className="social-editor-panel">
             <h4>Social & Portfolio Links</h4>
             <div className="social-editor-grid">
-              <div className="social-input-group">
-                <label>💻 GitHub</label>
-                <input type="text" placeholder="github.com/username" value={socialLinks.github} onChange={(e) => handleSocialChange('github', e.target.value)} />
-              </div>
-              <div className="social-input-group">
-                <label>🌐 Portfolio</label>
-                <input type="text" placeholder="yourportfolio.com" value={socialLinks.portfolio} onChange={(e) => handleSocialChange('portfolio', e.target.value)} />
-              </div>
-              <div className="social-input-group">
-                <label>🐦 Twitter</label>
-                <input type="text" placeholder="twitter.com/username" value={socialLinks.twitter} onChange={(e) => handleSocialChange('twitter', e.target.value)} />
-              </div>
-              <div className="social-input-group">
-                <label>🏠 Website</label>
-                <input type="text" placeholder="yourwebsite.com" value={socialLinks.website} onChange={(e) => handleSocialChange('website', e.target.value)} />
-              </div>
+              {[['github', '💻 GitHub', 'github.com/username'], ['portfolio', '🌐 Portfolio', 'yourportfolio.com'], ['twitter', '🐦 Twitter', 'twitter.com/username'], ['website', '🏠 Website', 'yourwebsite.com']].map(([key, label, ph]) => (
+                <div key={key} className="social-input-group">
+                  <label>{label}</label>
+                  <input type="text" placeholder={ph} value={socialLinks[key]} onChange={(e) => handleSocialChange(key, e.target.value)} />
+                </div>
+              ))}
             </div>
             <button className="social-editor-close" onClick={() => setShowSocialEditor(false)}>Done</button>
           </div>
@@ -1048,14 +900,10 @@ function CVPreview({ studentId }) {
               </div>
               <div className="preview-modal-controls">
                 <div className="preview-template-switcher">
-                  {TEMPLATES.map((t) => (
-                    <button key={t.id} className={`preview-tmpl-btn ${template === t.id ? 'active' : ''}`} onClick={() => handleTemplateChange(t.id)} title={t.name}>{t.icon}</button>
-                  ))}
+                  {TEMPLATES.map((t) => <button key={t.id} className={`preview-tmpl-btn ${template === t.id ? 'active' : ''}`} onClick={() => handleTemplateChange(t.id)} title={t.name}>{t.icon}</button>)}
                 </div>
                 <div className="preview-color-switcher">
-                  {COLOR_OPTIONS.slice(0, 6).map((c) => (
-                    <div key={c.value} className={`preview-color-dot ${primaryColor === c.value ? 'active' : ''}`} style={{ background: c.value }} onClick={() => handleColorChange(c.value)} title={c.name} />
-                  ))}
+                  {COLOR_OPTIONS.slice(0, 6).map((c) => <div key={c.value} className={`preview-color-dot ${primaryColor === c.value ? 'active' : ''}`} style={{ background: c.value }} onClick={() => handleColorChange(c.value)} title={c.name} />)}
                 </div>
                 <button className="preview-modal-close" onClick={handleCloseModal}>✕</button>
               </div>
@@ -1064,11 +912,9 @@ function CVPreview({ studentId }) {
               <div className="preview-cv-paper">{renderCurrentTemplate()}</div>
             </div>
             <div className="preview-modal-footer">
-              <button className="btn-modal-pdf" onClick={downloadPDF} disabled={pdfGenerating}>
-                <span>⬇️</span> {pdfGenerating ? 'Generating...' : 'Download PDF'}
-              </button>
-              <button className="btn-modal-docx" onClick={downloadDOCX}><span>📄</span> Download DOCX</button>
-              <button className="btn-modal-print" onClick={handlePrint}><span>🖨️</span> Print</button>
+              <button className="btn-modal-pdf"   onClick={downloadPDF}  disabled={pdfGenerating}><span>⬇️</span> {pdfGenerating ? 'Generating…' : 'Download PDF'}</button>
+              <button className="btn-modal-docx"  onClick={downloadDOCX}><span>📄</span> Download DOCX</button>
+              <button className="btn-modal-print" onClick={() => window.print()}><span>🖨️</span> Print</button>
             </div>
           </div>
         </div>
