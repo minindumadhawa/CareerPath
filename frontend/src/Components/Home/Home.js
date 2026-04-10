@@ -1,13 +1,38 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import './Home.css';
 
 function Home() {
   const navigate = useNavigate();
+  const [programStats, setProgramStats] = useState({ leadership: 0, technical: 0, quizzes: 0 });
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  // Fetch basic stats for the overview
+  useEffect(() => {
+    Promise.all([
+      fetch('http://localhost:5000/api/leadership').then(res => res.json()).catch(() => ({ count: 5 })),
+      fetch('http://localhost:5000/api/technical').then(res => res.json()).catch(() => ({ count: 12 })),
+      fetch('http://localhost:5000/api/quiz').then(res => res.json()).catch(() => ({ count: 8 }))
+    ]).then(([l, t, q]) => {
+      setProgramStats({
+        leadership: (l && l.count) || 5,
+        technical: (t && t.count) || 12,
+        quizzes: (q && q.count) || 8
+      });
+    });
+  }, []);
+
+  // Track window scroll for dynamic navbar
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <div className="career-home">
       {/* 1. Navbar */}
-      <nav className="navbar">
+      <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
         <div className="nav-container">
           <div className="logo">
             <span className="logo-icon">
@@ -19,8 +44,8 @@ function Home() {
           </div>
           <div className="nav-menu">
             <a href="#home">Home</a>
-            <a href="#internships">Internships</a>
-            <a href="#programs">Career Programs</a>
+            <Link to="/internships">Internships</Link>
+            <a href="#career-overview">Career Programs</a>
             <a href="#companies">Companies</a>
             <a href="#about">About</a>
             <a href="#contact">Contact</a>
@@ -43,7 +68,6 @@ function Home() {
               <button className="btn-secondary" onClick={() => navigate('/signup/company')}>Hire Interns</button>
             </div>
             
-            {/* Quick stats below hero buttons */}
             <div className="hero-trust">
                <div className="avatars">
                  <img src="https://i.pravatar.cc/100?img=1" alt="Student" />
@@ -58,16 +82,14 @@ function Home() {
             <div className="illustration-wrapper">
               <div className="blob-shape"></div>
               <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Students using laptop" className="main-img" />
-              
-              {/* Floating badges */}
               <div className="floating-badge badge-1">
                  <span className="badge-icon">🚀</span>
                  <span>Career Growth</span>
-              </div>
-              <div className="floating-badge badge-2">
+               </div>
+               <div className="floating-badge badge-2">
                  <span className="badge-icon">💼</span>
                  <span>Top Companies</span>
-              </div>
+               </div>
             </div>
           </div>
         </div>
@@ -82,7 +104,6 @@ function Home() {
                 <input type="text" placeholder="Internship title or keyword" />
              </div>
              <div className="search-divider"></div>
-             
              <div className="search-group">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="input-icon"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
                 <select defaultValue="">
@@ -93,7 +114,6 @@ function Home() {
                 </select>
              </div>
              <div className="search-divider"></div>
-             
              <div className="search-group">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="input-icon"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
                 <select defaultValue="">
@@ -103,10 +123,39 @@ function Home() {
                   <option value="health">Healthcare</option>
                 </select>
              </div>
-             
              <button type="button" className="btn-search">Search</button>
           </form>
         </div>
+      </section>
+
+      {/* Career Programs Overview Section */}
+      <section className="features-section" id="career-overview" style={{ background: '#f8fafc', padding: '80px 0' }}>
+         <div className="section-header">
+            <h2>Explore Career Programs</h2>
+            <p>A quick overview of what we offer to boost your career. Log in to enroll and track your progress!</p>
+         </div>
+         <div className="programs-overview-container" style={{ maxWidth: 1100, margin: '0 auto', padding: '0 20px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 30 }}>
+            <div style={{ background: '#fff', padding: '30px', borderRadius: 20, boxShadow: '0 10px 30px rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+               <div style={{ background: '#e0e7ff', width: 64, height: 64, borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem', marginBottom: 20 }}>🏆</div>
+               <h3 style={{ fontSize: '1.3rem', color: '#1e293b', marginBottom: 12 }}>Leadership Skills</h3>
+               <p style={{ color: '#64748b', lineHeight: 1.6, marginBottom: 20 }}>Develop essential soft skills, team management, and problem-solving through our <b>{programStats.leadership} exclusive programs</b>.</p>
+               <button onClick={() => navigate('/login')} style={{ marginTop: 'auto', background: 'transparent', color: '#1a56db', border: '2px solid #1a56db', padding: '10px 24px', borderRadius: 50, fontWeight: 600, cursor: 'pointer', transition: 'all 0.3s' }} onMouseEnter={e => { e.target.style.background = '#1a56db'; e.target.style.color = 'white'; }} onMouseLeave={e => { e.target.style.background = 'transparent'; e.target.style.color = '#1a56db'; }}>Full Access →</button>
+            </div>
+            
+            <div style={{ background: '#fff', padding: '30px', borderRadius: 20, boxShadow: '0 10px 30px rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+               <div style={{ background: '#cffafe', width: 64, height: 64, borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem', marginBottom: 20 }}>💻</div>
+               <h3 style={{ fontSize: '1.3rem', color: '#1e293b', marginBottom: 12 }}>Technical Resources</h3>
+               <p style={{ color: '#64748b', lineHeight: 1.6, marginBottom: 20 }}>Master the latest technologies with <b>{programStats.technical} video tutorials</b> covering frontend, backend integration, and more.</p>
+               <button onClick={() => navigate('/login')} style={{ marginTop: 'auto', background: 'transparent', color: '#1a56db', border: '2px solid #1a56db', padding: '10px 24px', borderRadius: 50, fontWeight: 600, cursor: 'pointer', transition: 'all 0.3s' }} onMouseEnter={e => { e.target.style.background = '#1a56db'; e.target.style.color = 'white'; }} onMouseLeave={e => { e.target.style.background = 'transparent'; e.target.style.color = '#1a56db'; }}>Full Access →</button>
+            </div>
+
+            <div style={{ background: '#fff', padding: '30px', borderRadius: 20, boxShadow: '0 10px 30px rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+               <div style={{ background: '#ede9fe', width: 64, height: 64, borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem', marginBottom: 20 }}>📝</div>
+               <h3 style={{ fontSize: '1.3rem', color: '#1e293b', marginBottom: 12 }}>Skill Assessments</h3>
+               <p style={{ color: '#64748b', lineHeight: 1.6, marginBottom: 20 }}>Prove your expertise by taking one of our <b>{programStats.quizzes} industry-standard quizzes</b> and benchmark your skills.</p>
+               <button onClick={() => navigate('/login')} style={{ marginTop: 'auto', background: 'transparent', color: '#1a56db', border: '2px solid #1a56db', padding: '10px 24px', borderRadius: 50, fontWeight: 600, cursor: 'pointer', transition: 'all 0.3s' }} onMouseEnter={e => { e.target.style.background = '#1a56db'; e.target.style.color = 'white'; }} onMouseLeave={e => { e.target.style.background = 'transparent'; e.target.style.color = '#1a56db'; }}>Full Access →</button>
+            </div>
+         </div>
       </section>
 
       {/* 4. Key Features Section */}
@@ -204,8 +253,8 @@ function Home() {
            <div className="footer-links-group">
              <h4>Quick Links</h4>
              <a href="#home">Home</a>
-             <a href="#internships">Internships</a>
-             <a href="#programs">Programs</a>
+             <Link to="/internships">Internships</Link>
+             <a href="#career-overview">Programs</a>
              <a href="#about">About Us</a>
            </div>
            <div className="footer-links-group">
