@@ -1,9 +1,163 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './CompanyDashboard.css';
 
 function CompanyDashboard() {
   const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState('dashboard');
+  
+  // Internship states
+  const [internships, setInternships] = useState([]);
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [editingInternshipId, setEditingInternshipId] = useState(null);
+  const [formData, setFormData] = useState({
+    title: '', description: '', position: '', location: '', 
+    duration: '', stipend: '', requirements: '', skills: '', 
+    applicationDeadline: '', startDate: '', totalPositions: 1
+  });
+  
+  // Applications states
+  const [appFilter, setAppFilter] = useState('All');
+  const [applications, setApplications] = useState([]);
+  
+  const filteredApps = appFilter === 'All' ? applications : applications.filter(a => a.status === appFilter);
+
+  const fetchApplications = async () => {
+    try {
+      const userStr = localStorage.getItem('user');
+      if (userStr) {
+        const parsedUser = JSON.parse(userStr);
+        const companyId = parsedUser.id || parsedUser._id;
+        const res = await fetch(`http://localhost:5000/api/applications/company/${companyId}`);
+        if (res.ok) {
+          const data = await res.json();
+          setApplications(data.data || []);
+        }
+      }
+    } catch (e) {
+      console.error('Error fetching applications:', e);
+    }
+  };
+
+  const fetchInternships = async () => {
+    try {
+      const userStr = localStorage.getItem('user');
+      if (userStr) {
+        const parsedUser = JSON.parse(userStr);
+        const companyId = parsedUser.id || parsedUser._id;
+        const res = await fetch(`http://localhost:5000/api/internships/company/${companyId}`);
+        if (res.ok) {
+          const data = await res.json();
+          setInternships(data.data || []);
+        }
+      }
+    } catch (e) {
+      console.error('Error fetching internships:', e);
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab === 'postings') {
+      fetchInternships();
+    } else if (activeTab === 'applications') {
+      fetchApplications();
+    }
+  }, [activeTab]);
+
+  const handleCreateInternship = async (e) => {
+    e.preventDefault();
+    try {
+      const userStr = localStorage.getItem('user');
+      if (!userStr) {
+        alert('Please log in again');
+        return;
+      }
+      const parsedUser = JSON.parse(userStr);
+      const companyId = parsedUser.id || parsedUser._id;
+      const skillsArray = typeof formData.skills === 'string' ? formData.skills.split(',').map(s => s.trim()).filter(Boolean) : formData.skills;
+
+      const payload = { ...formData, skills: skillsArray, companyId };
+      if (!payload.startDate) delete payload.startDate;
+      if (!payload.applicationDeadline) delete payload.applicationDeadline;
+
+      const url = editingInternshipId 
+        ? `http://localhost:5000/api/internships/${editingInternshipId}` 
+        : 'http://localhost:5000/api/internships';
+      
+      const method = editingInternshipId ? 'PUT' : 'POST';
+
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (res.ok) {
+        setShowCreateForm(false);
+        setEditingInternshipId(null);
+        setFormData({
+          title: '', description: '', position: '', location: '', 
+          duration: '', stipend: '', requirements: '', skills: '', 
+          applicationDeadline: '', startDate: '', totalPositions: 1
+        });
+        fetchInternships();
+      } else {
+        const errorData = await res.json().catch(() => ({}));
+        alert(`Failed to save internship: ${errorData.message || 'Unknown server error'}`);
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Error connecting to server');
+    }
+  };
+
+  const handleEdit = (intern) => {
+    setFormData({
+      title: intern.title || '',
+      description: intern.description || '',
+      position: intern.position || '',
+      location: intern.location || '',
+      duration: intern.duration || '',
+      stipend: intern.stipend || '',
+      requirements: intern.requirements || '',
+      skills: intern.skills ? intern.skills.join(', ') : '',
+      applicationDeadline: intern.applicationDeadline ? intern.applicationDeadline.split('T')[0] : '',
+      startDate: intern.startDate ? intern.startDate.split('T')[0] : '',
+      totalPositions: intern.totalPositions || 1
+    });
+    setEditingInternshipId(intern._id);
+    setShowCreateForm(true);
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this internship posting?")) return;
+    try {
+      const res = await fetch(`http://localhost:5000/api/internships/${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        fetchInternships();
+      } else {
+        alert("Failed to delete internship");
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleAutoFill = () => {
+    setFormData({
+      title: 'Full Stack Engineering Intern',
+      description: 'We are looking for a passionate Full Stack Engineering intern to join our dynamic team. You will be working on building real features using React, Node.js, and MongoDB.',
+      position: 'Full Stack Developer',
+      location: 'San Francisco, CA (Hybrid)',
+      duration: '6 Months',
+      stipend: '$45/hr',
+      requirements: 'Currently pursuing a B.S. or M.S. in Computer Science or related field. Strong understanding of web fundamentals, APIs, and modern Javascript.',
+      skills: 'JavaScript, React, Node.js, MongoDB, Git',
+      applicationDeadline: new Date(new Date().setDate(new Date().getDate() + 14)).toISOString().split('T')[0],
+      startDate: new Date(new Date().setDate(new Date().getDate() + 30)).toISOString().split('T')[0],
+      totalPositions: 3
+    });
+  };
 
   const handleLogout = () => {
     navigate('/login');
@@ -18,19 +172,19 @@ function CompanyDashboard() {
           <span className="badge-employer">Employer</span>
         </div>
         <nav className="sidebar-nav">
-          <a href="#dashboard" className="nav-item active">
+          <a href="#dashboard" className={`nav-item ${activeTab === 'dashboard' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); setActiveTab('dashboard'); }}>
              <span className="nav-icon">📊</span> Dashboard
           </a>
-          <a href="#postings" className="nav-item">
+          <a href="#postings" className={`nav-item ${activeTab === 'postings' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); setActiveTab('postings'); }}>
              <span className="nav-icon">💼</span> My Internships
           </a>
-          <a href="#applications" className="nav-item">
+          <a href="#applications" className={`nav-item ${activeTab === 'applications' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); setActiveTab('applications'); }}>
              <span className="nav-icon">📝</span> Applications
           </a>
-          <a href="#candidates" className="nav-item">
+          <a href="#candidates" className={`nav-item ${activeTab === 'candidates' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); setActiveTab('candidates'); }}>
              <span className="nav-icon">👥</span> Talent Search
           </a>
-          <a href="#interviews" className="nav-item">
+          <a href="#interviews" className={`nav-item ${activeTab === 'interviews' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); setActiveTab('interviews'); }}>
              <span className="nav-icon">🤝</span> Interviews
           </a>
         </nav>
@@ -64,145 +218,360 @@ function CompanyDashboard() {
         </header>
 
         {/* Content Area */}
+        {/* Content Area */}
         <div className="dashboard-content">
-          <div className="welcome-banner company-banner">
-            <div className="welcome-text">
-               <h1>Welcome back, Acme Corp ✨</h1>
-               <p>Here’s an overview of your recruitment pipeline today.</p>
-            </div>
-            <div className="banner-stats">
-               <div className="mini-stat">
-                 <span className="ms-val">84</span>
-                 <span className="ms-label">New Applicants</span>
-               </div>
-            </div>
-          </div>
-
-          <div className="dashboard-grid">
-            {/* Stats Cards */}
-            <div className="stat-card">
-               <h3>Active Internships</h3>
-               <div className="stat-value">5</div>
-               <p className="stat-subtitle text-teal">2 closing soon</p>
-            </div>
-            <div className="stat-card">
-               <h3>Total Applications</h3>
-               <div className="stat-value">342</div>
-               <p className="stat-subtitle text-teal">+12% vs last month</p>
-            </div>
-            <div className="stat-card">
-               <h3>Interviews Scheduled</h3>
-               <div className="stat-value">12</div>
-               <p className="stat-subtitle">4 happening this week</p>
-            </div>
-          </div>
-
-          <div className="dashboard-columns">
-             {/* Left Column - Recent Applications */}
-             <div className="dashboard-col flex-2">
-                <div className="section-card">
-                   <div className="card-header">
-                     <h2>Recent Applications</h2>
-                     <a href="#all" className="view-all">View All</a>
+          {activeTab === 'dashboard' && (
+            <>
+              <div className="welcome-banner company-banner">
+                <div className="welcome-text">
+                   <h1>Welcome back, Acme Corp ✨</h1>
+                   <p>Here’s an overview of your recruitment pipeline today.</p>
+                </div>
+                <div className="banner-stats">
+                   <div className="mini-stat">
+                     <span className="ms-val">84</span>
+                     <span className="ms-label">New Applicants</span>
                    </div>
-                   
+                </div>
+              </div>
+
+              <div className="dashboard-grid">
+                {/* Stats Cards */}
+                <div className="stat-card">
+                   <h3>Active Internships</h3>
+                   <div className="stat-value">5</div>
+                   <p className="stat-subtitle text-teal">2 closing soon</p>
+                </div>
+                <div className="stat-card">
+                   <h3>Total Applications</h3>
+                   <div className="stat-value">342</div>
+                   <p className="stat-subtitle text-teal">+12% vs last month</p>
+                </div>
+                <div className="stat-card">
+                   <h3>Interviews Scheduled</h3>
+                   <div className="stat-value">12</div>
+                   <p className="stat-subtitle">4 happening this week</p>
+                </div>
+              </div>
+
+              <div className="dashboard-columns">
+                 {/* Left Column - Recent Applications */}
+                 <div className="dashboard-col flex-2">
+                    <div className="section-card">
+                       <div className="card-header">
+                         <h2>Recent Applications</h2>
+                         <a href="#all" className="view-all">View All</a>
+                       </div>
+                       
+                       <table className="data-table">
+                         <thead>
+                           <tr>
+                             <th>Candidate</th>
+                             <th>Role Applied</th>
+                             <th>Match Score</th>
+                             <th>Status</th>
+                             <th>Action</th>
+                           </tr>
+                         </thead>
+                         <tbody>
+                           <tr>
+                             <td>
+                               <div className="candidate-cell">
+                                 <div className="cand-avatar bg-blue">JD</div>
+                                 <div>
+                                   <div className="cand-name">John Doe</div>
+                                   <div className="cand-uni">Harvard University</div>
+                                 </div>
+                               </div>
+                             </td>
+                             <td>Software Engineer Intern</td>
+                             <td><span className="score high">98%</span></td>
+                             <td><span className="badge pending">Pending</span></td>
+                             <td><button className="btn-table">Review</button></td>
+                           </tr>
+                           <tr>
+                             <td>
+                               <div className="candidate-cell">
+                                 <div className="cand-avatar bg-purple">AS</div>
+                                 <div>
+                                   <div className="cand-name">Alice Smith</div>
+                                   <div className="cand-uni">Stanford University</div>
+                                 </div>
+                               </div>
+                             </td>
+                             <td>Product Designer Intern</td>
+                             <td><span className="score high">92%</span></td>
+                             <td><span className="badge interviewing">Interviewing</span></td>
+                             <td><button className="btn-table">Review</button></td>
+                           </tr>
+                           <tr>
+                             <td>
+                               <div className="candidate-cell">
+                                 <div className="cand-avatar bg-green">RJ</div>
+                                 <div>
+                                   <div className="cand-name">Robert Jones</div>
+                                   <div className="cand-uni">MIT</div>
+                                 </div>
+                               </div>
+                             </td>
+                             <td>Data Science Intern</td>
+                             <td><span className="score med">75%</span></td>
+                             <td><span className="badge reviewed">Reviewed</span></td>
+                             <td><button className="btn-table">Review</button></td>
+                           </tr>
+                         </tbody>
+                       </table>
+                    </div>
+                 </div>
+                 
+                 {/* Right Column - Top Talent Matches */}
+                 <div className="dashboard-col flex-1">
+                    <div className="section-card">
+                       <div className="card-header">
+                         <h2>Top AI Recommendations</h2>
+                       </div>
+                       <div className="talent-list">
+                          <div className="talent-item">
+                             <div className="cand-avatar bg-orange">EK</div>
+                             <div className="talent-info">
+                               <h4>Elena K.</h4>
+                               <p>React, Node.js, Python</p>
+                             </div>
+                             <button className="btn-icon-outline">✉️</button>
+                          </div>
+                          <div className="talent-item">
+                             <div className="cand-avatar bg-teal">ML</div>
+                             <div className="talent-info">
+                               <h4>Mike L.</h4>
+                               <p>Figma, UI/UX, CSS</p>
+                             </div>
+                             <button className="btn-icon-outline">✉️</button>
+                          </div>
+                          <div className="talent-item">
+                             <div className="cand-avatar bg-indigo">SJ</div>
+                             <div className="talent-info">
+                               <h4>Sarah J.</h4>
+                               <p>Machine Learning, SQL</p>
+                             </div>
+                             <button className="btn-icon-outline">✉️</button>
+                          </div>
+                       </div>
+                       <button className="btn-outline-company mt-3">Discover More Talent</button>
+                    </div>
+                 </div>
+              </div>
+            </>
+          )}
+
+          {activeTab === 'postings' && (
+            <div className="internships-tab">
+               <div className="tab-header">
+                  <div>
+                    <h2>My Internships</h2>
+                    <p>Manage your active and past internship postings</p>
+                  </div>
+                  {!showCreateForm && (
+                     <button className="btn-post-job" onClick={() => {
+                        setEditingInternshipId(null);
+                        setFormData({
+                          title: '', description: '', position: '', location: '', 
+                          duration: '', stipend: '', requirements: '', skills: '', 
+                          applicationDeadline: '', startDate: '', totalPositions: 1
+                        });
+                        setShowCreateForm(true);
+                     }}>+ Create New</button>
+                  )}
+               </div>
+
+               {showCreateForm ? (
+                  <div className="internship-form-card">
+                     <div className="form-header-row">
+                        <h3>{editingInternshipId ? 'Edit Internship' : 'Post a New Internship'}</h3>
+                        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                          {!editingInternshipId && (
+                            <button type="button" className="btn-outline-company" onClick={handleAutoFill} style={{ padding: '0.4rem 1rem', fontSize: '0.85rem' }}>Auto-fill Data</button>
+                          )}
+                          <button className="btn-icon" onClick={() => setShowCreateForm(false)}>✖</button>
+                        </div>
+                     </div>
+                     <form onSubmit={handleCreateInternship} className="premium-form">
+                        <div className="form-grid-2">
+                           <div className="input-group">
+                              <label>Job Title</label>
+                              <input type="text" required placeholder="e.g. Software Engineer Intern" value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} />
+                           </div>
+                           <div className="input-group">
+                              <label>Position / Role</label>
+                              <input type="text" required placeholder="e.g. Full Stack Developer" value={formData.position} onChange={e => setFormData({...formData, position: e.target.value})} />
+                           </div>
+                           <div className="input-group">
+                              <label>Location</label>
+                              <input type="text" required placeholder="e.g. Remote, San Francisco" value={formData.location} onChange={e => setFormData({...formData, location: e.target.value})} />
+                           </div>
+                           <div className="input-group">
+                              <label>Duration</label>
+                              <input type="text" required placeholder="e.g. 3 Months, 6 Months" value={formData.duration} onChange={e => setFormData({...formData, duration: e.target.value})} />
+                           </div>
+                           <div className="input-group">
+                              <label>Stipend / Salary</label>
+                              <input type="text" required placeholder="e.g. $40/hr or Unpaid" value={formData.stipend} onChange={e => setFormData({...formData, stipend: e.target.value})} />
+                           </div>
+                           <div className="input-group">
+                              <label>Total Positions</label>
+                              <input type="number" required min="1" value={formData.totalPositions} onChange={e => setFormData({...formData, totalPositions: e.target.value})} />
+                           </div>
+                           <div className="input-group">
+                              <label>Start Date</label>
+                              <input type="date" value={formData.startDate} onChange={e => setFormData({...formData, startDate: e.target.value})} />
+                           </div>
+                           <div className="input-group">
+                              <label>Application Deadline</label>
+                              <input type="date" value={formData.applicationDeadline} onChange={e => setFormData({...formData, applicationDeadline: e.target.value})} />
+                           </div>
+                        </div>
+
+                        <div className="input-group full-width mt-3">
+                           <label>Required Skills (Comma separated)</label>
+                           <input type="text" placeholder="React, Node.js, Python" value={formData.skills} onChange={e => setFormData({...formData, skills: e.target.value})} />
+                        </div>
+                        <div className="input-group full-width mt-3">
+                           <label>Requirements & Qualifications</label>
+                           <textarea rows="3" required placeholder="Describe what you are looking for..." value={formData.requirements} onChange={e => setFormData({...formData, requirements: e.target.value})}></textarea>
+                        </div>
+                        <div className="input-group full-width mt-3">
+                           <label>Job Description</label>
+                           <textarea rows="4" required placeholder="Detailed description of the role..." value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})}></textarea>
+                        </div>
+
+                        <div className="form-actions mt-4">
+                           <button type="button" className="btn-secondary" onClick={() => setShowCreateForm(false)}>Cancel</button>
+                           <button type="submit" className="btn-primary-gradient">{editingInternshipId ? 'Save Changes' : 'Publish Internship'}</button>
+                        </div>
+                     </form>
+                  </div>
+               ) : (
+                  <>
+                     <div className="internships-filters">
+                       <button className="filter-btn active">All ({internships.length})</button>
+                       <button className="filter-btn">Active ({internships.filter(i => i.status === 'Active').length})</button>
+                       <button className="filter-btn">Drafts ({internships.filter(i => i.status === 'Draft').length})</button>
+                       <button className="filter-btn">Closed ({internships.filter(i => i.status === 'Closed').length})</button>
+                     </div>
+
+                     <div className="internships-list">
+                       {internships.length === 0 ? (
+                         <div className="coming-soon">
+                            <h2>No Internships Posted Yet</h2>
+                            <p>Click "+ Create New" to post your first internship opportunity.</p>
+                         </div>
+                       ) : internships.map(intern => (
+                         <div className="internship-card" key={intern._id}>
+                            <div className="icard-header">
+                              <h3>{intern.title}</h3>
+                              <span className={`badge badge-${intern.status.toLowerCase()}`}>{intern.status}</span>
+                            </div>
+                            <div className="icard-details">
+                              <span>📍 {intern.location}</span>
+                              <span>💰 {intern.stipend}</span>
+                              <span>⏱️ {intern.duration}</span>
+                              <span>📅 {new Date(intern.createdAt).toLocaleDateString()}</span>
+                            </div>
+                            <div className="icard-metrics">
+                              <div className="metric"><strong>0</strong> Views</div>
+                              <div className="metric"><strong>0</strong> Applicants</div>
+                              <div className="metric"><strong>{intern.totalPositions}</strong> Spots</div>
+                            </div>
+                            <div className="icard-actions">
+                              <button className="btn-outline-company">View Applicants</button>
+                              <button className="btn-icon" onClick={() => handleEdit(intern)}>✏️</button>
+                              <button className="btn-icon text-danger" onClick={() => handleDelete(intern._id)}>🗑️</button>
+                            </div>
+                         </div>
+                       ))}
+                     </div>
+                  </>
+               )}
+            </div>
+          )}
+
+          {activeTab === 'applications' && (
+            <div className="applications-tab">
+               <div className="tab-header">
+                  <div>
+                    <h2>Applications Management</h2>
+                    <p>Review and filter candidates applying to your positions.</p>
+                  </div>
+               </div>
+               
+               <div className="internships-filters">
+                 {['All', 'Pending', 'Reviewed', 'Interviewing', 'Rejected'].map(filter => (
+                   <button 
+                     key={filter}
+                     className={`filter-btn ${appFilter === filter ? 'active' : ''}`}
+                     onClick={() => setAppFilter(filter)}
+                   >
+                     {filter}
+                   </button>
+                 ))}
+               </div>
+
+               <div className="section-card">
                    <table className="data-table">
                      <thead>
                        <tr>
                          <th>Candidate</th>
                          <th>Role Applied</th>
-                         <th>Match Score</th>
+                         <th>Applied On</th>
+                         <th>CGPA</th>
                          <th>Status</th>
                          <th>Action</th>
                        </tr>
                      </thead>
                      <tbody>
-                       <tr>
-                         <td>
-                           <div className="candidate-cell">
-                             <div className="cand-avatar bg-blue">JD</div>
-                             <div>
-                               <div className="cand-name">John Doe</div>
-                               <div className="cand-uni">Harvard University</div>
+                       {filteredApps.length === 0 ? (
+                         <tr><td colSpan="6" style={{textAlign: 'center', padding: '2rem'}}>No applications found for this filter.</td></tr>
+                       ) : filteredApps.map(app => {
+                         const colors = ['bg-blue', 'bg-purple', 'bg-green', 'bg-orange', 'bg-teal'];
+                         const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                         const initials = app.name ? app.name.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase() : 'ST';
+                         
+                         return (
+                         <tr key={app._id}>
+                           <td>
+                             <div className="candidate-cell">
+                               <div className={`cand-avatar ${randomColor}`}>{initials}</div>
+                               <div>
+                                 <div className="cand-name">{app.name}</div>
+                                 <div className="cand-uni">{app.university}</div>
+                               </div>
                              </div>
-                           </div>
-                         </td>
-                         <td>Software Engineer Intern</td>
-                         <td><span className="score high">98%</span></td>
-                         <td><span className="badge pending">Pending</span></td>
-                         <td><button className="btn-table">Review</button></td>
-                       </tr>
-                       <tr>
-                         <td>
-                           <div className="candidate-cell">
-                             <div className="cand-avatar bg-purple">AS</div>
-                             <div>
-                               <div className="cand-name">Alice Smith</div>
-                               <div className="cand-uni">Stanford University</div>
-                             </div>
-                           </div>
-                         </td>
-                         <td>Product Designer Intern</td>
-                         <td><span className="score high">92%</span></td>
-                         <td><span className="badge interviewing">Interviewing</span></td>
-                         <td><button className="btn-table">Review</button></td>
-                       </tr>
-                       <tr>
-                         <td>
-                           <div className="candidate-cell">
-                             <div className="cand-avatar bg-green">RJ</div>
-                             <div>
-                               <div className="cand-name">Robert Jones</div>
-                               <div className="cand-uni">MIT</div>
-                             </div>
-                           </div>
-                         </td>
-                         <td>Data Science Intern</td>
-                         <td><span className="score med">75%</span></td>
-                         <td><span className="badge reviewed">Reviewed</span></td>
-                         <td><button className="btn-table">Review</button></td>
-                       </tr>
+                           </td>
+                           <td>{app.internshipId?.title || 'Unknown Role'}</td>
+                           <td>{new Date(app.createdAt).toLocaleDateString()}</td>
+                           <td><span className={`score ${app.cgpa > 3.5 ? 'high' : app.cgpa > 3.0 ? 'med' : 'low'}`}>{app.cgpa}/4.0</span></td>
+                           <td><span className={`badge ${app.status.toLowerCase()}`}>{app.status}</span></td>
+                           <td>
+                             <select className="status-select" defaultValue={app.status}>
+                               <option value="Pending">Pending</option>
+                               <option value="Reviewed">Reviewed</option>
+                               <option value="Interviewing">Interviewing</option>
+                               <option value="Rejected">Rejected</option>
+                             </select>
+                           </td>
+                         </tr>
+                       )})}
                      </tbody>
                    </table>
-                </div>
-             </div>
-             
-             {/* Right Column - Top Talent Matches */}
-             <div className="dashboard-col flex-1">
-                <div className="section-card">
-                   <div className="card-header">
-                     <h2>Top AI Recommendations</h2>
-                   </div>
-                   <div className="talent-list">
-                      <div className="talent-item">
-                         <div className="cand-avatar bg-orange">EK</div>
-                         <div className="talent-info">
-                           <h4>Elena K.</h4>
-                           <p>React, Node.js, Python</p>
-                         </div>
-                         <button className="btn-icon-outline">✉️</button>
-                      </div>
-                      <div className="talent-item">
-                         <div className="cand-avatar bg-teal">ML</div>
-                         <div className="talent-info">
-                           <h4>Mike L.</h4>
-                           <p>Figma, UI/UX, CSS</p>
-                         </div>
-                         <button className="btn-icon-outline">✉️</button>
-                      </div>
-                      <div className="talent-item">
-                         <div className="cand-avatar bg-indigo">SJ</div>
-                         <div className="talent-info">
-                           <h4>Sarah J.</h4>
-                           <p>Machine Learning, SQL</p>
-                         </div>
-                         <button className="btn-icon-outline">✉️</button>
-                      </div>
-                   </div>
-                   <button className="btn-outline-company mt-3">Discover More Talent</button>
-                </div>
-             </div>
-          </div>
+               </div>
+            </div>
+          )}
+
+          {['candidates', 'interviews'].includes(activeTab) && (
+            <div className="coming-soon">
+               <h2>More Features Coming Soon</h2>
+               <p>We are currently building out this section of your dashboard.</p>
+            </div>
+          )}
         </div>
       </main>
     </div>

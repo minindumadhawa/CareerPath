@@ -5,6 +5,7 @@ import ManageStudents from './ManageStudents';
 import ManageCompanies from './ManageCompanies';
 import AICVFilter from './AICVFilter';
 import AdminSettings from './AdminSettings';
+import AllApplications from './AllApplications';
 
 function AdminDashboard() {
   const navigate = useNavigate();
@@ -36,7 +37,7 @@ function AdminDashboard() {
              <span className="nav-icon">🏢</span> Manage Companies
           </a>
           <a href="#internships" className={`nav-item ${activeTab === 'internships' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); setActiveTab('internships'); }}>
-             <span className="nav-icon">💼</span> All Internships
+             <span className="nav-icon">💼</span> All Applications
           </a>
           <a href="#reports" className={`nav-item ${activeTab === 'reports' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); setActiveTab('reports'); }}>
              <span className="nav-icon">📑</span> Reports & Analytics
@@ -260,6 +261,7 @@ function AdminDashboard() {
           )}
           {activeTab === 'students' && <ManageStudents />}
           {activeTab === 'companies' && <ManageCompanies />}
+          {activeTab === 'internships' && <AllApplications />}
           {activeTab === 'ai-filter' && <AICVFilter />}
           {activeTab === 'settings' && <AdminSettings />}
         </div>

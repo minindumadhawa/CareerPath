@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import './Home.css';
 
 function Home() {
   const navigate = useNavigate();
   const [programStats, setProgramStats] = useState({ leadership: 0, technical: 0, quizzes: 0 });
+  const [isScrolled, setIsScrolled] = useState(false);
 
   // Fetch basic stats for the overview
   useEffect(() => {
@@ -21,10 +22,17 @@ function Home() {
     });
   }, []);
 
+  // Track window scroll for dynamic navbar
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <div className="career-home">
       {/* 1. Navbar */}
-      <nav className="navbar">
+      <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
         <div className="nav-container">
           <div className="logo">
             <span className="logo-icon">
@@ -36,7 +44,7 @@ function Home() {
           </div>
           <div className="nav-menu">
             <a href="#home">Home</a>
-            <a href="#internships">Internships</a>
+            <Link to="/internships">Internships</Link>
             <a href="#career-overview">Career Programs</a>
             <a href="#companies">Companies</a>
             <a href="#about">About</a>
@@ -245,7 +253,7 @@ function Home() {
            <div className="footer-links-group">
              <h4>Quick Links</h4>
              <a href="#home">Home</a>
-             <a href="#internships">Internships</a>
+             <Link to="/internships">Internships</Link>
              <a href="#career-overview">Programs</a>
              <a href="#about">About Us</a>
            </div>
