@@ -91,6 +91,16 @@ const LeadershipPrograms = () => {
       .finally(() => setLoading(false));
   }, []);
 
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (selected || showLogin) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [selected, showLogin]);
+
   useEffect(() => {
     if (!selected) return;
     setCanMarkWatched(false);
@@ -117,8 +127,10 @@ const LeadershipPrograms = () => {
   };
 
   const openProgram = async (p) => {
+    const scrollY = window.scrollY;
     setSelected(p);
     setActiveVideo(0);
+    requestAnimationFrame(() => window.scrollTo(0, scrollY));
     if (student) {
       await fetchEnrollment(p._id, student.email);
     } else {
@@ -154,7 +166,11 @@ const LeadershipPrograms = () => {
       }
       setShowLogin(false);
       setPendingProgram(null);
-      if (!selected) setSelected(prog);
+      if (!selected) {
+        const scrollY = window.scrollY;
+        setSelected(prog);
+        requestAnimationFrame(() => window.scrollTo(0, scrollY));
+      }
     } catch (err) {
       toast.error(err.response?.data?.message || 'Enrollment failed');
     } finally {

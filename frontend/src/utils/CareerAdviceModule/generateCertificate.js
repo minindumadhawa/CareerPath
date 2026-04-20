@@ -53,12 +53,11 @@ export const generateCertificate = ({ studentName, programTitle, category, instr
   doc.line(60, 38, W - 60, 38);
 
   // Certificate title
-  doc.setFontSize(9);
+  doc.setFontSize(10);
   doc.setTextColor(150, 170, 220);
   doc.setFont('helvetica', 'normal');
-  doc.setCharSpace(4);
-  doc.text('CERTIFICATE OF COMPLETION', W / 2, 48, { align: 'center' });
-  doc.setCharSpace(0);
+  doc.text('C E R T I F I C A T E   O F   C O M P L E T I O N', W / 2, 48, { align: 'center' });
+
 
   // Intro text
   doc.setFontSize(12);

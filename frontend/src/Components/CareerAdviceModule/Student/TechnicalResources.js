@@ -93,6 +93,16 @@ const TechnicalResources = () => {
       r.tags?.some(t => t.toLowerCase().includes(search.toLowerCase())))
   );
 
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (selected || showLogin) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [selected, showLogin]);
+
   useEffect(() => {
     if (!selected) return;
     setCanMarkWatched(false);
@@ -119,8 +129,10 @@ const TechnicalResources = () => {
   };
 
   const openResource = async (r) => {
+    const scrollY = window.scrollY;
     setSelected(r);
     setActiveVideo(0);
+    requestAnimationFrame(() => window.scrollTo(0, scrollY));
     if (student) await fetchEnrollment(r._id, student.email);
     else setEnrollment(null);
   };
@@ -151,7 +163,11 @@ const TechnicalResources = () => {
       else toast.success('🎉 Enrolled successfully!');
       setShowLogin(false);
       setPendingResource(null);
-      if (!selected) setSelected(res);
+      if (!selected) {
+        const scrollY = window.scrollY;
+        setSelected(res);
+        requestAnimationFrame(() => window.scrollTo(0, scrollY));
+      }
     } catch (err) {
       toast.error(err.response?.data?.message || 'Enrollment failed');
     }
