@@ -35,7 +35,7 @@ app.use("/api/chat", chatRoutes);
 app.use("/api/internships", internshipRoutes);
 app.use("/api/applications", applicationRoutes);
 
-mongoose.connect("mongodb+srv://admin:H4eQUj4fjzqgjrlX@cluster0.j4bshhl.mongodb.net/")
+mongoose.connect(process.env.MONGODB_URI || "mongodb+srv://admin:H4eQUj4fjzqgjrlX@cluster0.j4bshhl.mongodb.net/")
 .then(()=> console.log("Connected to mongoDB"))
 .then(()=> {
     app.listen(5000, () => {
