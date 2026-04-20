@@ -63,7 +63,7 @@ const TechnicalResources = () => {
   const [showLogin, setShowLogin] = useState(false);
   const [pendingResource, setPendingResource] = useState(null);
   const [enrolling, setEnrolling] = useState(false);
-  const [watchTimer, setWatchTimer] = useState(15);
+  const [watchTimer, setWatchTimer] = useState(20);
   const [canMarkWatched, setCanMarkWatched] = useState(false);
   const [studentEnrollments, setStudentEnrollments] = useState([]);
 
@@ -96,7 +96,7 @@ const TechnicalResources = () => {
   useEffect(() => {
     if (!selected) return;
     setCanMarkWatched(false);
-    setWatchTimer(15);
+    setWatchTimer(20);
     const interval = setInterval(() => {
       setWatchTimer(prev => {
         if (prev <= 1) {
@@ -352,13 +352,13 @@ const TechnicalResources = () => {
                             <a href={selected.videos[activeVideo].url} target="_blank" rel="noreferrer" style={{ fontSize: '0.78rem', color: 'var(--accent)', textDecoration: 'none' }}>🔗 Open in new tab →</a>
                           )}
                         </div>
-                        {enrollment && !enrollment.watchedVideos?.includes(activeVideo) && (
+                        {enrollment && !enrollment.watchedVideos?.includes(activeVideo) && canMarkWatched && (
                           <button
-                            className={`btn ${canMarkWatched ? 'btn-success' : 'btn-secondary'} btn-sm`}
-                            onClick={() => canMarkWatched && markVideoWatched(activeVideo)}
-                            disabled={!canMarkWatched}
+                            className="btn btn-success btn-sm"
+                            onClick={() => markVideoWatched(activeVideo)}
+                            style={{ animation: 'fadeIn 0.4s ease' }}
                           >
-                            {canMarkWatched ? '✅ Mark as Watched' : `⏳ Playing... (${watchTimer}s to unlock)`}
+                            ✅ Mark as Watched
                           </button>
                         )}
                         {enrollment?.watchedVideos?.includes(activeVideo) && (
