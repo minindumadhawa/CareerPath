@@ -35,6 +35,7 @@ import TechnicalResources from './Components/CareerAdviceModule/Student/Technica
 import TakeQuiz from './Components/CareerAdviceModule/Student/TakeQuiz';
 import QuizList from './Components/CareerAdviceModule/Student/QuizList';
 import MyProgress from './Components/CareerAdviceModule/Student/MyProgress';
+import WatchProgram from './Components/CareerAdviceModule/Student/WatchProgram';
 
 function App() {
   return (
@@ -60,6 +61,7 @@ function App() {
             <Route path="/student/quizzes" element={<QuizList />} />
             <Route path="/student/quiz/:id" element={<TakeQuiz />} />
             <Route path="/student/progress" element={<MyProgress />} />
+            <Route path="/student/watch/:id" element={<WatchProgram />} />
 
             <Route path="/admin/dashboard" element={<CareerAdminDashboard />} />
             <Route path="/admin/leadership/add" element={<AddLeadership />} />

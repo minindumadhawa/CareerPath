@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 import { useStudent } from '../../../context/CareerAdviceModule/StudentContext';
 import { generateCertificate } from '../../../utils/CareerAdviceModule/generateCertificate';
 
@@ -53,6 +54,7 @@ const StudentLoginModal = ({ onLogin, onClose }) => {
 
 const TechnicalResources = () => {
   const { student, login } = useStudent();
+  const navigate = useNavigate();
   const [resources, setResources] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('All');
@@ -63,9 +65,14 @@ const TechnicalResources = () => {
   const [showLogin, setShowLogin] = useState(false);
   const [pendingResource, setPendingResource] = useState(null);
   const [enrolling, setEnrolling] = useState(false);
-  const [watchTimer, setWatchTimer] = useState(15);
+  const [watchTimer, setWatchTimer] = useState(20);
   const [canMarkWatched, setCanMarkWatched] = useState(false);
   const [studentEnrollments, setStudentEnrollments] = useState([]);
+  
+  // Note System States
+  const [currentNote, setCurrentNote] = useState('');
+  const [savingNote, setSavingNote] = useState(false);
+  const [noteSaved, setNoteSaved] = useState(false);
 
   const categories = ['All', 'Programming', 'Database', 'Web Development', 'Mobile Development', 'Cloud & DevOps', 'Data Science', 'Cybersecurity', 'UI/UX Design'];
 
@@ -93,10 +100,20 @@ const TechnicalResources = () => {
       r.tags?.some(t => t.toLowerCase().includes(search.toLowerCase())))
   );
 
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (selected || showLogin) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [selected, showLogin]);
+
   useEffect(() => {
     if (!selected) return;
     setCanMarkWatched(false);
-    setWatchTimer(15);
+    setWatchTimer(20);
     const interval = setInterval(() => {
       setWatchTimer(prev => {
         if (prev <= 1) {
@@ -110,6 +127,16 @@ const TechnicalResources = () => {
     return () => clearInterval(interval);
   }, [selected, activeVideo]);
 
+  // Load Note for Active Video
+  useEffect(() => {
+    if (enrollment && enrollment.notes) {
+      const noteObj = enrollment.notes.find(n => n.videoIndex === activeVideo);
+      setCurrentNote(noteObj ? noteObj.text : '');
+    } else {
+      setCurrentNote('');
+    }
+  }, [activeVideo, enrollment]);
+
   const fetchEnrollment = async (resourceId, email) => {
     try {
       const res = await axios.get(`/api/enrollments/student/${email}`);
@@ -119,8 +146,10 @@ const TechnicalResources = () => {
   };
 
   const openResource = async (r) => {
+    const scrollY = window.scrollY;
     setSelected(r);
     setActiveVideo(0);
+    requestAnimationFrame(() => window.scrollTo(0, scrollY));
     if (student) await fetchEnrollment(r._id, student.email);
     else setEnrollment(null);
   };
@@ -151,7 +180,11 @@ const TechnicalResources = () => {
       else toast.success('🎉 Enrolled successfully!');
       setShowLogin(false);
       setPendingResource(null);
-      if (!selected) setSelected(res);
+      if (!selected) {
+        const scrollY = window.scrollY;
+        setSelected(res);
+        requestAnimationFrame(() => window.scrollTo(0, scrollY));
+      }
     } catch (err) {
       toast.error(err.response?.data?.message || 'Enrollment failed');
     }
@@ -169,6 +202,25 @@ const TechnicalResources = () => {
       const res = await axios.patch(`/api/enrollments/${enrollment._id}/watch`, { videoIndex });
       setEnrollment(res.data.data);
     } catch { /* silent */ }
+  };
+
+  const saveNote = async () => {
+    if (!enrollment) return;
+    setSavingNote(true);
+    setNoteSaved(false);
+    try {
+      const res = await axios.patch(`/api/enrollments/${enrollment._id}/note`, {
+        videoIndex: activeVideo,
+        text: currentNote
+      });
+      setEnrollment(res.data.data);
+      setNoteSaved(true);
+      setTimeout(() => setNoteSaved(false), 2000);
+    } catch {
+      toast.error('Failed to save note');
+    } finally {
+      setSavingNote(false);
+    }
   };
 
   const markComplete = async () => {
@@ -258,15 +310,15 @@ const TechnicalResources = () => {
               )}
               <div style={{ padding: '10px 18px', borderTop: '1px solid var(--border)', display: 'flex', gap: 8 }}>
                 {studentEnrollments.some(e => e.programId?._id === r._id || e.programId === r._id) ? (
-                  <button className="btn btn-success btn-sm" style={{ flex: 1, justifyContent: 'center' }} onClick={e => { e.stopPropagation(); openResource(r); }}>
-                    ✅ Enrolled
+                  <button className="btn btn-success btn-sm" style={{ flex: 1, justifyContent: 'center' }} onClick={e => { e.stopPropagation(); navigate(`/student/watch/${r._id}?type=TechnicalResource`); }}>
+                    ▶ Continue Learning
                   </button>
                 ) : (
                   <button className="btn btn-accent btn-sm" style={{ flex: 1, justifyContent: 'center' }} onClick={e => { e.stopPropagation(); handleEnrollClick(r); }}>
                     🚀 Enroll
                   </button>
                 )}
-                <button className="btn btn-secondary btn-sm" style={{ flex: 1, justifyContent: 'center' }}>▶ View</button>
+                <button className="btn btn-secondary btn-sm" style={{ flex: 1, justifyContent: 'center' }} onClick={e => { e.stopPropagation(); openResource(r); }}>👁 Preview</button>
               </div>
             </div>
           ))}
@@ -352,13 +404,13 @@ const TechnicalResources = () => {
                             <a href={selected.videos[activeVideo].url} target="_blank" rel="noreferrer" style={{ fontSize: '0.78rem', color: 'var(--accent)', textDecoration: 'none' }}>🔗 Open in new tab →</a>
                           )}
                         </div>
-                        {enrollment && !enrollment.watchedVideos?.includes(activeVideo) && (
+                        {enrollment && !enrollment.watchedVideos?.includes(activeVideo) && canMarkWatched && (
                           <button
-                            className={`btn ${canMarkWatched ? 'btn-success' : 'btn-secondary'} btn-sm`}
-                            onClick={() => canMarkWatched && markVideoWatched(activeVideo)}
-                            disabled={!canMarkWatched}
+                            className="btn btn-success btn-sm"
+                            onClick={() => markVideoWatched(activeVideo)}
+                            style={{ animation: 'fadeIn 0.4s ease' }}
                           >
-                            {canMarkWatched ? '✅ Mark as Watched' : `⏳ Playing... (${watchTimer}s to unlock)`}
+                            ✅ Mark as Watched
                           </button>
                         )}
                         {enrollment?.watchedVideos?.includes(activeVideo) && (
@@ -372,6 +424,32 @@ const TechnicalResources = () => {
                   {selected.tags?.length > 0 && (
                     <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 12 }}>
                       {selected.tags.map(t => <span key={t} style={{ background: '#cffafe', color: 'var(--accent-dark)', padding: '3px 10px', borderRadius: 50, fontSize: '0.78rem', fontWeight: 600 }}>{t}</span>)}
+                    </div>
+                  )}
+                  
+                  {/* Note Taking Section */}
+                  {enrollment && (
+                    <div style={{ marginTop: 20, background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 10, padding: 16 }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+                        <h4 style={{ fontSize: '0.9rem', margin: 0, color: 'var(--accent-dark)' }}>📝 My Notes</h4>
+                        <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+                          {savingNote ? (
+                            <span style={{ fontSize: '0.75rem', color: 'var(--gray)' }}>Saving...</span>
+                          ) : noteSaved ? (
+                            <span style={{ fontSize: '0.75rem', color: 'var(--success)', fontWeight: 600 }}>✅ Saved</span>
+                          ) : null}
+                          <button className="btn btn-sm" style={{ padding: '4px 10px', fontSize: '0.75rem', background: 'white', border: '1px solid var(--border)', cursor: 'pointer', color: 'var(--accent-dark)' }} onClick={saveNote}>Save Note</button>
+                        </div>
+                      </div>
+                      <textarea
+                        className="form-control"
+                        rows="5"
+                        placeholder="Type your personal notes for this technical resource here..."
+                        value={currentNote}
+                        onChange={(e) => setCurrentNote(e.target.value)}
+                        onBlur={saveNote}
+                        style={{ resize: 'vertical', fontSize: '0.85rem', background: 'white', borderColor: '#cbd5e1' }}
+                      />
                     </div>
                   )}
                 </div>

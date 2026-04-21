@@ -54,9 +54,30 @@ const markComplete = async (req, res) => {
 const getByStudent = async (req, res) => {
   try {
     const enrollments = await Enrollment.find({ studentEmail: req.params.email })
-      .populate({ path: 'programId', select: 'title category level instructor duration videos tags' })
+      .populate({ path: 'programId', select: 'title category level instructor duration videos tags description' })
       .sort({ createdAt: -1 });
     res.json({ success: true, data: enrollments });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+// PATCH save video note
+const saveVideoNote = async (req, res) => {
+  try {
+    const { videoIndex, text } = req.body;
+    const enrollment = await Enrollment.findById(req.params.id);
+    if (!enrollment) return res.status(404).json({ success: false, message: 'Enrollment not found' });
+    
+    // Find if note for this videoIndex already exists
+    const noteIndex = enrollment.notes.findIndex(n => n.videoIndex === videoIndex);
+    if (noteIndex >= 0) {
+      enrollment.notes[noteIndex].text = text;
+    } else {
+      enrollment.notes.push({ videoIndex, text });
+    }
+    await enrollment.save();
+    res.json({ success: true, data: enrollment });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
@@ -74,4 +95,4 @@ const getAllEnrollments = async (req, res) => {
   }
 };
 
-module.exports = { createEnrollment, markVideoWatched, markComplete, getByStudent, getAllEnrollments };
+module.exports = { createEnrollment, markVideoWatched, markComplete, getByStudent, getAllEnrollments, saveVideoNote };
