@@ -49,8 +49,8 @@
   position: absolute;
   bottom: 80px;
   right: 0;
-  width: 380px;
-  height: 600px;
+  width: 440px;
+  height: 680px;
   max-height: calc(100vh - 120px);
   background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(16px);
