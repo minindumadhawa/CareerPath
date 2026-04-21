@@ -66,6 +66,11 @@ const TechnicalResources = () => {
   const [watchTimer, setWatchTimer] = useState(20);
   const [canMarkWatched, setCanMarkWatched] = useState(false);
   const [studentEnrollments, setStudentEnrollments] = useState([]);
+  
+  // Note System States
+  const [currentNote, setCurrentNote] = useState('');
+  const [savingNote, setSavingNote] = useState(false);
+  const [noteSaved, setNoteSaved] = useState(false);
 
   const categories = ['All', 'Programming', 'Database', 'Web Development', 'Mobile Development', 'Cloud & DevOps', 'Data Science', 'Cybersecurity', 'UI/UX Design'];
 
@@ -119,6 +124,16 @@ const TechnicalResources = () => {
     }, 1000);
     return () => clearInterval(interval);
   }, [selected, activeVideo]);
+
+  // Load Note for Active Video
+  useEffect(() => {
+    if (enrollment && enrollment.notes) {
+      const noteObj = enrollment.notes.find(n => n.videoIndex === activeVideo);
+      setCurrentNote(noteObj ? noteObj.text : '');
+    } else {
+      setCurrentNote('');
+    }
+  }, [activeVideo, enrollment]);
 
   const fetchEnrollment = async (resourceId, email) => {
     try {
@@ -185,6 +200,25 @@ const TechnicalResources = () => {
       const res = await axios.patch(`/api/enrollments/${enrollment._id}/watch`, { videoIndex });
       setEnrollment(res.data.data);
     } catch { /* silent */ }
+  };
+
+  const saveNote = async () => {
+    if (!enrollment) return;
+    setSavingNote(true);
+    setNoteSaved(false);
+    try {
+      const res = await axios.patch(`/api/enrollments/${enrollment._id}/note`, {
+        videoIndex: activeVideo,
+        text: currentNote
+      });
+      setEnrollment(res.data.data);
+      setNoteSaved(true);
+      setTimeout(() => setNoteSaved(false), 2000);
+    } catch {
+      toast.error('Failed to save note');
+    } finally {
+      setSavingNote(false);
+    }
   };
 
   const markComplete = async () => {
@@ -388,6 +422,32 @@ const TechnicalResources = () => {
                   {selected.tags?.length > 0 && (
                     <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 12 }}>
                       {selected.tags.map(t => <span key={t} style={{ background: '#cffafe', color: 'var(--accent-dark)', padding: '3px 10px', borderRadius: 50, fontSize: '0.78rem', fontWeight: 600 }}>{t}</span>)}
+                    </div>
+                  )}
+                  
+                  {/* Note Taking Section */}
+                  {enrollment && (
+                    <div style={{ marginTop: 20, background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 10, padding: 16 }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+                        <h4 style={{ fontSize: '0.9rem', margin: 0, color: 'var(--accent-dark)' }}>📝 My Notes</h4>
+                        <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+                          {savingNote ? (
+                            <span style={{ fontSize: '0.75rem', color: 'var(--gray)' }}>Saving...</span>
+                          ) : noteSaved ? (
+                            <span style={{ fontSize: '0.75rem', color: 'var(--success)', fontWeight: 600 }}>✅ Saved</span>
+                          ) : null}
+                          <button className="btn btn-sm" style={{ padding: '4px 10px', fontSize: '0.75rem', background: 'white', border: '1px solid var(--border)', cursor: 'pointer', color: 'var(--accent-dark)' }} onClick={saveNote}>Save Note</button>
+                        </div>
+                      </div>
+                      <textarea
+                        className="form-control"
+                        rows="5"
+                        placeholder="Type your personal notes for this technical resource here..."
+                        value={currentNote}
+                        onChange={(e) => setCurrentNote(e.target.value)}
+                        onBlur={saveNote}
+                        style={{ resize: 'vertical', fontSize: '0.85rem', background: 'white', borderColor: '#cbd5e1' }}
+                      />
                     </div>
                   )}
                 </div>

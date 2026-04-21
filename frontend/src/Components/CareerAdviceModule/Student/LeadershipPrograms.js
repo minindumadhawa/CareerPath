@@ -73,6 +73,11 @@ const LeadershipPrograms = () => {
   const [watchTimer, setWatchTimer] = useState(20);
   const [canMarkWatched, setCanMarkWatched] = useState(false);
   const [studentEnrollments, setStudentEnrollments] = useState([]);
+  
+  // Note System States
+  const [currentNote, setCurrentNote] = useState('');
+  const [savingNote, setSavingNote] = useState(false);
+  const [noteSaved, setNoteSaved] = useState(false);
 
   useEffect(() => {
     if (student) {
@@ -117,6 +122,16 @@ const LeadershipPrograms = () => {
     }, 1000);
     return () => clearInterval(interval);
   }, [selected, activeVideo]);
+
+  // Load Note for Active Video
+  useEffect(() => {
+    if (enrollment && enrollment.notes) {
+      const noteObj = enrollment.notes.find(n => n.videoIndex === activeVideo);
+      setCurrentNote(noteObj ? noteObj.text : '');
+    } else {
+      setCurrentNote('');
+    }
+  }, [activeVideo, enrollment]);
 
   const fetchEnrollment = async (programId, email) => {
     try {
@@ -194,6 +209,25 @@ const LeadershipPrograms = () => {
       const res = await axios.patch(`/api/enrollments/${enrollment._id}/watch`, { videoIndex });
       setEnrollment(res.data.data);
     } catch { /* silent */ }
+  };
+
+  const saveNote = async () => {
+    if (!enrollment) return;
+    setSavingNote(true);
+    setNoteSaved(false);
+    try {
+      const res = await axios.patch(`/api/enrollments/${enrollment._id}/note`, {
+        videoIndex: activeVideo,
+        text: currentNote
+      });
+      setEnrollment(res.data.data);
+      setNoteSaved(true);
+      setTimeout(() => setNoteSaved(false), 2000);
+    } catch {
+      toast.error('Failed to save note');
+    } finally {
+      setSavingNote(false);
+    }
   };
 
   const markComplete = async () => {
@@ -412,6 +446,32 @@ const LeadershipPrograms = () => {
                   )}
                   <div className="divider" />
                   <p style={{ fontSize: '0.85rem', color: 'var(--dark-3)', lineHeight: 1.7 }}>{selected.description}</p>
+                  
+                  {/* Note Taking Section */}
+                  {enrollment && (
+                    <div style={{ marginTop: 20, background: 'var(--light-gray)', borderRadius: 10, padding: 16 }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+                        <h4 style={{ fontSize: '0.9rem', margin: 0 }}>📝 My Notes</h4>
+                        <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+                          {savingNote ? (
+                            <span style={{ fontSize: '0.75rem', color: 'var(--gray)' }}>Saving...</span>
+                          ) : noteSaved ? (
+                            <span style={{ fontSize: '0.75rem', color: 'var(--success)', fontWeight: 600 }}>✅ Saved</span>
+                          ) : null}
+                          <button className="btn btn-sm" style={{ padding: '4px 10px', fontSize: '0.75rem', background: 'white', border: '1px solid var(--border)', cursor: 'pointer' }} onClick={saveNote}>Save Note</button>
+                        </div>
+                      </div>
+                      <textarea
+                        className="form-control"
+                        rows="5"
+                        placeholder="Type your personal notes for this video here..."
+                        value={currentNote}
+                        onChange={(e) => setCurrentNote(e.target.value)}
+                        onBlur={saveNote}
+                        style={{ resize: 'vertical', fontSize: '0.85rem', background: 'white' }}
+                      />
+                    </div>
+                  )}
                 </div>
 
                 {/* Right — Playlist */}

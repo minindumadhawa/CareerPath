@@ -10,7 +10,6 @@ const enrollmentSchema = new mongoose.Schema({
       message: 'Please enter a valid email'
     }
   },
-  // Support both program types
   programId: { type: mongoose.Schema.Types.ObjectId, refPath: 'programType' },
   programType: {
     type: String,
@@ -18,6 +17,10 @@ const enrollmentSchema = new mongoose.Schema({
     enum: ['Leadership', 'TechnicalResource']
   },
   watchedVideos: [{ type: Number }],
+  notes: [{
+    videoIndex: { type: Number, required: true },
+    text: { type: String, default: '' }
+  }],
   completedAt: { type: Date, default: null },
   isCompleted: { type: Boolean, default: false },
 }, { timestamps: true });
