@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 import { useStudent } from '../../../context/CareerAdviceModule/StudentContext';
 import { generateCertificate } from '../../../utils/CareerAdviceModule/generateCertificate';
 
@@ -60,6 +61,7 @@ const StudentLoginModal = ({ onLogin, onClose }) => {
 
 const LeadershipPrograms = () => {
   const { student, login } = useStudent();
+  const navigate = useNavigate();
   const [programs, setPrograms] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('All');
@@ -317,15 +319,15 @@ const LeadershipPrograms = () => {
               )}
               <div style={{ padding: '12px 20px', borderTop: '1px solid var(--border)', display: 'flex', gap: 8 }}>
                 {studentEnrollments.some(e => e.programId?._id === p._id || e.programId === p._id) ? (
-                  <button className="btn btn-success btn-sm" style={{ flex: 1, justifyContent: 'center' }} onClick={e => { e.stopPropagation(); openProgram(p); }}>
-                    ✅ Enrolled
+                  <button className="btn btn-success btn-sm" style={{ flex: 1, justifyContent: 'center' }} onClick={e => { e.stopPropagation(); navigate(`/student/watch/${p._id}?type=Leadership`); }}>
+                    ▶ Continue Learning
                   </button>
                 ) : (
                   <button className="btn btn-primary btn-sm" style={{ flex: 1, justifyContent: 'center' }} onClick={e => { e.stopPropagation(); handleEnrollClick(p); }}>
                     🚀 Enroll
                   </button>
                 )}
-                <button className="btn btn-secondary btn-sm" style={{ flex: 1, justifyContent: 'center' }}>▶ View</button>
+                <button className="btn btn-secondary btn-sm" style={{ flex: 1, justifyContent: 'center' }} onClick={e => { e.stopPropagation(); openProgram(p); }}>👁 Preview</button>
               </div>
             </div>
           ))}

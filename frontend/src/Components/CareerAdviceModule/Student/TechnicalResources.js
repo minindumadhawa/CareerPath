@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 import { useStudent } from '../../../context/CareerAdviceModule/StudentContext';
 import { generateCertificate } from '../../../utils/CareerAdviceModule/generateCertificate';
 
@@ -53,6 +54,7 @@ const StudentLoginModal = ({ onLogin, onClose }) => {
 
 const TechnicalResources = () => {
   const { student, login } = useStudent();
+  const navigate = useNavigate();
   const [resources, setResources] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('All');
@@ -308,15 +310,15 @@ const TechnicalResources = () => {
               )}
               <div style={{ padding: '10px 18px', borderTop: '1px solid var(--border)', display: 'flex', gap: 8 }}>
                 {studentEnrollments.some(e => e.programId?._id === r._id || e.programId === r._id) ? (
-                  <button className="btn btn-success btn-sm" style={{ flex: 1, justifyContent: 'center' }} onClick={e => { e.stopPropagation(); openResource(r); }}>
-                    ✅ Enrolled
+                  <button className="btn btn-success btn-sm" style={{ flex: 1, justifyContent: 'center' }} onClick={e => { e.stopPropagation(); navigate(`/student/watch/${r._id}?type=TechnicalResource`); }}>
+                    ▶ Continue Learning
                   </button>
                 ) : (
                   <button className="btn btn-accent btn-sm" style={{ flex: 1, justifyContent: 'center' }} onClick={e => { e.stopPropagation(); handleEnrollClick(r); }}>
                     🚀 Enroll
                   </button>
                 )}
-                <button className="btn btn-secondary btn-sm" style={{ flex: 1, justifyContent: 'center' }}>▶ View</button>
+                <button className="btn btn-secondary btn-sm" style={{ flex: 1, justifyContent: 'center' }} onClick={e => { e.stopPropagation(); openResource(r); }}>👁 Preview</button>
               </div>
             </div>
           ))}
