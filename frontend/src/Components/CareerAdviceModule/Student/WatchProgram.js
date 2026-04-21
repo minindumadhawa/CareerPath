@@ -151,7 +151,35 @@ const WatchProgram = () => {
       <div style={{ background: 'white', borderBottom: '1px solid var(--border)', padding: '10px 20px', display: 'flex', alignItems: 'center', gap: 16, flexShrink: 0 }}>
         <button
           onClick={() => navigate(-1)}
-          style={{ background: 'none', border: '1px solid var(--border)', padding: '6px 14px', borderRadius: 8, cursor: 'pointer', color: 'var(--dark-3)', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: 6 }}
+          onMouseEnter={e => {
+            e.currentTarget.style.background = 'linear-gradient(135deg, #4f46e5, #7c3aed)';
+            e.currentTarget.style.color = 'white';
+            e.currentTarget.style.borderColor = 'transparent';
+            e.currentTarget.style.transform = 'translateX(-2px)';
+            e.currentTarget.style.boxShadow = '0 4px 12px rgba(99,102,241,0.35)';
+          }}
+          onMouseLeave={e => {
+            e.currentTarget.style.background = 'white';
+            e.currentTarget.style.color = '#4f46e5';
+            e.currentTarget.style.borderColor = '#e0e7ff';
+            e.currentTarget.style.transform = 'translateX(0)';
+            e.currentTarget.style.boxShadow = '0 2px 6px rgba(99,102,241,0.1)';
+          }}
+          style={{
+            background: 'white',
+            border: '1.5px solid #e0e7ff',
+            padding: '8px 18px',
+            borderRadius: 50,
+            cursor: 'pointer',
+            color: '#4f46e5',
+            fontSize: '0.85rem',
+            fontWeight: 600,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 7,
+            boxShadow: '0 2px 6px rgba(99,102,241,0.1)',
+            transition: 'all 0.25s ease',
+          }}
         >
           ← Back
         </button>
