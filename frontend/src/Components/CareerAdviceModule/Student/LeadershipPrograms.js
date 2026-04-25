@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 import { useStudent } from '../../../context/CareerAdviceModule/StudentContext';
 import { generateCertificate } from '../../../utils/CareerAdviceModule/generateCertificate';
 
@@ -60,6 +61,7 @@ const StudentLoginModal = ({ onLogin, onClose }) => {
 
 const LeadershipPrograms = () => {
   const { student, login } = useStudent();
+  const navigate = useNavigate();
   const [programs, setPrograms] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('All');
@@ -70,9 +72,14 @@ const LeadershipPrograms = () => {
   const [showLogin, setShowLogin] = useState(false);
   const [pendingProgram, setPendingProgram] = useState(null);
   const [enrolling, setEnrolling] = useState(false);
-  const [watchTimer, setWatchTimer] = useState(15);
+  const [watchTimer, setWatchTimer] = useState(20);
   const [canMarkWatched, setCanMarkWatched] = useState(false);
   const [studentEnrollments, setStudentEnrollments] = useState([]);
+  
+  // Note System States
+  const [currentNote, setCurrentNote] = useState('');
+  const [savingNote, setSavingNote] = useState(false);
+  const [noteSaved, setNoteSaved] = useState(false);
 
   useEffect(() => {
     if (student) {
@@ -91,10 +98,20 @@ const LeadershipPrograms = () => {
       .finally(() => setLoading(false));
   }, []);
 
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (selected || showLogin) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [selected, showLogin]);
+
   useEffect(() => {
     if (!selected) return;
     setCanMarkWatched(false);
-    setWatchTimer(15);
+    setWatchTimer(20);
     const interval = setInterval(() => {
       setWatchTimer(prev => {
         if (prev <= 1) {
@@ -108,6 +125,16 @@ const LeadershipPrograms = () => {
     return () => clearInterval(interval);
   }, [selected, activeVideo]);
 
+  // Load Note for Active Video
+  useEffect(() => {
+    if (enrollment && enrollment.notes) {
+      const noteObj = enrollment.notes.find(n => n.videoIndex === activeVideo);
+      setCurrentNote(noteObj ? noteObj.text : '');
+    } else {
+      setCurrentNote('');
+    }
+  }, [activeVideo, enrollment]);
+
   const fetchEnrollment = async (programId, email) => {
     try {
       const res = await axios.get(`/api/enrollments/student/${email}`);
@@ -117,8 +144,10 @@ const LeadershipPrograms = () => {
   };
 
   const openProgram = async (p) => {
+    const scrollY = window.scrollY;
     setSelected(p);
     setActiveVideo(0);
+    requestAnimationFrame(() => window.scrollTo(0, scrollY));
     if (student) {
       await fetchEnrollment(p._id, student.email);
     } else {
@@ -154,7 +183,11 @@ const LeadershipPrograms = () => {
       }
       setShowLogin(false);
       setPendingProgram(null);
-      if (!selected) setSelected(prog);
+      if (!selected) {
+        const scrollY = window.scrollY;
+        setSelected(prog);
+        requestAnimationFrame(() => window.scrollTo(0, scrollY));
+      }
     } catch (err) {
       toast.error(err.response?.data?.message || 'Enrollment failed');
     } finally {
@@ -178,6 +211,25 @@ const LeadershipPrograms = () => {
       const res = await axios.patch(`/api/enrollments/${enrollment._id}/watch`, { videoIndex });
       setEnrollment(res.data.data);
     } catch { /* silent */ }
+  };
+
+  const saveNote = async () => {
+    if (!enrollment) return;
+    setSavingNote(true);
+    setNoteSaved(false);
+    try {
+      const res = await axios.patch(`/api/enrollments/${enrollment._id}/note`, {
+        videoIndex: activeVideo,
+        text: currentNote
+      });
+      setEnrollment(res.data.data);
+      setNoteSaved(true);
+      setTimeout(() => setNoteSaved(false), 2000);
+    } catch {
+      toast.error('Failed to save note');
+    } finally {
+      setSavingNote(false);
+    }
   };
 
   const markComplete = async () => {
@@ -267,15 +319,15 @@ const LeadershipPrograms = () => {
               )}
               <div style={{ padding: '12px 20px', borderTop: '1px solid var(--border)', display: 'flex', gap: 8 }}>
                 {studentEnrollments.some(e => e.programId?._id === p._id || e.programId === p._id) ? (
-                  <button className="btn btn-success btn-sm" style={{ flex: 1, justifyContent: 'center' }} onClick={e => { e.stopPropagation(); openProgram(p); }}>
-                    ✅ Enrolled
+                  <button className="btn btn-success btn-sm" style={{ flex: 1, justifyContent: 'center' }} onClick={e => { e.stopPropagation(); navigate(`/student/watch/${p._id}?type=Leadership`); }}>
+                    ▶ Continue Learning
                   </button>
                 ) : (
                   <button className="btn btn-primary btn-sm" style={{ flex: 1, justifyContent: 'center' }} onClick={e => { e.stopPropagation(); handleEnrollClick(p); }}>
                     🚀 Enroll
                   </button>
                 )}
-                <button className="btn btn-secondary btn-sm" style={{ flex: 1, justifyContent: 'center' }}>▶ View</button>
+                <button className="btn btn-secondary btn-sm" style={{ flex: 1, justifyContent: 'center' }} onClick={e => { e.stopPropagation(); openProgram(p); }}>👁 Preview</button>
               </div>
             </div>
           ))}
@@ -379,13 +431,13 @@ const LeadershipPrograms = () => {
                             <a href={selected.videos[activeVideo].url} target="_blank" rel="noreferrer" style={{ fontSize: '0.78rem', color: 'var(--accent)', textDecoration: 'none' }}>🔗 Open in new tab →</a>
                           )}
                         </div>
-                        {enrollment && !enrollment.watchedVideos?.includes(activeVideo) && (
+                        {enrollment && !enrollment.watchedVideos?.includes(activeVideo) && canMarkWatched && (
                           <button
-                            className={`btn ${canMarkWatched ? 'btn-success' : 'btn-secondary'} btn-sm`}
-                            onClick={() => canMarkWatched && markVideoWatched(activeVideo)}
-                            disabled={!canMarkWatched}
+                            className="btn btn-success btn-sm"
+                            onClick={() => markVideoWatched(activeVideo)}
+                            style={{ animation: 'fadeIn 0.4s ease' }}
                           >
-                            {canMarkWatched ? '✅ Mark as Watched' : `⏳ Playing... (${watchTimer}s)`}
+                            ✅ Mark as Watched
                           </button>
                         )}
                         {enrollment && enrollment.watchedVideos?.includes(activeVideo) && (
@@ -396,6 +448,32 @@ const LeadershipPrograms = () => {
                   )}
                   <div className="divider" />
                   <p style={{ fontSize: '0.85rem', color: 'var(--dark-3)', lineHeight: 1.7 }}>{selected.description}</p>
+                  
+                  {/* Note Taking Section */}
+                  {enrollment && (
+                    <div style={{ marginTop: 20, background: 'var(--light-gray)', borderRadius: 10, padding: 16 }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+                        <h4 style={{ fontSize: '0.9rem', margin: 0 }}>📝 My Notes</h4>
+                        <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+                          {savingNote ? (
+                            <span style={{ fontSize: '0.75rem', color: 'var(--gray)' }}>Saving...</span>
+                          ) : noteSaved ? (
+                            <span style={{ fontSize: '0.75rem', color: 'var(--success)', fontWeight: 600 }}>✅ Saved</span>
+                          ) : null}
+                          <button className="btn btn-sm" style={{ padding: '4px 10px', fontSize: '0.75rem', background: 'white', border: '1px solid var(--border)', cursor: 'pointer' }} onClick={saveNote}>Save Note</button>
+                        </div>
+                      </div>
+                      <textarea
+                        className="form-control"
+                        rows="5"
+                        placeholder="Type your personal notes for this video here..."
+                        value={currentNote}
+                        onChange={(e) => setCurrentNote(e.target.value)}
+                        onBlur={saveNote}
+                        style={{ resize: 'vertical', fontSize: '0.85rem', background: 'white' }}
+                      />
+                    </div>
+                  )}
                 </div>
 
                 {/* Right — Playlist */}

@@ -4,6 +4,7 @@ import './StudentDashboard.css';
 import StudentProfile from './StudentProfile';
 import ResumeTemplates from './ResumeTemplates';
 import CVPreview from './CVPreview';
+import StudentInternships from './StudentInternships';
 
 function StudentDashboard() {
   const navigate = useNavigate();
@@ -35,7 +36,7 @@ function StudentDashboard() {
              <span className="nav-icon">📝</span> Applications
           </a>
           <a href="#saved" className={`nav-item ${activeTab === 'saved' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); setActiveTab('saved'); }}>
-             <span className="nav-icon">⭐</span> Saved Internships
+             <span className="nav-icon">⭐</span> Internships
           </a>
           <a href="#interviews" className={`nav-item ${activeTab === 'interviews' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); setActiveTab('interviews'); }}>
              <span className="nav-icon">🤝</span> Interviews
@@ -164,6 +165,7 @@ function StudentDashboard() {
           )}
           {activeTab === 'profile' && <StudentProfile />}
           {activeTab === 'cv' && <ResumeTemplates />}
+          {activeTab === 'saved' && <StudentInternships />}
         </div>
       </main>
     </div>

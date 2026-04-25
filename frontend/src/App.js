@@ -12,6 +12,7 @@ import StudentDashboard from './Components/Dashboard/StudentDashboard';
 import CompanyDashboard from './Components/Dashboard/CompanyDashboard';
 import AdminDashboard from './Components/Dashboard/AdminDashboard';
 import CVPreview from './Components/Dashboard/CVPreview';
+import InternshipsPage from './Components/Internships/InternshipsPage';
 
 // Career Advice Module
 import CareerAdviceLayout from './Components/CareerAdviceModule/CareerAdviceLayout';
@@ -34,6 +35,7 @@ import TechnicalResources from './Components/CareerAdviceModule/Student/Technica
 import TakeQuiz from './Components/CareerAdviceModule/Student/TakeQuiz';
 import QuizList from './Components/CareerAdviceModule/Student/QuizList';
 import MyProgress from './Components/CareerAdviceModule/Student/MyProgress';
+import WatchProgram from './Components/CareerAdviceModule/Student/WatchProgram';
 
 function App() {
   return (
@@ -49,6 +51,7 @@ function App() {
           <Route path="/cv-preview" element={<CVPreview />} />
           <Route path="/company-dashboard" element={<CompanyDashboard />} />
           <Route path="/admin-dashboard" element={<AdminDashboard />} />
+          <Route path="/internships" element={<InternshipsPage />} />
 
           {/* New Career Advice Module Nested Routes */}
           <Route element={<CareerAdviceLayout />}>
@@ -58,6 +61,7 @@ function App() {
             <Route path="/student/quizzes" element={<QuizList />} />
             <Route path="/student/quiz/:id" element={<TakeQuiz />} />
             <Route path="/student/progress" element={<MyProgress />} />
+            <Route path="/student/watch/:id" element={<WatchProgram />} />
 
             <Route path="/admin/dashboard" element={<CareerAdminDashboard />} />
             <Route path="/admin/leadership/add" element={<AddLeadership />} />

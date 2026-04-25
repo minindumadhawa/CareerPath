@@ -1,0 +1,98 @@
+.internships-public-page {
+  min-height: 100vh;
+  background-color: #f8fafc;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Nav mirroring Home.css briefly but self-contained to avoid breakage if Home refactored */
+.public-nav {
+  position: fixed;
+  top: 0; left: 0; width: 100%;
+  padding: 1.5rem 0;
+  transition: all 0.3s ease;
+  z-index: 1000;
+  background: white;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+.public-nav .nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
+}
+.public-nav .logo a {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--primary);
+  text-decoration: none;
+}
+.public-nav .nav-links {
+  list-style: none; display: flex; gap: 2rem; margin: 0; padding: 0; align-items: center;
+}
+.public-nav .nav-links a {
+  text-decoration: none; color: #334155; font-weight: 500; font-size: 1rem; transition: color 0.3s;
+}
+.public-nav .nav-links a:hover, .public-nav .nav-links a.active {
+  color: var(--primary);
+}
+.nav-login { font-weight: 600 !important; }
+.nav-signup {
+  background: linear-gradient(135deg, var(--primary) 0%, #3b82f6 100%); color: white !important; padding: 0.5rem 1.25rem; border-radius: 8px; font-weight: 600;
+  transition: transform 0.2s;
+}
+.nav-signup:hover { transform: translateY(-2px); box-shadow: 0 4px 15px -3px rgba(37, 99, 235, 0.4); }
+
+/* Grid */
+.internships-grid-container {
+  max-width: 1200px; margin: 4rem auto; padding: 0 2rem;
+}
+.internships-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 2rem;
+}
+.public-intern-card {
+  background: white; border-radius: 16px; padding: 1.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  border: 1px solid #e2e8f0; transition: all 0.3s ease;
+  display: flex; flex-direction: column;
+}
+.public-intern-card:hover {
+  transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+.card-top {
+  display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem;
+}
+.company-info { display: flex; gap: 1rem; align-items: center; }
+.company-logo-placeholder {
+  width: 48px; height: 48px; background: var(--secondary); color: var(--primary); border-radius: 12px;
+  display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold;
+}
+.company-info h3 { margin: 0 0 0.25rem 0; font-size: 1.25rem; color: #0f172a; }
+.company-name { font-size: 0.9rem; color: #64748b; font-weight: 500; }
+.duration-badge {
+  background: #f1f5f9; color: #475569; padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.8rem; font-weight: 600;
+}
+
+.card-middle { margin-bottom: 1.5rem; display: flex; flex-direction: column; gap: 0.5rem; }
+.detail-item { font-size: 0.95rem; color: #334155; display: flex; align-items: center; gap: 0.5rem; }
+
+.card-skills { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2rem; flex: 1; }
+.skill-pill {
+  background: #f8fafc; border: 1px solid #e2e8f0; color: #475569; padding: 0.25rem 0.75rem;
+  border-radius: 6px; font-size: 0.8rem; font-weight: 500;
+}
+
+.card-bottom {
+  display: flex; justify-content: space-between; align-items: center;
+  padding-top: 1.5rem; border-top: 1px solid #e2e8f0;
+}
+.posted-date { margin: 0; font-size: 0.85rem; color: #94a3b8; }
+.btn-apply-now {
+  background: white; border: 2px solid var(--primary); color: var(--primary);
+  padding: 0.5rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.2s;
+}
+.btn-apply-now:hover { background: var(--primary); color: white; }
+
+.no-results { text-align: center; padding: 4rem; color: #64748b; }
+.no-results h2 { color: #1e293b; margin-bottom: 0.5rem; }
