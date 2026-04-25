@@ -3,8 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import './StudentDashboard.css';
 import StudentProfile from './StudentProfile';
 import ResumeTemplates from './ResumeTemplates';
-import CVPreview from './CVPreview';
 import StudentInternships from './StudentInternships';
+import StudentApplications from './StudentApplications';
 
 function StudentDashboard() {
   const navigate = useNavigate();
@@ -166,6 +166,7 @@ function StudentDashboard() {
           {activeTab === 'profile' && <StudentProfile />}
           {activeTab === 'cv' && <ResumeTemplates />}
           {activeTab === 'saved' && <StudentInternships />}
+          {activeTab === 'applications' && <StudentApplications />}
         </div>
       </main>
     </div>
