@@ -12,7 +12,7 @@ function AllApplications() {
   const fetchApplications = async () => {
     try {
       setLoading(true);
-      const res = await fetch('http://localhost:5000/api/applications');
+      const res = await fetch('http://localhost:5001/api/applications');
       if (res.ok) {
         const data = await res.json();
         setApplications(data.data || []);

@@ -67,7 +67,7 @@ const Chatbot = () => {
     // Load History on Mount
     useEffect(() => {
         if (userId) {
-            axios.get(`http://localhost:5000/api/chat/history/${userId}`)
+            axios.get(`http://localhost:5001/api/chat/history/${userId}`)
                 .then(res => {
                     if (res.data.messages && res.data.messages.length > 0) {
                         setMessages(res.data.messages);
@@ -94,7 +94,7 @@ const Chatbot = () => {
         setIsLoading(true);
 
         try {
-            const response = await axios.post("http://localhost:5000/api/chat/ask", { 
+            const response = await axios.post("http://localhost:5001/api/chat/ask", { 
                 message: text,
                 userId: userId 
             });
@@ -124,7 +124,7 @@ const Chatbot = () => {
         setIsLoading(true);
 
         try {
-            const response = await axios.post("http://localhost:5000/api/chat/analyze-resume", formData, {
+            const response = await axios.post("http://localhost:5001/api/chat/analyze-resume", formData, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
             setMessages(prev => [...prev, { text: response.data.reply, sender: 'bot' }]);
