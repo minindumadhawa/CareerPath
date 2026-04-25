@@ -28,7 +28,7 @@ function CompanyDashboard() {
       if (userStr) {
         const parsedUser = JSON.parse(userStr);
         const companyId = parsedUser.id || parsedUser._id;
-        const res = await fetch(`http://localhost:5000/api/applications/company/${companyId}`);
+        const res = await fetch(`http://localhost:5001/api/applications/company/${companyId}`);
         if (res.ok) {
           const data = await res.json();
           setApplications(data.data || []);
@@ -45,7 +45,7 @@ function CompanyDashboard() {
       if (userStr) {
         const parsedUser = JSON.parse(userStr);
         const companyId = parsedUser.id || parsedUser._id;
-        const res = await fetch(`http://localhost:5000/api/internships/company/${companyId}`);
+        const res = await fetch(`http://localhost:5001/api/internships/company/${companyId}`);
         if (res.ok) {
           const data = await res.json();
           setInternships(data.data || []);
@@ -81,8 +81,8 @@ function CompanyDashboard() {
       if (!payload.applicationDeadline) delete payload.applicationDeadline;
 
       const url = editingInternshipId 
-        ? `http://localhost:5000/api/internships/${editingInternshipId}` 
-        : 'http://localhost:5000/api/internships';
+        ? `http://localhost:5001/api/internships/${editingInternshipId}` 
+        : 'http://localhost:5001/api/internships';
       
       const method = editingInternshipId ? 'PUT' : 'POST';
 
@@ -132,7 +132,7 @@ function CompanyDashboard() {
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this internship posting?")) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/internships/${id}`, { method: 'DELETE' });
+      const res = await fetch(`http://localhost:5001/api/internships/${id}`, { method: 'DELETE' });
       if (res.ok) {
         fetchInternships();
       } else {

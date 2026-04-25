@@ -17,7 +17,7 @@ function StudentInternships() {
     }
     const fetchInternships = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/internships/active');
+        const res = await fetch('http://localhost:5001/api/internships/active');
         if (res.ok) {
           const data = await res.json();
           setInternships(data.data || []);

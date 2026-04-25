@@ -13,7 +13,7 @@ function ManageCompanies() {
   const fetchCompanies = async () => {
     try {
       setLoading(true);
-      const res = await fetch('http://localhost:5000/api/users/companies');
+      const res = await fetch('http://localhost:5001/api/users/companies');
       const data = await res.json();
       if (res.ok) {
         setCompanies(data);
@@ -30,7 +30,7 @@ function ManageCompanies() {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this company account? This action cannot be undone.')) {
       try {
-        const res = await fetch(`http://localhost:5000/api/users/companies/${id}`, {
+        const res = await fetch(`http://localhost:5001/api/users/companies/${id}`, {
           method: 'DELETE'
         });
         if (res.ok) {
@@ -48,7 +48,7 @@ function ManageCompanies() {
   const handleVerify = async (id) => {
     if (window.confirm('Are you sure you want to verify this company? They will be fully approved.')) {
       try {
-        const res = await fetch(`http://localhost:5000/api/users/companies/${id}/verify`, {
+        const res = await fetch(`http://localhost:5001/api/users/companies/${id}/verify`, {
           method: 'PUT'
         });
         if (res.ok) {

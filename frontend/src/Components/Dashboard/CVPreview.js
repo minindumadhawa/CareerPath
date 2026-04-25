@@ -236,7 +236,7 @@ function CVPreview({ studentId }) {
   const photoInputRef = useRef(null);
   const user = getUser();
   const fetchId = studentId || user?.id || null;
-  const apiUrl = environment?.apiUrl || 'http://localhost:5000/api/users';
+  const apiUrl = environment?.apiUrl || 'http://localhost:5001/api/users';
 
   // ─── Load Demo Data ───────────────────────────────────────
   const loadDemoData = useCallback(() => {
