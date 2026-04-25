@@ -12,7 +12,7 @@ const applicationSchema = new mongoose.Schema({
   coverLetter: { type: String, required: true },
   status: { 
     type: String, 
-    enum: ['Pending', 'Reviewed', 'Interviewing', 'Accepted', 'Rejected'], 
+    enum: ['Pending', 'Reviewed', 'Accepted', 'Rejected'], 
     default: 'Pending' 
   }
 }, { timestamps: true });

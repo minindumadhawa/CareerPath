@@ -64,24 +64,6 @@ function CompanyDashboard() {
     }
   }, [activeTab]);
 
-  const handleStatusChange = async (appId, newStatus) => {
-    try {
-      const res = await fetch(`http://localhost:5001/api/applications/${appId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: newStatus })
-      });
-      if (res.ok) {
-        setApplications(apps => apps.map(app => app._id === appId ? { ...app, status: newStatus } : app));
-      } else {
-        alert('Failed to update status');
-      }
-    } catch (e) {
-      console.error(e);
-      alert('Error updating status');
-    }
-  };
-
   const handleCreateInternship = async (e) => {
     e.preventDefault();
     try {
@@ -569,11 +551,7 @@ function CompanyDashboard() {
                            <td><span className={`score ${app.cgpa > 3.5 ? 'high' : app.cgpa > 3.0 ? 'med' : 'low'}`}>{app.cgpa}/4.0</span></td>
                            <td><span className={`badge ${app.status.toLowerCase()}`}>{app.status}</span></td>
                            <td>
-                             <select 
-                               className="status-select" 
-                               value={app.status}
-                               onChange={(e) => handleStatusChange(app._id, e.target.value)}
-                             >
+                             <select className="status-select" defaultValue={app.status}>
                                <option value="Pending">Pending</option>
                                <option value="Reviewed">Reviewed</option>
                                <option value="Interviewing">Interviewing</option>

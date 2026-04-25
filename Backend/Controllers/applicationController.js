@@ -62,10 +62,7 @@ exports.applyForInternship = async (req, res) => {
 exports.getApplicationsForStudent = async (req, res) => {
   try {
     const { studentId } = req.params;
-    const applications = await Application.find({ studentId }).populate({
-      path: 'internshipId',
-      populate: { path: 'companyId', select: 'companyName' }
-    });
+    const applications = await Application.find({ studentId }).populate('internshipId');
     res.status(200).json({ success: true, data: applications });
   } catch (error) {
     console.error('Error fetching applications:', error);
@@ -104,30 +101,6 @@ exports.getAllApplications = async (req, res) => {
     res.status(200).json({ success: true, data: applications });
   } catch (error) {
     console.error('Error fetching all applications:', error);
-    res.status(500).json({ success: false, message: 'Server error' });
-  }
-};
-
-exports.updateApplicationStatus = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { status } = req.body;
-
-    if (!['Pending', 'Reviewed', 'Interviewing', 'Rejected'].includes(status)) {
-      return res.status(400).json({ success: false, message: 'Invalid status' });
-    }
-
-    const application = await Application.findById(id);
-    if (!application) {
-      return res.status(404).json({ success: false, message: 'Application not found' });
-    }
-
-    application.status = status;
-    await application.save();
-
-    res.status(200).json({ success: true, data: application, message: 'Status updated successfully' });
-  } catch (error) {
-    console.error('Error updating application status:', error);
     res.status(500).json({ success: false, message: 'Server error' });
   }
 };
