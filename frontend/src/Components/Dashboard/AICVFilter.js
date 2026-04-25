@@ -186,7 +186,7 @@ function AICVFilter() {
     setLoading(true);
 
     try {
-      const res = await fetch('http://localhost:5000/api/users/students');
+      const res = await fetch('http://localhost:5001/api/users/students');
       const data = await res.json();
       if (res.ok) {
         // Run AI Algorithm perfectly mapped to user prompt logic

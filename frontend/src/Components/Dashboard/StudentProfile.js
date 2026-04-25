@@ -110,7 +110,7 @@ function StudentProfile() {
   });
 
   const user   = getUser();
-  const apiUrl = environment?.apiUrl || 'http://localhost:5000/api/users';
+  const apiUrl = environment?.apiUrl || 'http://localhost:5001/api/users';
 
   // ─── Fetch Profile ──────────────────────────────────────────
   const fetchProfile = useCallback(async () => {

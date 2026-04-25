@@ -40,7 +40,7 @@ function AdminSettings() {
 
   const fetchProfile = async () => {
     try {
-      const res = await fetch(`http://localhost:5000/api/users/profile/${user.id}`);
+      const res = await fetch(`http://localhost:5001/api/users/profile/${user.id}`);
       const data = await res.json();
       if (res.ok) {
         setProfile({
@@ -80,7 +80,7 @@ function AdminSettings() {
         payload.password = profile.newPassword;
       }
       
-      const res = await fetch(`http://localhost:5000/api/users/profile/${user.id}`, {
+      const res = await fetch(`http://localhost:5001/api/users/profile/${user.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
