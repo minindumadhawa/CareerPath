@@ -15,6 +15,22 @@ const MyProgress = () => {
   const [emailInput, setEmailInput] = useState('');
   const [emailError, setEmailError] = useState('');
 
+  // Determine active student from either global app login or guest module login
+  let activeStudent = student;
+  let isGlobalUser = false;
+  try {
+    const globalUserStr = localStorage.getItem('user');
+    if (globalUserStr) {
+      const u = JSON.parse(globalUserStr);
+      if (u && u.email) {
+        activeStudent = { name: u.name || u.firstName || u.username || 'Student', email: u.email };
+        isGlobalUser = true;
+      }
+    }
+  } catch (e) {
+    console.error('Error parsing global user:', e);
+  }
+
   const fetchProgress = async (email) => {
     setLoading(true);
     try {
@@ -33,8 +49,8 @@ const MyProgress = () => {
 
   // Auto-load if already logged in
   useEffect(() => {
-    if (student) fetchProgress(student.email);
-  }, [student]);
+    if (activeStudent) fetchProgress(activeStudent.email);
+  }, [activeStudent?.email]);
 
   const handleEmailLookup = () => {
     if (!emailInput.trim()) { setEmailError('Email is required'); return; }
@@ -52,7 +68,7 @@ const MyProgress = () => {
     : 0;
 
   // === NOT LOGGED IN — simple email lookup ===
-  if (!student) {
+  if (!activeStudent) {
     return (
       <div className="page-container fade-in">
         <div className="page-header">
@@ -123,13 +139,15 @@ const MyProgress = () => {
         <div>
           <h1 className="page-title">My Progress 📊</h1>
           <p className="page-subtitle">
-            {student.name !== 'Student' ? `Hello, ${student.name}!` : ''} Viewing progress for{' '}
-            <strong>{student.email}</strong>
+            {activeStudent.name !== 'Student' ? `Hello, ${activeStudent.name}!` : ''} Viewing progress for{' '}
+            <strong>{activeStudent.email}</strong>
           </p>
         </div>
-        <button className="btn btn-secondary btn-sm" onClick={() => { logout(); setEnrollments([]); setQuizResults([]); }}>
-          🔄 Switch Account
-        </button>
+        {!isGlobalUser && (
+          <button className="btn btn-secondary btn-sm" onClick={() => { logout(); setEnrollments([]); setQuizResults([]); }}>
+            🔄 Switch Account
+          </button>
+        )}
       </div>
 
       {loading ? (
@@ -226,7 +244,7 @@ const MyProgress = () => {
                         {enr.isCompleted && (
                           <button className="btn btn-sm" style={{ background: 'linear-gradient(135deg, #d4af37, #f0d060)', color: '#1a1a00', fontWeight: 700, border: 'none' }}
                             onClick={() => generateCertificate({
-                              studentName: student.name !== 'Student' ? student.name : student.email.split('@')[0],
+                              studentName: activeStudent.name !== 'Student' ? activeStudent.name : activeStudent.email.split('@')[0],
                               programTitle: prog.title,
                               category: prog.category,
                               instructor: prog.instructor,

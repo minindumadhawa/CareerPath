@@ -49,8 +49,9 @@
   position: absolute;
   bottom: 80px;
   right: 0;
-  width: 350px;
-  height: 500px;
+  width: 440px;
+  height: 680px;
+  max-height: calc(100vh - 120px);
   background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
@@ -252,11 +253,11 @@
 
 /* Input Area */
 .chatbot-input-area {
-  padding: 16px;
+  padding: 12px 16px;
   background: rgba(255, 255, 255, 0.6);
   border-top: 1px solid rgba(0, 0, 0, 0.05);
   display: flex;
-  gap: 10px;
+  gap: 8px;
   align-items: center;
 }
 
@@ -277,33 +278,103 @@
 }
 
 .send-btn {
-  background: #6366f1;
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
   color: white;
   border: none;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
+  flex-shrink: 0; /* Prevents the button from being squeezed into an oval */
 }
 
 .send-btn:disabled {
-  background: #ccc;
+  background: #e2e8f0;
+  color: #94a3b8;
   cursor: not-allowed;
+  box-shadow: none;
+  transform: none !important;
 }
 
 .send-btn:not(:disabled):hover {
-  background: #4f46e5;
-  transform: scale(1.05);
+  transform: scale(1.1) rotate(-5deg);
+  box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4);
+  background: linear-gradient(135deg, #4338ca, #6d28d9);
+}
+
+.send-btn:not(:disabled):active {
+  transform: scale(0.95);
 }
 
 .send-btn svg {
-  width: 18px;
-  height: 18px;
-  transform: translateX(-1px);
+  width: 20px;
+  height: 20px;
+  transform: translate(1px, -1px); /* Fine-tuning the icon centering */
+}
+
+/* Voice & Speaker Controls */
+.voice-btn {
+  background: none;
+  border: none;
+  color: #6366f1;
+  padding: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  border-radius: 50%;
+}
+
+.voice-btn:hover {
+  background: #f5f3ff;
+  color: #4f46e5;
+}
+
+.voice-btn.listening {
+  color: #ef4444;
+  animation: pulse-red 1.5s infinite;
+  background: rgba(239, 68, 68, 0.1);
+}
+
+@keyframes pulse-red {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); box-shadow: 0 0 10px rgba(239, 68, 68, 0.3); }
+  100% { transform: scale(1); }
+}
+
+.speaker-btn {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  padding: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.6;
+}
+
+.speaker-btn:hover {
+  color: #6366f1;
+  opacity: 1;
+}
+
+.speaker-btn.speaking {
+  color: #10b981;
+  opacity: 1;
+}
+
+.bot-msg-header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 2px;
 }
 
 /* Responsive adjustments */

@@ -35,11 +35,11 @@ app.use("/api/chat", chatRoutes);
 app.use("/api/internships", internshipRoutes);
 app.use("/api/applications", applicationRoutes);
 
-mongoose.connect("mongodb+srv://admin:H4eQUj4fjzqgjrlX@cluster0.j4bshhl.mongodb.net/")
-.then(()=> console.log("Connected to mongoDB"))
-.then(()=> {
-    app.listen(5000, () => {
-        console.log("Server listening on port 5000");
-    });
-})
-.catch((err)=> console.log((err)));
+mongoose.connect(process.env.MONGODB_URI)
+    .then(() => console.log("Connected to mongoDB"))
+    .then(() => {
+        app.listen(5000, () => {
+            console.log("Server listening on port 5000");
+        });
+    })
+    .catch((err) => console.log((err)));

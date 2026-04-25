@@ -16,4 +16,4 @@ const internshipSchema = new mongoose.Schema({
   status: { type: String, enum: ['Active', 'Draft', 'Closed'], default: 'Active' },
 }, { timestamps: true });
 
-module.exports = mongoose.model('Internship', internshipSchema);
+module.exports = mongoose.models.Internship || mongoose.model('Internship', internshipSchema);
