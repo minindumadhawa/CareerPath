@@ -6,7 +6,8 @@ function AICVFilter() {
   const [criteria, setCriteria] = useState({
     skills: '',
     degrees: 'Software Engineering, Computer Science, IT',
-    keywords: ''
+    keywords: '',
+    minGpa: ''
   });
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState([]);
@@ -14,6 +15,7 @@ function AICVFilter() {
   const [fieldErrors, setFieldErrors] = useState({});
   const [viewingCvFor, setViewingCvFor] = useState(null);
   const [expandedRow, setExpandedRow] = useState(null);
+  const [hasScanned, setHasScanned] = useState(false);
 
   // Sanitizer: Allows letters, numbers, spaces, commas, dots, dashes, plus, and hash. Strips all other special chars.
   const handleInputChange = (field, value) => {
@@ -27,6 +29,7 @@ function AICVFilter() {
   const calculateScore = (student, parsedCriteria) => {
     let marks = {
       skills: 0,
+      gpa: 0,
       education: 0,
       experience: 0,
       certs: 0,
@@ -50,15 +53,27 @@ function AICVFilter() {
       const validReqCount = parsedCriteria.skills.filter(s => s.trim()).length;
       if (validReqCount > 0) {
         const ratio = matchCount / validReqCount;
-        if (ratio >= 0.8) marks.skills = 40;        // Exact / High match
-        else if (ratio >= 0.4) marks.skills = 25;   // Related / Medium marks
-        else if (ratio > 0) marks.skills = 10;      // Low match
+        if (ratio >= 0.8) marks.skills = 35;        // Exact / High match
+        else if (ratio >= 0.4) marks.skills = 20;   // Related / Medium marks
+        else if (ratio > 0) marks.skills = 8;       // Low match
         else marks.skills = 0;                      // No match
       } else {
-        marks.skills = 40;
+        marks.skills = 35;
       }
     } else {
-      marks.skills = 40; // Default full if no skills requested
+      marks.skills = 35; // Default full if no skills requested
+    }
+
+    // 1.5 GPA Ranking (0 - 10)
+    const studentGpa = parseFloat(student.gpa);
+    if (!isNaN(studentGpa)) {
+      if (studentGpa >= 3.8) marks.gpa = 10;
+      else if (studentGpa >= 3.5) marks.gpa = 8;
+      else if (studentGpa >= 3.0) marks.gpa = 5;
+      else if (studentGpa >= 2.5) marks.gpa = 3;
+      else marks.gpa = 0;
+    } else {
+      marks.gpa = 0;
     }
 
     // 2. Education (0 - 15)
@@ -69,11 +84,11 @@ function AICVFilter() {
         parsedCriteria.degrees.forEach(reqDeg => {
           const rd = reqDeg.toLowerCase().trim();
           if (rd && (deg.includes(rd) || rd.includes(deg))) {
-            bestEduMark = Math.max(bestEduMark, 15); // Highly relevant
+            bestEduMark = Math.max(bestEduMark, 10); // Highly relevant
           } else if (deg.includes('engineering') || deg.includes('science') || deg.includes('technology') || deg.includes('computing') || deg.includes('it')) {
-            bestEduMark = Math.max(bestEduMark, 10); // Related field
+            bestEduMark = Math.max(bestEduMark, 7); // Related field
           } else {
-            bestEduMark = Math.max(bestEduMark, 5);  // Non-related
+            bestEduMark = Math.max(bestEduMark, 4);  // Non-related
           }
         });
       });
@@ -81,9 +96,9 @@ function AICVFilter() {
     } else {
       // No specific degree requested
       if (studentDegrees.some(d => d.includes('software') || d.includes('computer') || d.includes('it') || d.includes('information'))) {
-        marks.education = 15;
-      } else if (studentDegrees.length > 0) {
         marks.education = 10;
+      } else if (studentDegrees.length > 0) {
+        marks.education = 7;
       } else {
          marks.education = 0;
       }
@@ -147,7 +162,7 @@ function AICVFilter() {
     }
 
     // Total
-    marks.total = marks.skills + marks.education + marks.experience + marks.certs + marks.quality + marks.keywords;
+    marks.total = marks.skills + marks.gpa + marks.education + marks.experience + marks.certs + marks.quality + marks.keywords;
     return marks;
   };
 
@@ -190,7 +205,16 @@ function AICVFilter() {
       const data = await res.json();
       if (res.ok) {
         // Run AI Algorithm perfectly mapped to user prompt logic
-        const scoredStudents = data.map(student => {
+        const minGpa = parseFloat(criteria.minGpa);
+        const filteredData = data.filter(student => {
+          if (!isNaN(minGpa)) {
+            const studentGpa = parseFloat(student.gpa);
+            if (isNaN(studentGpa) || studentGpa < minGpa) return false;
+          }
+          return true;
+        });
+
+        const scoredStudents = filteredData.map(student => {
           const scoreBreakdown = calculateScore(student, parsedCriteria);
           return {
             ...student,
@@ -208,6 +232,7 @@ function AICVFilter() {
       setError('Network error');
     } finally {
       setLoading(false);
+      setHasScanned(true);
     }
   };
 
@@ -285,6 +310,20 @@ function AICVFilter() {
                       onChange={(e) => handleInputChange('keywords', e.target.value)}
                     />
                   </div>
+
+                  <div className="form-group">
+                    <label>4. Minimum GPA Requirement (Optional)</label>
+                    <p className="hint">Only show candidates above this GPA</p>
+                    <input 
+                      type="number" 
+                      placeholder="e.g. 3.5" 
+                      step="0.01"
+                      min="0"
+                      max="4.0"
+                      value={criteria.minGpa}
+                      onChange={(e) => handleInputChange('minGpa', e.target.value)}
+                    />
+                  </div>
                 </div>
 
                 <div className="filter-actions-row">
@@ -308,7 +347,9 @@ function AICVFilter() {
               
               {!loading && results.length === 0 && !error && (
                 <div className="empty-state" style={{padding: '3rem', textAlign: 'center', color: '#64748b'}}>
-                  Configure criteria in the left panel and run a scan to rank tracking applicants.
+                  {hasScanned 
+                    ? "No candidates match your current criteria and GPA requirement. Try broadening your search." 
+                    : "Configure criteria in the left panel and run a scan to rank tracking applicants."}
                 </div>
               )}
 
@@ -349,11 +390,15 @@ function AICVFilter() {
                             <div className="breakdown-grid-modern">
                               <div className="bk-item-modern">
                                 <span>Skills Match</span>
-                                <strong>{student.scoreBreakdown.skills} <small style={{fontSize:'0.8rem', color:'#64748b'}}>/40</small></strong>
+                                <strong>{student.scoreBreakdown.skills} <small style={{fontSize:'0.8rem', color:'#64748b'}}>/35</small></strong>
+                              </div>
+                              <div className="bk-item-modern">
+                                <span>GPA Ranking</span>
+                                <strong>{student.scoreBreakdown.gpa} <small style={{fontSize:'0.8rem', color:'#64748b'}}>/10</small></strong>
                               </div>
                               <div className="bk-item-modern">
                                 <span>Education</span>
-                                <strong>{student.scoreBreakdown.education} <small style={{fontSize:'0.8rem', color:'#64748b'}}>/15</small></strong>
+                                <strong>{student.scoreBreakdown.education} <small style={{fontSize:'0.8rem', color:'#64748b'}}>/10</small></strong>
                               </div>
                               <div className="bk-item-modern">
                                 <span>Experience</span>

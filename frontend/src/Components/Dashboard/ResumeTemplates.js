@@ -35,7 +35,21 @@ const TEMPLATES = [
 
 // ─── Helpers ───────────────────────────────────────────────────
 const getUser = () => { try { return JSON.parse(localStorage.getItem('user')) || null; } catch { return null; } };
-const getEffectiveProfileId = () => { try { return localStorage.getItem('profileId') || getUser()?.id || null; } catch { return null; } };
+const getEffectiveProfileId = () => { 
+  try { 
+    const pid = localStorage.getItem('profileId');
+    // Check if it's a valid 24-character hex string (MongoDB ObjectId)
+    if (pid && /^[0-9a-fA-F]{24}$/.test(pid)) return pid;
+    
+    const user = getUser();
+    const uid = user?.id || user?._id;
+    if (uid && /^[0-9a-fA-F]{24}$/.test(uid)) return uid;
+    
+    return null; 
+  } catch { 
+    return null; 
+  } 
+};
 const ensureArray = (v) => { if (Array.isArray(v)) return v; if (typeof v === 'string' && v.trim()) return v.split(',').map(s => s.trim()).filter(Boolean); return []; };
 
 const normalizeProfile = (data) => {
@@ -56,9 +70,23 @@ const normalizeProfile = (data) => {
 
 const fetchProfileData = async (id) => {
   const apiUrl = environment?.apiUrl || 'http://localhost:5001/api/users';
+  if (!id || id === 'undefined' || id === 'null') throw new Error('No valid profile ID provided');
+  
   const res = await fetch(`${apiUrl}/profile/${id}`);
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.message || 'Failed to fetch profile');
+  let data;
+  try {
+    data = await res.json();
+  } catch (e) {
+    throw new Error('Server returned an invalid response');
+  }
+  
+  if (!res.ok) {
+    if (res.status === 404 && data.message === 'User not found') {
+      localStorage.removeItem('profileId');
+      throw new Error('User profile not found in database. Please complete your profile or try logging in again.');
+    }
+    throw new Error(data.message || 'Failed to fetch profile');
+  }
   return normalizeProfile(data);
 };
 
@@ -368,7 +396,7 @@ function ResumeTemplates() {
     if(!id){setShowError(true);setInfoMessage('No profile found. Complete your profile first.');return;}
     setShowError(false);setIsLoading(true);
     try{setPreviewData(await fetchProfileData(id));setPreviewMode(true);}
-    catch(e){setInfoMessage('Error: '+(e.message||'Unknown'));}
+    catch(e){setShowError(true); setInfoMessage('Error: '+(e.message||'Unknown'));}
     finally{setIsLoading(false);}
   },[selectedTemplate,profileId]);
 
@@ -492,6 +520,7 @@ function ResumeTemplates() {
 
     } catch (err) {
       console.error('PDF generation failed:', err);
+      setShowError(true);
       setInfoMessage('PDF error: ' + (err.message || 'Unknown error. Try Preview first, then Download.'));
     } finally {
       const ov = document.getElementById('pdf-overlay');
