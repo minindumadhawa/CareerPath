@@ -169,22 +169,6 @@ function CompanyDashboard() {
     }
   };
 
-  const handleAutoFill = () => {
-    setFormData({
-      title: 'Full Stack Engineering Intern',
-      description: 'We are looking for a passionate Full Stack Engineering intern to join our dynamic team. You will be working on building real features using React, Node.js, and MongoDB.',
-      position: 'Full Stack Developer',
-      location: 'San Francisco, CA (Hybrid)',
-      duration: '6 Months',
-      stipend: '$45/hr',
-      requirements: 'Currently pursuing a B.S. or M.S. in Computer Science or related field. Strong understanding of web fundamentals, APIs, and modern Javascript.',
-      skills: 'JavaScript, React, Node.js, MongoDB, Git',
-      applicationDeadline: new Date(new Date().setDate(new Date().getDate() + 14)).toISOString().split('T')[0],
-      startDate: new Date(new Date().setDate(new Date().getDate() + 30)).toISOString().split('T')[0],
-      totalPositions: 3
-    });
-  };
-
   const handleLogout = () => {
     navigate('/login');
   };
@@ -414,9 +398,7 @@ function CompanyDashboard() {
                      <div className="form-header-row">
                         <h3>{editingInternshipId ? 'Edit Internship' : 'Post a New Internship'}</h3>
                         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                          {!editingInternshipId && (
-                            <button type="button" className="btn-outline-company" onClick={handleAutoFill} style={{ padding: '0.4rem 1rem', fontSize: '0.85rem' }}>Auto-fill Data</button>
-                          )}
+
                           <button className="btn-icon" onClick={() => setShowCreateForm(false)}>✖</button>
                         </div>
                      </div>
