@@ -2,6 +2,33 @@ const Application = require('../models/Application');
 const Internship = require('../models/Internship');
 const User = require('../models/User');
 
+exports.updateApplicationStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+    
+    const validStatuses = ['Pending', 'Reviewed', 'Interviewing', 'Accepted', 'Rejected'];
+    if (!validStatuses.includes(status)) {
+      return res.status(400).json({ success: false, message: 'Invalid status' });
+    }
+
+    const application = await Application.findByIdAndUpdate(
+      id,
+      { status },
+      { new: true }
+    );
+
+    if (!application) {
+      return res.status(404).json({ success: false, message: 'Application not found' });
+    }
+
+    res.status(200).json({ success: true, data: application });
+  } catch (error) {
+    console.error('Error updating status:', error);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+};
+
 exports.applyForInternship = async (req, res) => {
   try {
     const { studentId, internshipId, name, email, phone, university, cgpa, resume, coverLetter } = req.body;
@@ -62,7 +89,10 @@ exports.applyForInternship = async (req, res) => {
 exports.getApplicationsForStudent = async (req, res) => {
   try {
     const { studentId } = req.params;
-    const applications = await Application.find({ studentId }).populate('internshipId');
+    const applications = await Application.find({ studentId }).populate({
+      path: 'internshipId',
+      populate: { path: 'companyId', select: 'fullName' }
+    });
     res.status(200).json({ success: true, data: applications });
   } catch (error) {
     console.error('Error fetching applications:', error);

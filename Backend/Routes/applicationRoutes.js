@@ -14,4 +14,7 @@ router.get('/company/:companyId', applicationController.getApplicationsForCompan
 // Get all applications globally
 router.get('/', applicationController.getAllApplications);
 
+// Update application status
+router.put('/:id/status', applicationController.updateApplicationStatus);
+
 module.exports = router;

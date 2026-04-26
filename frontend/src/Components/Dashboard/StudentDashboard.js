@@ -5,6 +5,7 @@ import StudentProfile from './StudentProfile';
 import ResumeTemplates from './ResumeTemplates';
 import CVPreview from './CVPreview';
 import StudentInternships from './StudentInternships';
+import StudentApplications from './StudentApplications';
 
 function StudentDashboard() {
   const navigate = useNavigate();
@@ -165,6 +166,7 @@ function StudentDashboard() {
           )}
           {activeTab === 'profile' && <StudentProfile />}
           {activeTab === 'cv' && <ResumeTemplates />}
+          {activeTab === 'applications' && <StudentApplications />}
           {activeTab === 'saved' && <StudentInternships />}
         </div>
       </main>
