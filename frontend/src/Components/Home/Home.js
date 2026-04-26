@@ -10,9 +10,9 @@ function Home() {
   // Fetch basic stats for the overview
   useEffect(() => {
     Promise.all([
-      fetch('http://localhost:5000/api/leadership').then(res => res.json()).catch(() => ({ count: 5 })),
-      fetch('http://localhost:5000/api/technical').then(res => res.json()).catch(() => ({ count: 12 })),
-      fetch('http://localhost:5000/api/quiz').then(res => res.json()).catch(() => ({ count: 8 }))
+      fetch('http://localhost:5001/api/leadership').then(res => res.json()).catch(() => ({ count: 5 })),
+      fetch('http://localhost:5001/api/technical').then(res => res.json()).catch(() => ({ count: 12 })),
+      fetch('http://localhost:5001/api/quiz').then(res => res.json()).catch(() => ({ count: 8 }))
     ]).then(([l, t, q]) => {
       setProgramStats({
         leadership: (l && l.count) || 5,

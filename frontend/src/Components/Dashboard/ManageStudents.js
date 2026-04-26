@@ -15,7 +15,7 @@ function ManageStudents() {
   const fetchStudents = async () => {
     try {
       setLoading(true);
-      const res = await fetch('http://localhost:5000/api/users/students');
+      const res = await fetch('http://localhost:5001/api/users/students');
       const data = await res.json();
       if (res.ok) {
         setStudents(data);
@@ -32,7 +32,7 @@ function ManageStudents() {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this student account? This action cannot be undone.')) {
       try {
-        const res = await fetch(`http://localhost:5000/api/users/students/${id}`, {
+        const res = await fetch(`http://localhost:5001/api/users/students/${id}`, {
           method: 'DELETE'
         });
         if (res.ok) {

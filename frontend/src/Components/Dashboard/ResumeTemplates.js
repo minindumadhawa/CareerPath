@@ -55,7 +55,7 @@ const normalizeProfile = (data) => {
 };
 
 const fetchProfileData = async (id) => {
-  const apiUrl = environment?.apiUrl || 'http://localhost:5000/api/users';
+  const apiUrl = environment?.apiUrl || 'http://localhost:5001/api/users';
   const res = await fetch(`${apiUrl}/profile/${id}`);
   const data = await res.json();
   if (!res.ok) throw new Error(data.message || 'Failed to fetch profile');
@@ -359,7 +359,7 @@ function ResumeTemplates() {
   }, []);
 
   useEffect(() => { setAnimatedIds(new Set()); const t=setTimeout(()=>setAnimatedIds(new Set(filtered.map(t=>t.id))),50); return()=>clearTimeout(t); }, [filtered]);
-  useEffect(() => { if(infoMessage&&!showError){const t=setTimeout(()=>setInfoMessage(''),5000);return()=>clearTimeout(t);} }, [infoMessage,showError]);
+  useEffect(() => { if(infoMessage&&!showError){const t=setTimeout(()=>setInfoMessage(''),5001);return()=>clearTimeout(t);} }, [infoMessage,showError]);
 
   // ─── Preview ──────────────────────────────────────────────
   const onPreview = useCallback(async () => {
