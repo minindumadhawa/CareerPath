@@ -64,6 +64,32 @@ function CompanyDashboard() {
     }
   }, [activeTab]);
 
+  const handleStatusChange = async (appId, newStatus) => {
+    try {
+      const res = await fetch(`http://localhost:5001/api/applications/${appId}/status`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ status: newStatus }),
+      });
+      
+      if (res.ok) {
+        setApplications(prevApps => 
+          prevApps.map(app => 
+            app._id === appId ? { ...app, status: newStatus } : app
+          )
+        );
+      } else {
+        const errorData = await res.json().catch(() => ({}));
+        alert(`Failed to update status: ${errorData.message || 'Server error'}`);
+      }
+    } catch (error) {
+      console.error('Error updating status:', error);
+      alert('Error connecting to server');
+    }
+  };
+
   const handleCreateInternship = async (e) => {
     e.preventDefault();
     try {
@@ -141,22 +167,6 @@ function CompanyDashboard() {
     } catch (err) {
       console.error(err);
     }
-  };
-
-  const handleAutoFill = () => {
-    setFormData({
-      title: 'Full Stack Engineering Intern',
-      description: 'We are looking for a passionate Full Stack Engineering intern to join our dynamic team. You will be working on building real features using React, Node.js, and MongoDB.',
-      position: 'Full Stack Developer',
-      location: 'San Francisco, CA (Hybrid)',
-      duration: '6 Months',
-      stipend: '$45/hr',
-      requirements: 'Currently pursuing a B.S. or M.S. in Computer Science or related field. Strong understanding of web fundamentals, APIs, and modern Javascript.',
-      skills: 'JavaScript, React, Node.js, MongoDB, Git',
-      applicationDeadline: new Date(new Date().setDate(new Date().getDate() + 14)).toISOString().split('T')[0],
-      startDate: new Date(new Date().setDate(new Date().getDate() + 30)).toISOString().split('T')[0],
-      totalPositions: 3
-    });
   };
 
   const handleLogout = () => {
@@ -388,9 +398,7 @@ function CompanyDashboard() {
                      <div className="form-header-row">
                         <h3>{editingInternshipId ? 'Edit Internship' : 'Post a New Internship'}</h3>
                         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                          {!editingInternshipId && (
-                            <button type="button" className="btn-outline-company" onClick={handleAutoFill} style={{ padding: '0.4rem 1rem', fontSize: '0.85rem' }}>Auto-fill Data</button>
-                          )}
+
                           <button className="btn-icon" onClick={() => setShowCreateForm(false)}>✖</button>
                         </div>
                      </div>
@@ -551,12 +559,26 @@ function CompanyDashboard() {
                            <td><span className={`score ${app.cgpa > 3.5 ? 'high' : app.cgpa > 3.0 ? 'med' : 'low'}`}>{app.cgpa}/4.0</span></td>
                            <td><span className={`badge ${app.status.toLowerCase()}`}>{app.status}</span></td>
                            <td>
-                             <select className="status-select" defaultValue={app.status}>
-                               <option value="Pending">Pending</option>
-                               <option value="Reviewed">Reviewed</option>
-                               <option value="Interviewing">Interviewing</option>
-                               <option value="Rejected">Rejected</option>
-                             </select>
+                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                               <select 
+                                 className="status-select" 
+                                 value={app.status}
+                                 onChange={(e) => handleStatusChange(app._id, e.target.value)}
+                               >
+                                 <option value="Pending">Pending</option>
+                                 <option value="Reviewed">Reviewed</option>
+                                 <option value="Interviewing">Interviewing</option>
+                                 <option value="Rejected">Rejected</option>
+                               </select>
+                               <a 
+                                 href={`mailto:${app.email}?subject=Update on your application for ${app.internshipId?.title || 'Internship'}`}
+                                 className="btn-icon-outline"
+                                 title="Send Email"
+                                 style={{ padding: '0.2rem 0.5rem', borderRadius: '4px', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
+                               >
+                                 ✉️
+                               </a>
+                             </div>
                            </td>
                          </tr>
                        )})}
