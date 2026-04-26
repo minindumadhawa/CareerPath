@@ -10,6 +10,32 @@ import AllApplications from './AllApplications';
 function AdminDashboard() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('overview');
+  const [stats, setStats] = useState({
+    students: 0,
+    companies: 0,
+    internships: 0,
+    pendingVerifications: 0,
+    recentUsers: []
+  });
+  const [loadingStats, setLoadingStats] = useState(true);
+
+  React.useEffect(() => {
+    fetchStats();
+  }, []);
+
+  const fetchStats = async () => {
+    try {
+      const res = await fetch('http://localhost:5001/api/admin/stats');
+      const data = await res.json();
+      if (res.ok) {
+        setStats(data);
+      }
+    } catch (err) {
+      console.error("Error fetching admin stats:", err);
+    } finally {
+      setLoadingStats(false);
+    }
+  };
   
   const user = JSON.parse(localStorage.getItem('user')) || { name: 'Super Admin' };
   const initials = user.name ? user.name.substring(0, 2).toUpperCase() : 'AD';
@@ -23,7 +49,10 @@ function AdminDashboard() {
       {/* Sidebar */}
       <aside className="admin-sidebar">
         <div className="sidebar-logo">
-          <Link to="/">CareerPath</Link>
+          <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }}>
+            <img src="/favicon.png" alt="Logo" style={{ width: '32px', height: '32px', borderRadius: '8px' }} />
+            <span style={{ fontSize: '1.6rem', fontWeight: 800, color: '#2563eb', letterSpacing: '-0.5px' }}>CareerPath</span>
+          </Link>
           <span className="badge-admin">Admin Portal</span>
         </div>
         <nav className="sidebar-nav">
@@ -38,9 +67,6 @@ function AdminDashboard() {
           </a>
           <a href="#internships" className={`nav-item ${activeTab === 'internships' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); setActiveTab('internships'); }}>
              <span className="nav-icon">💼</span> All Applications
-          </a>
-          <a href="#reports" className={`nav-item ${activeTab === 'reports' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); setActiveTab('reports'); }}>
-             <span className="nav-icon">📑</span> Reports & Analytics
           </a>
           <a href="#ai-filter" className={`nav-item ${activeTab === 'ai-filter' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); setActiveTab('ai-filter'); }}>
              <span className="nav-icon">🤖</span> AI CV Filter
@@ -95,30 +121,30 @@ function AdminDashboard() {
 
               {/* Stats Grid */}
               <div className="admin-grid modern-stats-grid">
-                <div className="stat-card">
-                   <div className="stat-icon bg-indigo">👥</div>
-                   <div className="stat-info">
-                     <div className="stat-value">10,245</div>
-                     <h3>Total Students</h3>
-                     <p className="stat-subtitle text-indigo">↑ 12% vs last month</p>
-                   </div>
-                </div>
-                <div className="stat-card">
-                   <div className="stat-icon bg-blue">🏢</div>
-                   <div className="stat-info">
-                     <div className="stat-value">512</div>
-                     <h3>Registered Companies</h3>
-                     <p className="stat-subtitle text-indigo">↑ 8 new this week</p>
-                   </div>
-                </div>
-                <div className="stat-card">
-                   <div className="stat-icon bg-green">💼</div>
-                   <div className="stat-info">
-                     <div className="stat-value">2,108</div>
-                     <h3>Active Internships</h3>
-                     <p className="stat-subtitle text-success">Healthy ecosystem</p>
-                   </div>
-                </div>
+                 <div className="stat-card">
+                    <div className="stat-icon bg-indigo">👥</div>
+                    <div className="stat-info">
+                      <div className="stat-value">{stats.students.toLocaleString()}</div>
+                      <h3>Total Students</h3>
+                      <p className="stat-subtitle text-indigo">Platform users</p>
+                    </div>
+                 </div>
+                 <div className="stat-card">
+                    <div className="stat-icon bg-blue">🏢</div>
+                    <div className="stat-info">
+                      <div className="stat-value">{stats.companies}</div>
+                      <h3>Registered Companies</h3>
+                      <p className="stat-subtitle text-indigo">Verified & pending</p>
+                    </div>
+                 </div>
+                 <div className="stat-card">
+                    <div className="stat-icon bg-green">💼</div>
+                    <div className="stat-info">
+                      <div className="stat-value">{stats.internships}</div>
+                      <h3>Active Internships</h3>
+                      <p className="stat-subtitle text-success">Open positions</p>
+                    </div>
+                 </div>
                 <div className="stat-card">
                    <div className="stat-icon bg-teal">⚡</div>
                    <div className="stat-info">
@@ -131,20 +157,15 @@ function AdminDashboard() {
 
               {/* Quick Actions Row */}
               <div className="quick-action-cards">
-                 <div className="qa-card" onClick={() => setActiveTab('companies')}>
-                    <div className="qa-icon">🏢</div>
-                    <h4>Verify Companies</h4>
-                    <p>15 pending verifications</p>
-                 </div>
+                  <div className="qa-card" onClick={() => setActiveTab('companies')}>
+                     <div className="qa-icon">🏢</div>
+                     <h4>Verify Companies</h4>
+                     <p>{stats.pendingVerifications} pending verifications</p>
+                  </div>
                  <div className="qa-card" onClick={() => setActiveTab('ai-filter')}>
                     <div className="qa-icon">🤖</div>
                     <h4>AI CV Filter</h4>
                     <p>Run ranking algorithms</p>
-                 </div>
-                 <div className="qa-card" onClick={() => setActiveTab('reports')}>
-                    <div className="qa-icon">📑</div>
-                    <h4>Export Reports</h4>
-                    <p>Generate monthly PDFs</p>
                  </div>
                  <div className="qa-card" onClick={() => setActiveTab('settings')}>
                     <div className="qa-icon">⚙️</div>
@@ -161,13 +182,13 @@ function AdminDashboard() {
                          <h2>System Alerts</h2>
                        </div>
                        <div className="alert-list">
-                          <div className="alert-item warning">
-                             <div className="alert-icon">⚠️</div>
-                             <div className="alert-info">
-                               <h4>15 Companies Pending Verification</h4>
-                               <p>Please review submitted documents.</p>
-                             </div>
-                          </div>
+                           <div className="alert-item warning">
+                              <div className="alert-icon">⚠️</div>
+                              <div className="alert-info">
+                                <h4>{stats.pendingVerifications} Companies Pending Verification</h4>
+                                <p>Please review submitted documents.</p>
+                              </div>
+                           </div>
                           <div className="alert-item success">
                              <div className="alert-icon">✅</div>
                              <div className="alert-info">
@@ -206,52 +227,26 @@ function AdminDashboard() {
                              </tr>
                            </thead>
                            <tbody>
-                             <tr>
-                               <td>
-                                 <div className="entity-cell">
-                                   <div className="cand-avatar bg-blue">S</div>
-                                   <div>
-                                     <div className="entity-name">sam.wilson@university.edu</div>
-                                     <div className="entity-sub">Sam Wilson</div>
-                                   </div>
-                                 </div>
-                               </td>
-                               <td><span className="role-tag student">Student</span></td>
-                               <td>Just now</td>
-                               <td><span className="badge active">Active</span></td>
-                               <td><button className="btn-table">Manage</button></td>
-                             </tr>
-                             <tr>
-                               <td>
-                                 <div className="entity-cell">
-                                   <div className="cand-avatar bg-teal">T</div>
-                                   <div>
-                                     <div className="entity-name">hr@techinnovators.com</div>
-                                     <div className="entity-sub">Tech Innovators LLC</div>
-                                   </div>
-                                 </div>
-                               </td>
-                               <td><span className="role-tag company">Company</span></td>
-                               <td>2 hours ago</td>
-                               <td><span className="badge warning">Needs Verification</span></td>
-                               <td><button className="btn-table">Verify</button></td>
-                             </tr>
-                             <tr>
-                               <td>
-                                 <div className="entity-cell">
-                                   <div className="cand-avatar bg-purple">E</div>
-                                   <div>
-                                     <div className="entity-name">emma.r@college.edu</div>
-                                     <div className="entity-sub">Emma Roberts</div>
-                                   </div>
-                                 </div>
-                               </td>
-                               <td><span className="role-tag student">Student</span></td>
-                               <td>Yesterday</td>
-                               <td><span className="badge active">Active</span></td>
-                               <td><button className="btn-table">Manage</button></td>
-                             </tr>
-                           </tbody>
+                              {stats.recentUsers.map(u => (
+                                <tr key={u._id}>
+                                  <td>
+                                    <div className="entity-cell">
+                                      <div className={`cand-avatar bg-${u.role === 'student' ? 'blue' : 'teal'}`}>
+                                        {(u.fullName || u.name || 'U')[0].toUpperCase()}
+                                      </div>
+                                      <div>
+                                        <div className="entity-name">{u.email}</div>
+                                        <div className="entity-sub">{u.fullName || u.name || 'N/A'}</div>
+                                      </div>
+                                    </div>
+                                  </td>
+                                  <td><span className={`role-tag ${u.role}`}>{u.role.charAt(0).toUpperCase() + u.role.slice(1)}</span></td>
+                                  <td>{new Date(u.createdAt).toLocaleDateString()}</td>
+                                  <td><span className={`badge ${u.isVerified !== false ? 'active' : 'warning'}`}>{u.isVerified !== false ? 'Active' : 'Pending'}</span></td>
+                                  <td><button className="btn-table" onClick={() => setActiveTab(u.role === 'student' ? 'students' : 'companies')}>Manage</button></td>
+                                </tr>
+                              ))}
+                            </tbody>
                          </table>
                        </div>
                     </div>
