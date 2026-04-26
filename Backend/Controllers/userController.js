@@ -79,7 +79,8 @@ exports.updateProfile = async (req, res) => {
       phoneNumber, location, linkedin, summary,
       technicalSkills, softSkills, 
       education, workExperience, projects,
-      certifications, achievements, references 
+      certifications, achievements, references,
+      gpa
     } = req.body;
     
     const user = await User.findById(req.params.id);
@@ -113,6 +114,7 @@ exports.updateProfile = async (req, res) => {
           user.achievements = Array.isArray(achievements) ? achievements : typeof achievements === 'string' ? achievements.split(',').map(s => s.trim()).filter(Boolean) : [];
       }
       if (references !== undefined) user.references = references;
+      if (gpa !== undefined) user.gpa = gpa;
     }
 
     await user.save();
