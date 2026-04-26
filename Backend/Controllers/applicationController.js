@@ -31,10 +31,10 @@ exports.updateApplicationStatus = async (req, res) => {
 
 exports.applyForInternship = async (req, res) => {
   try {
-    const { studentId, internshipId, name, email, phone, university, cgpa, resume, coverLetter } = req.body;
+    const { studentId, internshipId, name, email, phone, university, cgpa, coverLetter } = req.body;
 
     // Validate Required Fields
-    if (!studentId || !internshipId || !name || !email || !phone || !university || !cgpa || !resume || !coverLetter) {
+    if (!studentId || !internshipId || !name || !email || !phone || !university || !cgpa || !coverLetter) {
       return res.status(400).json({ success: false, message: 'All fields are required.' });
     }
 
@@ -65,7 +65,6 @@ exports.applyForInternship = async (req, res) => {
       phone,
       university,
       cgpa: parsedCgpa,
-      resume,
       coverLetter
     });
 

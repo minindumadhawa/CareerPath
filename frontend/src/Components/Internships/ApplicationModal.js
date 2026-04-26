@@ -9,7 +9,6 @@ const ApplicationModal = ({ internship, onClose, user }) => {
     phone: '',
     university: '',
     cgpa: '',
-    resume: '',
     coverLetter: ''
   });
 
@@ -36,7 +35,6 @@ const ApplicationModal = ({ internship, onClose, user }) => {
       }
     }
     
-    if (!formData.resume.trim()) newErrors.resume = 'Resume link/text is required';
     if (!formData.coverLetter.trim()) newErrors.coverLetter = 'Cover letter is required';
 
     setErrors(newErrors);
@@ -133,11 +131,7 @@ const ApplicationModal = ({ internship, onClose, user }) => {
               {errors.cgpa && <span className="error-text">{errors.cgpa}</span>}
             </div>
 
-            <div className="form-group">
-              <label htmlFor="resume">Resume Link/Text *</label>
-              <input type="text" id="resume" name="resume" value={formData.resume} onChange={handleChange} placeholder="Link to Google Drive / Portfolio etc." />
-              {errors.resume && <span className="error-text">{errors.resume}</span>}
-            </div>
+
 
             <div className="form-group full-width">
               <label htmlFor="coverLetter">Cover Letter *</label>

@@ -8,7 +8,6 @@ const applicationSchema = new mongoose.Schema({
   phone: { type: String, required: true, trim: true },
   university: { type: String, required: true, trim: true },
   cgpa: { type: Number, required: true, min: 0, max: 4.0 },
-  resume: { type: String, required: true }, // Can be a link or text representation
   coverLetter: { type: String, required: true },
   status: { 
     type: String, 
