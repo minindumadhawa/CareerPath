@@ -23,7 +23,10 @@ function AdminDashboard() {
       {/* Sidebar */}
       <aside className="admin-sidebar">
         <div className="sidebar-logo">
-          <Link to="/">CareerPath</Link>
+          <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }}>
+            <img src="/favicon.png" alt="Logo" style={{ width: '32px', height: '32px', borderRadius: '8px' }} />
+            <span style={{ fontSize: '1.6rem', fontWeight: 800, color: '#2563eb', letterSpacing: '-0.5px' }}>CareerPath</span>
+          </Link>
           <span className="badge-admin">Admin Portal</span>
         </div>
         <nav className="sidebar-nav">
@@ -39,7 +42,6 @@ function AdminDashboard() {
           <a href="#internships" className={`nav-item ${activeTab === 'internships' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); setActiveTab('internships'); }}>
              <span className="nav-icon">💼</span> All Applications
           </a>
-
           <a href="#ai-filter" className={`nav-item ${activeTab === 'ai-filter' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); setActiveTab('ai-filter'); }}>
              <span className="nav-icon">🤖</span> AI CV Filter
           </a>
@@ -138,11 +140,6 @@ function AdminDashboard() {
                     <div className="qa-icon">🤖</div>
                     <h4>AI CV Filter</h4>
                     <p>Run ranking algorithms</p>
-                 </div>
-                 <div className="qa-card" onClick={() => setActiveTab('reports')}>
-                    <div className="qa-icon">📑</div>
-                    <h4>Export Reports</h4>
-                    <p>Generate monthly PDFs</p>
                  </div>
                  <div className="qa-card" onClick={() => setActiveTab('settings')}>
                     <div className="qa-icon">⚙️</div>

@@ -28,7 +28,10 @@ const Sidebar = () => {
   return (
     <aside className="dashboard-sidebar">
       <div className="sidebar-logo">
-        <NavLink to="/" style={{ fontSize: '1.5rem', fontWeight: 700, color: '#2563eb', textDecoration: 'none' }}>CareerPath</NavLink>
+        <NavLink to="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }}>
+          <img src="/favicon.png" alt="Logo" style={{ width: '32px', height: '32px', borderRadius: '8px' }} />
+          <span style={{ fontSize: '1.5rem', fontWeight: 700, color: '#2563eb' }}>CareerPath</span>
+        </NavLink>
         {isAdmin && <span className="badge-admin" style={{ marginLeft: 8, fontSize: '0.7rem', background: '#e0e7ff', color: '#4338ca', padding: '2px 6px', borderRadius: 10 }}>Admin Panel</span>}
       </div>
       
