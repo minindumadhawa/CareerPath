@@ -217,7 +217,7 @@ function TemplateThumbnail({ templateId, primaryColor }) {
 // ═══════════════════════════════════════════════════════════════
 // MAIN COMPONENT
 // ═══════════════════════════════════════════════════════════════
-function CVPreview({ studentId }) {
+function CVPreview({ studentId, readOnly = false }) {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -921,116 +921,132 @@ function CVPreview({ studentId }) {
   // MAIN RENDER
   // ═══════════════════════════════════════════════════════════════
   return (
-    <div className="cv-wrapper">
-      <div className="resume-templates-section no-print">
-        <div className="templates-header">
-          <h2>Resume Templates</h2>
-          <p>Select a template to generate your resume</p>
-        </div>
+    <div className={`cv-wrapper ${readOnly ? 'cv-readonly' : ''}`}>
+      {!readOnly && (
+        <div className="resume-templates-section no-print">
+          <div className="templates-header">
+            <h2>Resume Templates</h2>
+            <p>Select a template to generate your resume</p>
+          </div>
 
-        <div className="profile-status">
-          <i className="status-icon">✓</i>
-          <span>Profile found. Choose a template and click Preview or Download.</span>
-        </div>
+          <div className="profile-status">
+            <i className="status-icon">✓</i>
+            <span>Profile found. Choose a template and click Preview or Download.</span>
+          </div>
 
-        {/* Template Cards */}
-        <div className="templates-grid">
-          {TEMPLATES.map((temp) => (
-            <div key={temp.id} className={`template-card ${template === temp.id ? 'active' : ''}`} onClick={() => handleTemplateChange(temp.id)}>
-              <TemplateThumbnail templateId={temp.id} primaryColor={primaryColor} />
-              {template === temp.id && (
-                <div className="template-check">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3" strokeLinecap="round"><polyline points="20 6 9 17 4 12" /></svg>
+          {/* Template Cards */}
+          <div className="templates-grid">
+            {TEMPLATES.map((temp) => (
+              <div key={temp.id} className={`template-card ${template === temp.id ? 'active' : ''}`} onClick={() => handleTemplateChange(temp.id)}>
+                <TemplateThumbnail templateId={temp.id} primaryColor={primaryColor} />
+                {template === temp.id && (
+                  <div className="template-check">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3" strokeLinecap="round"><polyline points="20 6 9 17 4 12" /></svg>
+                  </div>
+                )}
+                <div className="template-name">{temp.name}</div>
+                <div className="template-desc">{temp.desc}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* Action Buttons */}
+          <div className="action-buttons">
+            <button className="btn-preview" onClick={() => setShowPreviewModal(true)}>
+              <span className="btn-icon">👁️</span> Preview Resume
+            </button>
+            <button className="btn-download" onClick={downloadPDF} disabled={pdfGenerating}>
+              <span className="btn-icon">⬇️</span> {pdfGenerating ? 'Generating...' : 'Download PDF'}
+            </button>
+            <button className="btn-docx" onClick={downloadDOCX}>
+              <span className="btn-icon">📄</span> Download DOCX
+            </button>
+          </div>
+
+          {/* Customization Toolbar */}
+          <div className="customization-toolbar">
+            <div className="toolbar-item">
+              <button className="color-trigger" onClick={() => { setShowColorPicker(!showColorPicker); setShowFontPicker(false); }} style={{ backgroundColor: primaryColor }}>
+                <span>🎨</span> Accent Color
+              </button>
+              {showColorPicker && (
+                <div className="color-dropdown">
+                  {COLOR_OPTIONS.map((color) => (
+                    <div key={color.value} className={`color-option ${primaryColor === color.value ? 'active' : ''}`} style={{ backgroundColor: color.value }} onClick={() => handleColorChange(color.value)} title={color.name} />
+                  ))}
                 </div>
               )}
-              <div className="template-name">{temp.name}</div>
-              <div className="template-desc">{temp.desc}</div>
             </div>
-          ))}
-        </div>
-
-        {/* Action Buttons */}
-        <div className="action-buttons">
-          <button className="btn-preview" onClick={() => setShowPreviewModal(true)}>
-            <span className="btn-icon">👁️</span> Preview Resume
-          </button>
-          <button className="btn-download" onClick={downloadPDF} disabled={pdfGenerating}>
-            <span className="btn-icon">⬇️</span> {pdfGenerating ? 'Generating...' : 'Download PDF'}
-          </button>
-          <button className="btn-docx" onClick={downloadDOCX}>
-            <span className="btn-icon">📄</span> Download DOCX
-          </button>
-        </div>
-
-        {/* Customization Toolbar */}
-        <div className="customization-toolbar">
-          <div className="toolbar-item">
-            <button className="color-trigger" onClick={() => { setShowColorPicker(!showColorPicker); setShowFontPicker(false); }} style={{ backgroundColor: primaryColor }}>
-              <span>🎨</span> Accent Color
-            </button>
-            {showColorPicker && (
-              <div className="color-dropdown">
-                {COLOR_OPTIONS.map((color) => (
-                  <div key={color.value} className={`color-option ${primaryColor === color.value ? 'active' : ''}`} style={{ backgroundColor: color.value }} onClick={() => handleColorChange(color.value)} title={color.name} />
-                ))}
-              </div>
-            )}
-          </div>
-          <div className="toolbar-item">
-            <button className="font-trigger" onClick={() => { setShowFontPicker(!showFontPicker); setShowColorPicker(false); }}>
-              <span>🔤</span> {FONT_OPTIONS.find((f) => f.id === selectedFont)?.name || 'Font'}
-            </button>
-            {showFontPicker && (
-              <div className="font-dropdown">
-                {FONT_OPTIONS.map((font) => (
-                  <div key={font.id} className={`font-option ${selectedFont === font.id ? 'active' : ''}`} style={{ fontFamily: font.family }} onClick={() => handleFontChange(font.id)}>
-                    {font.name}
-                    {selectedFont === font.id && <span className="font-check">✓</span>}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-          <div className="toolbar-item">
-            <input ref={photoInputRef} type="file" accept="image/jpeg,image/png,image/webp" onChange={handlePhotoUpload} style={{ display: 'none' }} id="photo-upload" />
-            <button className="photo-trigger" onClick={() => photoInputRef.current?.click()}>
-              <span>📸</span> {profilePhoto ? 'Change Photo' : 'Add Photo'}
-            </button>
-            {profilePhoto && <button className="photo-remove" onClick={handleRemovePhoto} title="Remove photo">✕</button>}
-          </div>
-          <div className="toolbar-item">
-            <button className="social-trigger" onClick={() => setShowSocialEditor(!showSocialEditor)}>
-              <span>🔗</span> Social Links
-            </button>
-          </div>
-        </div>
-
-        {/* Social Links Editor */}
-        {showSocialEditor && (
-          <div className="social-editor-panel">
-            <h4>Social & Portfolio Links</h4>
-            <div className="social-editor-grid">
-              <div className="social-input-group">
-                <label>💻 GitHub</label>
-                <input type="text" placeholder="github.com/username" value={socialLinks.github} onChange={(e) => handleSocialChange('github', e.target.value)} />
-              </div>
-              <div className="social-input-group">
-                <label>🌐 Portfolio</label>
-                <input type="text" placeholder="yourportfolio.com" value={socialLinks.portfolio} onChange={(e) => handleSocialChange('portfolio', e.target.value)} />
-              </div>
-              <div className="social-input-group">
-                <label>🐦 Twitter</label>
-                <input type="text" placeholder="twitter.com/username" value={socialLinks.twitter} onChange={(e) => handleSocialChange('twitter', e.target.value)} />
-              </div>
-              <div className="social-input-group">
-                <label>🏠 Website</label>
-                <input type="text" placeholder="yourwebsite.com" value={socialLinks.website} onChange={(e) => handleSocialChange('website', e.target.value)} />
-              </div>
+            <div className="toolbar-item">
+              <button className="font-trigger" onClick={() => { setShowFontPicker(!showFontPicker); setShowColorPicker(false); }}>
+                <span>🔤</span> {FONT_OPTIONS.find((f) => f.id === selectedFont)?.name || 'Font'}
+              </button>
+              {showFontPicker && (
+                <div className="font-dropdown">
+                  {FONT_OPTIONS.map((font) => (
+                    <div key={font.id} className={`font-option ${selectedFont === font.id ? 'active' : ''}`} style={{ fontFamily: font.family }} onClick={() => handleFontChange(font.id)}>
+                      {font.name}
+                      {selectedFont === font.id && <span className="font-check">✓</span>}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
-            <button className="social-editor-close" onClick={() => setShowSocialEditor(false)}>Done</button>
+            <div className="toolbar-item">
+              <input ref={photoInputRef} type="file" accept="image/jpeg,image/png,image/webp" onChange={handlePhotoUpload} style={{ display: 'none' }} id="photo-upload" />
+              <button className="photo-trigger" onClick={() => photoInputRef.current?.click()}>
+                <span>📸</span> {profilePhoto ? 'Change Photo' : 'Add Photo'}
+              </button>
+              {profilePhoto && <button className="photo-remove" onClick={handleRemovePhoto} title="Remove photo">✕</button>}
+            </div>
+            <div className="toolbar-item">
+              <button className="social-trigger" onClick={() => setShowSocialEditor(!showSocialEditor)}>
+                <span>🔗</span> Social Links
+              </button>
+            </div>
           </div>
-        )}
-      </div>
+
+          {/* Social Links Editor */}
+          {showSocialEditor && (
+            <div className="social-editor-panel">
+              <h4>Social & Portfolio Links</h4>
+              <div className="social-editor-grid">
+                <div className="social-input-group">
+                  <label>💻 GitHub</label>
+                  <input type="text" placeholder="github.com/username" value={socialLinks.github} onChange={(e) => handleSocialChange('github', e.target.value)} />
+                </div>
+                <div className="social-input-group">
+                  <label>🌐 Portfolio</label>
+                  <input type="text" placeholder="yourportfolio.com" value={socialLinks.portfolio} onChange={(e) => handleSocialChange('portfolio', e.target.value)} />
+                </div>
+                <div className="social-input-group">
+                  <label>🐦 Twitter</label>
+                  <input type="text" placeholder="twitter.com/username" value={socialLinks.twitter} onChange={(e) => handleSocialChange('twitter', e.target.value)} />
+                </div>
+                <div className="social-input-group">
+                  <label>🏠 Website</label>
+                  <input type="text" placeholder="yourwebsite.com" value={socialLinks.website} onChange={(e) => handleSocialChange('website', e.target.value)} />
+                </div>
+              </div>
+              <button className="social-editor-close" onClick={() => setShowSocialEditor(false)}>Done</button>
+            </div>
+          )}
+        </div>
+      )}
+
+      {readOnly && (
+        <div className="cv-readonly-header no-print">
+          <div className="readonly-info">
+            <span className="readonly-badge">Student CV View</span>
+            <h3>{profile.fullName}</h3>
+          </div>
+          <div className="readonly-actions">
+            <button className="btn-readonly-download" onClick={downloadPDF} disabled={pdfGenerating}>
+              {pdfGenerating ? 'Generating...' : 'Download PDF'}
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* CV Document */}
       <div className="cv-print-container" id="cv-document">

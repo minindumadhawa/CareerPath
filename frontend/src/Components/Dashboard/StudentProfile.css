@@ -245,6 +245,7 @@
   flex-wrap: wrap;
 }
 .col-half  { flex: 1; min-width: 200px; }
+.col-quarter { flex: 0.5; min-width: 120px; }
 .col-1     { flex: 1; min-width: 150px; }
 .col-small { width: 100px; flex-shrink: 0; }
 

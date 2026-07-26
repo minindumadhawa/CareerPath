@@ -370,3 +370,91 @@
   color: #7c3aed;
   font-weight: 700;
 }
+
+/* ====== READ ONLY MODE STYLES ====== */
+.cv-readonly {
+  padding: 0;
+  max-width: 100%;
+}
+
+.cv-readonly-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f8fafc;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  border: 1px solid #e2e8f0;
+}
+
+.readonly-info h3 {
+  margin: 0.25rem 0 0;
+  font-size: 1.25rem;
+  color: #1e293b;
+}
+
+.readonly-badge {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  color: #64748b;
+  background: #f1f5f9;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.btn-readonly-download {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-readonly-download:hover {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+.btn-readonly-download:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+}
+
+/* Manage Students Adjustments */
+.cv-preview-card {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.cv-view-active {
+  padding-bottom: 3rem;
+}
+
+.cv-preview-card .card-header {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.btn-back {
+  background: none;
+  border: 1px solid #e2e8f0;
+  color: #64748b;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.btn-back:hover {
+  background: #f1f5f9;
+  color: #1e293b;
+}

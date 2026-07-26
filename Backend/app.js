@@ -11,6 +11,7 @@ const enrollmentRoutes = require("./Routes/enrollmentRoutes");
 const chatRoutes = require("./Routes/chatRoutes");
 const internshipRoutes = require("./Routes/internshipRoutes");
 const applicationRoutes = require("./Routes/applicationRoutes");
+const adminRoutes = require("./Routes/adminRoutes");
 
 const app = express();
 
@@ -34,6 +35,7 @@ app.use("/api/enrollments", enrollmentRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/internships", internshipRoutes);
 app.use("/api/applications", applicationRoutes);
+app.use("/api/admin", adminRoutes);
 
 mongoose.connect(process.env.MONGODB_URI)
     .then(() => console.log("Connected to mongoDB"))

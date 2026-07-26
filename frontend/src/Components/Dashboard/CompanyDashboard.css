@@ -387,6 +387,15 @@
   font-size: 0.8rem;
   color: var(--text-light, #64748b);
 }
+.cand-email {
+  font-size: 0.75rem;
+  color: var(--primary, #2563eb);
+  text-decoration: none;
+  display: block;
+}
+.cand-email:hover {
+  text-decoration: underline;
+}
 
 .score {
   font-weight: 700;

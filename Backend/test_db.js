@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 const Enrollment = require('./models/careerAdvicemodel/Enrollment');
 require('dotenv').config();
-
-const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://admin:H4eQUj4fjzqgjrlX@cluster0.j4bshhl.mongodb.net/';
+//XqdDbYuoR6knQ9c8
+const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://admin:<db_password>@cluster0.ixembwy.mongodb.net/';
 
 async function testEnroll() {
     try {
