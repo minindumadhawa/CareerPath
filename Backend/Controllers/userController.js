@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const mongoose = require('mongoose');
 const multer = require('multer');
 
 // Configure multer for photo upload
@@ -14,6 +15,9 @@ const upload = multer({ storage });
 
 exports.getProfile = async (req, res) => {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ message: 'Invalid user ID format' });
+    }
     const user = await User.findById(req.params.id).select('-password');
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
@@ -66,13 +70,17 @@ exports.createProfile = async (req, res) => {
 
 exports.updateProfile = async (req, res) => {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ message: 'Invalid user ID format' });
+    }
     const { 
       email,
       fullName, university, 
       phoneNumber, location, linkedin, summary,
       technicalSkills, softSkills, 
       education, workExperience, projects,
-      certifications, achievements, references 
+      certifications, achievements, references,
+      gpa
     } = req.body;
     
     const user = await User.findById(req.params.id);
@@ -106,6 +114,7 @@ exports.updateProfile = async (req, res) => {
           user.achievements = Array.isArray(achievements) ? achievements : typeof achievements === 'string' ? achievements.split(',').map(s => s.trim()).filter(Boolean) : [];
       }
       if (references !== undefined) user.references = references;
+      if (gpa !== undefined) user.gpa = gpa;
     }
 
     await user.save();
@@ -139,6 +148,9 @@ exports.getAllStudents = async (req, res) => {
 
 exports.deleteStudent = async (req, res) => {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ message: 'Invalid student ID format' });
+    }
     const student = await User.findById(req.params.id);
     if (!student) {
       return res.status(404).json({ message: 'Student not found' });
@@ -163,6 +175,9 @@ exports.getAllCompanies = async (req, res) => {
 
 exports.deleteCompany = async (req, res) => {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ message: 'Invalid company ID format' });
+    }
     const company = await User.findById(req.params.id);
     if (!company) {
       return res.status(404).json({ message: 'Company not found' });
@@ -177,6 +192,9 @@ exports.deleteCompany = async (req, res) => {
 
 exports.verifyCompany = async (req, res) => {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ message: 'Invalid company ID format' });
+    }
     const company = await User.findById(req.params.id);
     if (!company) {
       return res.status(404).json({ message: 'Company not found' });
@@ -199,6 +217,9 @@ exports.uploadPhoto = [
   upload.single('profileImage'),
   async (req, res) => {
     try {
+      if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+        return res.status(400).json({ message: 'Invalid user ID format' });
+      }
       const user = await User.findById(req.params.id);
       if (!user) {
         return res.status(404).json({ message: 'User not found' });

@@ -548,10 +548,18 @@ function CompanyDashboard() {
                            <td>
                              <div className="candidate-cell">
                                <div className={`cand-avatar ${randomColor}`}>{initials}</div>
-                               <div>
-                                 <div className="cand-name">{app.name}</div>
-                                 <div className="cand-uni">{app.university}</div>
-                               </div>
+                                 <div>
+                                   <div className="cand-name">{app.name}</div>
+                                   <div className="cand-uni">{app.university}</div>
+                                   <a 
+                                     href={`https://mail.google.com/mail/?view=cm&fs=1&to=${app.email}&su=${encodeURIComponent(`Update on your application for ${app.internshipId?.title || 'Internship'}`)}`}
+                                     target="_blank" 
+                                     rel="noopener noreferrer"
+                                     className="cand-email"
+                                   >
+                                     {app.email}
+                                   </a>
+                                 </div>
                              </div>
                            </td>
                            <td>{app.internshipId?.title || 'Unknown Role'}</td>
@@ -571,9 +579,11 @@ function CompanyDashboard() {
                                  <option value="Rejected">Rejected</option>
                                </select>
                                <a 
-                                 href={`mailto:${app.email}?subject=Update on your application for ${app.internshipId?.title || 'Internship'}`}
+                                 href={`https://mail.google.com/mail/?view=cm&fs=1&to=${app.email}&su=${encodeURIComponent(`Update on your application for ${app.internshipId?.title || 'Internship'}`)}`}
+                                 target="_blank"
+                                 rel="noopener noreferrer"
                                  className="btn-icon-outline"
-                                 title="Send Email"
+                                 title="Send Email via Gmail"
                                  style={{ padding: '0.2rem 0.5rem', borderRadius: '4px', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
                                >
                                  ✉️

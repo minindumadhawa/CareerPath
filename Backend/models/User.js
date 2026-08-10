@@ -37,6 +37,7 @@ const userSchema = new mongoose.Schema({
   portfolio: { type: String },
   dateOfBirth: { type: Date },
   summary: { type: String },
+  gpa: { type: Number },
   
   technicalSkills: { type: [String], default: [] },
   softSkills: { type: [String], default: [] },

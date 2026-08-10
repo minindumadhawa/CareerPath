@@ -52,13 +52,13 @@ function ManageStudents() {
 
   if (viewingCvFor) {
     return (
-      <div className="manage-students-container">
-        <div className="section-card">
-          <div className="card-header">
-            <h2>Student CV File</h2>
-            <button className="btn-back" onClick={() => setViewingCvFor(null)}>← Back to Students</button>
+      <div className="manage-students-container cv-view-active">
+        <div className="section-card cv-preview-card">
+          <div className="card-header no-print">
+            <button className="btn-back" onClick={() => setViewingCvFor(null)}>← Back to Student List</button>
+            <h2>Student Resume</h2>
           </div>
-          <CVPreview studentId={viewingCvFor} />
+          <CVPreview studentId={viewingCvFor} readOnly={true} />
         </div>
       </div>
     );

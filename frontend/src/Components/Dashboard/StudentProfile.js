@@ -13,7 +13,7 @@ const PHOTO_ACCEPT   = ['image/jpeg', 'image/png', 'image/webp'];
 
 const INITIAL_PROFILE = {
   fullName: '', email: '', university: '', phoneNumber: '',
-  location: '', linkedin: '', summary: '',
+  location: '', linkedin: '', summary: '', gpa: '',
   technicalSkills: '', softSkills: '',
   education: [], workExperience: [], projects: [],
   certifications: '', achievements: '', references: '', languages: '',
@@ -131,6 +131,7 @@ function StudentProfile() {
           location:        data.location        || '',
           linkedin:        data.linkedin        || '',
           summary:         data.summary         || '',
+          gpa:             data.gpa             || '',
           technicalSkills: toCommaString(data.technicalSkills),
           softSkills:      toCommaString(data.softSkills),
           education:       Array.isArray(data.education)      ? data.education      : [],
@@ -467,11 +468,16 @@ function StudentProfile() {
               <input type="text" name="linkedin" value={profile.linkedin} onChange={handleChange}
                 placeholder="linkedin.com/in/yourname" />
             </div>
-            <div className="col-half">
+            <div className="col-quarter">
               <label>University / College</label>
               <input type="text" name="university" value={profile.university} onChange={handleChange} required
                 style={fieldErrors.university ? { borderColor: '#e11d48' } : undefined} />
               {fieldError('university')}
+            </div>
+            <div className="col-quarter">
+              <label>Current GPA</label>
+              <input type="number" name="gpa" value={profile.gpa} onChange={handleChange}
+                placeholder="e.g. 3.8" step="0.01" min="0" max="4.0" />
             </div>
           </div>
         </div>
