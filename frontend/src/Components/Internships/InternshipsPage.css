@@ -96,3 +96,14 @@
 
 .no-results { text-align: center; padding: 4rem; color: #64748b; }
 .no-results h2 { color: #1e293b; margin-bottom: 0.5rem; }
+
+.hero-illustration .main-img {
+  border-radius: 20px;
+  box-shadow: 0 20px 40px -15px rgba(37, 99, 235, 0.25);
+  transition: transform 0.3s ease;
+}
+
+.hero-illustration .main-img:hover {
+  transform: translateY(-4px);
+}
+

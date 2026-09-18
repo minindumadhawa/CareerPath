@@ -46,7 +46,7 @@ function Home() {
             <a href="#home">Home</a>
             <Link to="/internships">Internships</Link>
             <a href="#career-overview">Career Programs</a>
-            <a href="#companies">Companies</a>
+            <Link to="/companies">Companies</Link>
             <a href="#about">About</a>
             <a href="#contact">Contact</a>
           </div>

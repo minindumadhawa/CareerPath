@@ -104,7 +104,7 @@ function InternshipsPage() {
           <div className="hero-illustration">
             <div className="illustration-wrapper">
               <div className="blob-shape"></div>
-              <img src="https://images.unsplash.com/photo-1515165562489-399a38bd2c7c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Student searching internships" className="main-img" />
+              <img src="/internship_hero.png" alt="Student searching internships" className="main-img" />
               <div className="floating-badge badge-1">
                  <span className="badge-icon">🎯</span>
                  <span>Global Roles</span>

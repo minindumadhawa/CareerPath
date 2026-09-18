@@ -116,7 +116,7 @@ function StudentDashboard() {
                    
                    <div className="job-list">
                       <div className="job-item">
-                         <div className="job-logo bg-purple">G</div>
+                         <img src="/logos/google.svg" alt="Google" className="job-logo" style={{ objectFit: 'contain', padding: '4px', backgroundColor: '#f3f4f6' }} />
                          <div className="job-details">
                            <h4>Software Engineer Intern</h4>
                            <p>Google • San Francisco, CA (Remote)</p>
@@ -125,7 +125,7 @@ function StudentDashboard() {
                       </div>
                       
                       <div className="job-item">
-                         <div className="job-logo bg-blue">M</div>
+                         <img src="/logos/meta.svg" alt="Meta" className="job-logo" style={{ objectFit: 'contain', padding: '4px', backgroundColor: '#f3f4f6' }} />
                          <div className="job-details">
                            <h4>Data Science Intern</h4>
                            <p>Meta • New York, NY</p>
@@ -134,7 +134,7 @@ function StudentDashboard() {
                       </div>
                       
                       <div className="job-item">
-                         <div className="job-logo bg-green">S</div>
+                         <img src="/logos/spotify.svg" alt="Spotify" className="job-logo" style={{ objectFit: 'contain', padding: '4px', backgroundColor: '#f3f4f6' }} />
                          <div className="job-details">
                            <h4>Product Designer Intern</h4>
                            <p>Spotify • London, UK</p>

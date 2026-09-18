@@ -13,6 +13,7 @@ import CompanyDashboard from './Components/Dashboard/CompanyDashboard';
 import AdminDashboard from './Components/Dashboard/AdminDashboard';
 import CVPreview from './Components/Dashboard/CVPreview';
 import InternshipsPage from './Components/Internships/InternshipsPage';
+import CompaniesPage from './Components/Companies/CompaniesPage';
 
 // Career Advice Module
 import CareerAdviceLayout from './Components/CareerAdviceModule/CareerAdviceLayout';
@@ -52,6 +53,7 @@ function App() {
           <Route path="/company-dashboard" element={<CompanyDashboard />} />
           <Route path="/admin-dashboard" element={<AdminDashboard />} />
           <Route path="/internships" element={<InternshipsPage />} />
+          <Route path="/companies" element={<CompaniesPage />} />
 
           {/* New Career Advice Module Nested Routes */}
           <Route element={<CareerAdviceLayout />}>
